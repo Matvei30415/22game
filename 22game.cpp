@@ -395,11 +395,13 @@ void process_hunter_move(std::vector<card> &table_hand, std::vector<card> &curre
     // Остаётся на столе, если не взял ни одной числовой карты или Hunter'a
     if (count_erase == 0)
     {
+        is_trick = false;
         move_card(table_hand, current_hand, chosen_card_index);
     }
     // Отправляется во взятки, если взял хотя бы одну числовую карту или Hunter'а
     else
     {
+        is_trick = true;
         move_card(current_tricks, current_hand, chosen_card_index);
     }
 }
@@ -448,7 +450,7 @@ void sort_card_list(std::vector<card> &current_hand)
 // Обработка 1 хода
 void process_player_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards)
 {
-    sort_card_list(current_hand);
+    sort_card_list(table_hand);
     short chosen_card_index = select_card_from_hand(table_hand, current_hand, current_tricks);
     // Если стол не пустой и выбранная карта - не Хантер, выбираем карты для взятки
     if (table_hand.size() != 0 && !(current_hand[chosen_card_index].type == picture_card && current_hand[chosen_card_index].value.picture_cards == 'H'))
@@ -460,7 +462,6 @@ void process_player_move(std::vector<card> &table_hand, std::vector<card> &curre
             bool valid_trick = process_trick(table_hand, current_hand, current_tricks, selected_cards, chosen_card_index);
             if (!valid_trick)
             {
-                sort_card_list(table_hand);
                 process_player_move(table_hand, current_hand, current_tricks, selected_cards);
                 return;
             }
@@ -482,9 +483,7 @@ void process_player_move(std::vector<card> &table_hand, std::vector<card> &curre
     {
         process_hunter_move(table_hand, current_hand, current_tricks, chosen_card_index);
     }
-    sort_card_list(table_hand);
 }
-
 
 // Нахождение комбинации с цифровыми картами
 void find_digital_combinations(std::vector<card> &current_hand, card &current_card, short n, std::vector<card> &combo, std::vector<card> &max_combo, double &max_combo_quality, bool &res, short start = 0)
@@ -522,7 +521,6 @@ void find_digital_combinations(std::vector<card> &current_hand, card &current_ca
     }
 }
 
-
 // Нахождение комбинации с лицами
 bool find_picture_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &max_combo, double max_combo_quality)
 {
@@ -540,6 +538,8 @@ bool find_picture_combinations(std::vector<card> &current_hand, card &current_ca
                 res = true;
             }
         }
+        else if (current_hand[i].type == digital_card)
+            break;
     }
     return res;
 }
@@ -548,7 +548,7 @@ bool find_picture_combinations(std::vector<card> &current_hand, card &current_ca
 bool find_hunter_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &combo, std::vector<card> &max_combo, double max_combo_quality)
 {
     bool res = false;
-    double current_combo_quality = current_card.quality;
+    double current_combo_quality = 0;
     for (int i = 0; i < current_hand.size(); i++)
     {
         if ((current_hand[i].type == picture_card && current_hand[i].value.picture_cards == 'H') ||
@@ -558,6 +558,8 @@ bool find_hunter_combinations(std::vector<card> &current_hand, card &current_car
             combo.push_back(current_hand[i]);
         }
     }
+    if (current_combo_quality != 0)
+        current_combo_quality += current_card.quality;
     if (current_combo_quality > max_combo_quality)
     {
         max_combo_quality = current_combo_quality;
@@ -574,14 +576,22 @@ void search_trick(std::vector<card> &selected_cards, std::vector<card> &table_ha
     std::vector<card> combo{};
     double max_combo_quality = 0;
     clear_card_list(selected_cards);
-    sort_card_list(table_hand);
-    sort_card_list(current_hand);
     for (int i = 0; i < current_hand.size(); i++)
     {
         find_new_max_combo = false;
         if (current_hand[i].type == digital_card)
         {
-            find_digital_combinations(table_hand, current_hand[i], 22 - current_hand[i].value.digital_cards, combo, max_combo, max_combo_quality, find_new_max_combo);
+            if (current_hand[i].value.digital_cards != 2)
+                find_digital_combinations(table_hand, current_hand[i], 22 - current_hand[i].value.digital_cards, combo, max_combo, max_combo_quality, find_new_max_combo);
+            else
+            {
+                find_digital_combinations(table_hand, current_hand[i], 22 - 2, combo, max_combo, max_combo_quality, find_new_max_combo);
+                clear_card_list(combo);
+                if (find_new_max_combo)
+                    max_combo_card_index = i;
+                find_new_max_combo = false;
+                find_digital_combinations(table_hand, current_hand[i], 22 - 11, combo, max_combo, max_combo_quality, find_new_max_combo);
+            }
             clear_card_list(combo);
             if (find_new_max_combo)
                 max_combo_card_index = i;
@@ -612,6 +622,7 @@ void process_bot_move(std::vector<card> &table_hand, std::vector<card> &current_
     std::vector<card> card_from_hand{};
     std::vector<card> max_combo{};
     short choosen_card_index = -1;
+    sort_card_list(table_hand);
     // print_bot_hand(current_hand, current_hand.size());
     search_trick(selected_cards, table_hand, current_hand, max_combo, choosen_card_index);
     if (choosen_card_index != -1)
@@ -619,22 +630,37 @@ void process_bot_move(std::vector<card> &table_hand, std::vector<card> &current_
         is_trick = true;
         card_from_hand.push_back(current_hand[choosen_card_index]);
         print_card_list(card_from_hand, 1);
-        print_card_list(max_combo, max_combo.size());
-        move_card(current_tricks, current_hand, choosen_card_index);
-        for (short i = 0; i < max_combo.size(); i++)
-            for (short j = 0; j < table_hand.size(); j++)
-                if (max_combo[i].id == table_hand[j].id)
-                    move_card(current_tricks, table_hand, j);
+        if (current_hand[choosen_card_index].type == picture_card && current_hand[choosen_card_index].value.picture_cards == 'H')
+        {
+            process_hunter_move(table_hand, current_hand, current_tricks, choosen_card_index);
+        }
+        else
+        {
+            print_card_list(max_combo, max_combo.size());
+            is_trick = true;
+            move_card(current_tricks, current_hand, choosen_card_index);
+            for (short i = 0; i < max_combo.size(); i++)
+                for (short j = 0; j < table_hand.size(); j++)
+                    if (max_combo[i].id == table_hand[j].id)
+                        move_card(current_tricks, table_hand, j);
+        }
     }
     else
     {
         is_trick = false;
         choosen_card_index = rand() % current_hand.size();
-        card_from_hand.push_back(current_hand[choosen_card_index]);
-        print_card_list(card_from_hand, 1);
-        move_card(table_hand, current_hand, choosen_card_index);
+        if (current_hand[choosen_card_index].type == picture_card && current_hand[choosen_card_index].value.picture_cards == 'H')
+        {
+            print_card_list(card_from_hand, 1);
+            process_hunter_move(table_hand, current_hand, current_tricks, choosen_card_index);
+        }
+        else
+        {
+            card_from_hand.push_back(current_hand[choosen_card_index]);
+            print_card_list(card_from_hand, 1);
+            move_card(table_hand, current_hand, choosen_card_index);
+        }
     }
-    sort_card_list(table_hand);
 }
 
 // Передача оставшихся на столе карт, игроку, который взял последнюю взятку
@@ -675,41 +701,52 @@ void сalculate_points(points &results, std::vector<card> &current_hand, short l
 void print_tricks(std::vector<card> &player_1_tricks, std::vector<card> &player_2_tricks)
 {
     std::cout << line << std::endl;
-    std::cout << "Взятки игрока: " << std::endl;
-    print_card_list(player_1_tricks, player_1_tricks.size());
-    std::cout << "Взятки бота: " << std::endl;
-    print_card_list(player_2_tricks, player_2_tricks.size());
+    std::cout << "Взятки игрока " << std::endl;
     std::cout << line << std::endl;
+    print_card_list(player_1_tricks, player_1_tricks.size());
+    std::cout << line << std::endl;
+    std::cout << "Взятки бота " << std::endl;
+    std::cout << line << std::endl;
+    print_card_list(player_2_tricks, player_2_tricks.size());
 }
 
 // Печать результатов
 void print_results(points &player_1_results, points &player_2_results)
 {
     std::cout << line << std::endl;
-    std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви" << std::endl;
+    std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма" << std::endl;
+    std::cout << line << std::endl;
     std::cout << "Результаты Игрока: "
               << (short)player_1_results.get_more_cards << " | "
               << player_1_results.get_more_clubs << " | "
               << player_1_results.get_twenty_of_diamonds << " | "
-              << player_1_results.get_ace_of_hearts << std::endl;
+              << player_1_results.get_ace_of_hearts << " | "
+              << (short)player_1_results.get_more_cards + player_1_results.get_more_clubs +
+                     player_1_results.get_twenty_of_diamonds + player_1_results.get_ace_of_hearts
+              << std::endl;
+    std::cout << line << std::endl;
     std::cout << "Результаты Бота: "
               << (short)player_2_results.get_more_cards << " | "
               << player_2_results.get_more_clubs << " | "
               << player_2_results.get_twenty_of_diamonds << " | "
-              << player_2_results.get_ace_of_hearts << std::endl;
+              << player_2_results.get_ace_of_hearts << " | "
+              << (short)player_2_results.get_more_cards + player_2_results.get_more_clubs +
+                     player_2_results.get_twenty_of_diamonds + player_2_results.get_ace_of_hearts
+              << std::endl;
 }
 
 // Запуск одной партии
-void process_game(std::vector<card> &current_deck, game_mode mode, std::vector<card> &table_hand, std::vector<card> &player_1_hand, std::vector<card> &player_2_hand, std::vector<card> &player_1_tricks, std::vector<card> &player_2_tricks, std::vector<card> &selected_cards)
+void process_game(std::vector<card> &current_deck, game_mode mode, std::vector<card> &table_hand, std::vector<card> &player_1_hand, std::vector<card> &player_2_hand, std::vector<card> &player_1_tricks, std::vector<card> &player_2_tricks, std::vector<card> &selected_cards, turns &last_trick)
 {
     bool success_move = true;
     turns turn = player_1;
-    turns last_trick;
     for (short i = 0; i < deck_size; i++)
     {
         if (i % 8 == 0 && success_move == true)
         {
             deal_cards(current_deck, player_1_hand, player_2_hand, current_deck.size());
+            sort_card_list(player_1_hand);
+            sort_card_list(player_2_hand);
         }
         if (turn == player_1)
         {
@@ -760,9 +797,9 @@ int main(void)
     points player_2_results{};
     initialize_deck(current_deck);
     shuffle_deck(current_deck);
-    process_game(current_deck, with_bot, table_hand, player_1_hand, player_2_hand, player_1_tricks, player_2_tricks, selected_cards);
+    process_game(current_deck, with_bot, table_hand, player_1_hand, player_2_hand, player_1_tricks, player_2_tricks, selected_cards, last_trick);
     process_last_trick(last_trick, table_hand, player_1_tricks, player_2_tricks);
-    // print_tricks(player_1_tricks, player_2_tricks);
+    print_tricks(player_1_tricks, player_2_tricks);
     сalculate_points(player_1_results, player_1_tricks, player_1_tricks.size());
     сalculate_points(player_2_results, player_2_tricks, player_2_tricks.size());
     print_results(player_1_results, player_2_results);
