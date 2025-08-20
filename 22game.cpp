@@ -485,6 +485,8 @@ void process_player_move(std::vector<card> &table_hand, std::vector<card> &curre
     sort_card_list(table_hand);
 }
 
+
+// Нахождение комбинации с цифровыми картами
 void find_digital_combinations(std::vector<card> &current_hand, card &current_card, short n, std::vector<card> &combo, std::vector<card> &max_combo, double &max_combo_quality, bool &res, short start = 0)
 {
     double current_combo_quality = 0;
@@ -520,6 +522,8 @@ void find_digital_combinations(std::vector<card> &current_hand, card &current_ca
     }
 }
 
+
+// Нахождение комбинации с лицами
 bool find_picture_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &max_combo, double max_combo_quality)
 {
     bool res = false;
@@ -540,6 +544,7 @@ bool find_picture_combinations(std::vector<card> &current_hand, card &current_ca
     return res;
 }
 
+// Расчёт ценности хода при розыгрше Хантера
 bool find_hunter_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &combo, std::vector<card> &max_combo, double max_combo_quality)
 {
     bool res = false;
@@ -623,6 +628,7 @@ void process_bot_move(std::vector<card> &table_hand, std::vector<card> &current_
     }
     else
     {
+        is_trick = false;
         choosen_card_index = rand() % current_hand.size();
         card_from_hand.push_back(current_hand[choosen_card_index]);
         print_card_list(card_from_hand, 1);
@@ -693,6 +699,7 @@ void print_results(points &player_1_results, points &player_2_results)
               << player_2_results.get_ace_of_hearts << std::endl;
 }
 
+// Запуск одной партии
 void process_game(std::vector<card> &current_deck, game_mode mode, std::vector<card> &table_hand, std::vector<card> &player_1_hand, std::vector<card> &player_2_hand, std::vector<card> &player_1_tricks, std::vector<card> &player_2_tricks, std::vector<card> &selected_cards)
 {
     bool success_move = true;
