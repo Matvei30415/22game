@@ -17,6 +17,11 @@ using turns = enum {
     player_2 = 2
 };
 
+using game_mode = enum {
+    with_other_player = 1,
+    with_bot = 2
+};
+
 enum
 {
     deck_size = 48,
@@ -36,6 +41,7 @@ using denomination = union
 
 struct card
 {
+    short id;
     type_denomination type;
     denomination value;
     char suit;
@@ -55,54 +61,54 @@ struct points
 bool is_trick = false;
 const std::string line(100, '-');
 const card deck_of_cards[deck_size] = {
-    {.type = digital_card, {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 10}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 12}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 14}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 16}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 18}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 10}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 12}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 14}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 16}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 18}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 10}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 12}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 14}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 16}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 18}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 4}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 6}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 8}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 10}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 12}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 14}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 16}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 18}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'L'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'G'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'L'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'G'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'L'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'G'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'L'}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'G'}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'H'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'H'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = picture_card, {.picture_cards = 'H'}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 2}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 2}, .suit = 'G', .quality = 11.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 2}, .suit = 'C', .quality = 35.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 2}, .suit = 'H', .quality = 275.0 / 264.0},
-    {.type = digital_card, {.digital_cards = 20}, .suit = 'D', .quality = 275.0 / 264.0}};
+    {.id = 1, .type = digital_card, {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 2, .type = digital_card, {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 3, .type = digital_card, {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 4, .type = digital_card, {.digital_cards = 10}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 5, .type = digital_card, {.digital_cards = 12}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 6, .type = digital_card, {.digital_cards = 14}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 7, .type = digital_card, {.digital_cards = 16}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 8, .type = digital_card, {.digital_cards = 18}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 9, .type = digital_card, {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 10, .type = digital_card, {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 11, .type = digital_card, {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 12, .type = digital_card, {.digital_cards = 10}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 13, .type = digital_card, {.digital_cards = 12}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 14, .type = digital_card, {.digital_cards = 14}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 15, .type = digital_card, {.digital_cards = 16}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 16, .type = digital_card, {.digital_cards = 18}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 17, .type = digital_card, {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 18, .type = digital_card, {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 19, .type = digital_card, {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 20, .type = digital_card, {.digital_cards = 10}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 21, .type = digital_card, {.digital_cards = 12}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 22, .type = digital_card, {.digital_cards = 14}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 23, .type = digital_card, {.digital_cards = 16}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 24, .type = digital_card, {.digital_cards = 18}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 25, .type = digital_card, {.digital_cards = 4}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 26, .type = digital_card, {.digital_cards = 6}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 27, .type = digital_card, {.digital_cards = 8}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 28, .type = digital_card, {.digital_cards = 10}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 29, .type = digital_card, {.digital_cards = 12}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 30, .type = digital_card, {.digital_cards = 14}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 31, .type = digital_card, {.digital_cards = 16}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 32, .type = digital_card, {.digital_cards = 18}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 33, .type = picture_card, {.picture_cards = 'L'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 34, .type = picture_card, {.picture_cards = 'G'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 35, .type = picture_card, {.picture_cards = 'L'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 36, .type = picture_card, {.picture_cards = 'G'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 37, .type = picture_card, {.picture_cards = 'L'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 38, .type = picture_card, {.picture_cards = 'G'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 39, .type = picture_card, {.picture_cards = 'L'}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 40, .type = picture_card, {.picture_cards = 'G'}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 41, .type = picture_card, {.picture_cards = 'H'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 42, .type = picture_card, {.picture_cards = 'H'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 43, .type = picture_card, {.picture_cards = 'H'}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 44, .type = digital_card, {.digital_cards = 2}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 45, .type = digital_card, {.digital_cards = 2}, .suit = 'G', .quality = 11.0 / 264.0},
+    {.id = 46, .type = digital_card, {.digital_cards = 2}, .suit = 'C', .quality = 35.0 / 264.0},
+    {.id = 47, .type = digital_card, {.digital_cards = 2}, .suit = 'H', .quality = 275.0 / 264.0},
+    {.id = 48, .type = digital_card, {.digital_cards = 20}, .suit = 'D', .quality = 275.0 / 264.0}};
 
 // Иницализация колоды
 void initialize_deck(std::vector<card> &current_deck)
@@ -176,6 +182,14 @@ void print_hand(std::vector<card> &current_cards, short len)
     std::cout << "Ваши карты: " << std::endl;
     print_card_list(current_cards, len);
     std::cout << "Выберите карту: ";
+}
+
+// Вывод руки бота (для отладки)
+void print_bot_hand(std::vector<card> &current_cards, short len)
+{
+
+    std::cout << "Карты бота: " << std::endl;
+    print_card_list(current_cards, len);
 }
 
 // Вывод стола
@@ -391,28 +405,28 @@ void process_hunter_move(std::vector<card> &table_hand, std::vector<card> &curre
 }
 
 // Сортировка текущих карт на столе
-void sort_table(std::vector<card> &table_hand)
+void sort_card_list(std::vector<card> &current_hand)
 {
     short count_picture_cards = 0;
     card tmp;
-    for (short idx_i = 0; idx_i < table_hand.size(); idx_i++)
+    for (short idx_i = 0; idx_i < current_hand.size(); idx_i++)
     {
-        if (table_hand[idx_i].type == picture_card)
+        if (current_hand[idx_i].type == picture_card)
         {
-            tmp = table_hand[idx_i];
-            table_hand.erase(table_hand.cbegin() + idx_i);
-            table_hand.insert(table_hand.cbegin(), tmp);
+            tmp = current_hand[idx_i];
+            current_hand.erase(current_hand.cbegin() + idx_i);
+            current_hand.insert(current_hand.cbegin(), tmp);
             count_picture_cards++;
             continue;
         }
-        for (short idx_j = idx_i + 1; idx_j < table_hand.size(); idx_j++)
+        for (short idx_j = idx_i + 1; idx_j < current_hand.size(); idx_j++)
         {
-            if ((table_hand[idx_i].type == digital_card && table_hand[idx_j].type == digital_card) &&
-                ((table_hand[idx_i].value.digital_cards > table_hand[idx_j].value.digital_cards) ||
-                 ((table_hand[idx_i].value.digital_cards == table_hand[idx_j].value.digital_cards) &&
-                  (table_hand[idx_i].suit != 'G' && table_hand[idx_j].suit == 'G'))))
+            if ((current_hand[idx_i].type == digital_card && current_hand[idx_j].type == digital_card) &&
+                ((current_hand[idx_i].value.digital_cards > current_hand[idx_j].value.digital_cards) ||
+                 ((current_hand[idx_i].value.digital_cards == current_hand[idx_j].value.digital_cards) &&
+                  (current_hand[idx_i].suit != 'G' && current_hand[idx_j].suit == 'G'))))
             {
-                std::swap(table_hand[idx_i], table_hand[idx_j]);
+                std::swap(current_hand[idx_i], current_hand[idx_j]);
             }
         }
     }
@@ -420,12 +434,12 @@ void sort_table(std::vector<card> &table_hand)
     {
         for (short idx_j = idx_i + 1; idx_j < count_picture_cards; idx_j++)
         {
-            if ((table_hand[idx_i].value.picture_cards == 'L' && table_hand[idx_j].value.picture_cards == 'G') ||
-                (table_hand[idx_i].value.picture_cards == 'H') ||
-                ((table_hand[idx_i].value.picture_cards == table_hand[idx_j].value.picture_cards) &&
-                 (table_hand[idx_i].suit != 'G' && table_hand[idx_j].suit == 'G')))
+            if ((current_hand[idx_i].value.picture_cards == 'L' && current_hand[idx_j].value.picture_cards == 'G') ||
+                (current_hand[idx_i].value.picture_cards == 'H') ||
+                ((current_hand[idx_i].value.picture_cards == current_hand[idx_j].value.picture_cards) &&
+                 (current_hand[idx_i].suit != 'G' && current_hand[idx_j].suit == 'G')))
             {
-                std::swap(table_hand[idx_i], table_hand[idx_j]);
+                std::swap(current_hand[idx_i], current_hand[idx_j]);
             }
         }
     }
@@ -434,6 +448,7 @@ void sort_table(std::vector<card> &table_hand)
 // Обработка 1 хода
 void process_player_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards)
 {
+    sort_card_list(current_hand);
     short chosen_card_index = select_card_from_hand(table_hand, current_hand, current_tricks);
     // Если стол не пустой и выбранная карта - не Хантер, выбираем карты для взятки
     if (table_hand.size() != 0 && !(current_hand[chosen_card_index].type == picture_card && current_hand[chosen_card_index].value.picture_cards == 'H'))
@@ -445,7 +460,7 @@ void process_player_move(std::vector<card> &table_hand, std::vector<card> &curre
             bool valid_trick = process_trick(table_hand, current_hand, current_tricks, selected_cards, chosen_card_index);
             if (!valid_trick)
             {
-                sort_table(table_hand);
+                sort_card_list(table_hand);
                 process_player_move(table_hand, current_hand, current_tricks, selected_cards);
                 return;
             }
@@ -467,17 +482,153 @@ void process_player_move(std::vector<card> &table_hand, std::vector<card> &curre
     {
         process_hunter_move(table_hand, current_hand, current_tricks, chosen_card_index);
     }
-    sort_table(table_hand);
+    sort_card_list(table_hand);
+}
+
+void find_digital_combinations(std::vector<card> &current_hand, card &current_card, short n, std::vector<card> &combo, std::vector<card> &max_combo, double &max_combo_quality, bool &res, short start = 0)
+{
+    double current_combo_quality = 0;
+    if (n == 0)
+    {
+        current_combo_quality += current_card.quality;
+        for (short i = 0; i < combo.size(); i++)
+        {
+            current_combo_quality += combo[i].quality;
+        }
+        if (current_combo_quality > max_combo_quality)
+        {
+            max_combo_quality = current_combo_quality;
+            max_combo = combo;
+            res = true;
+        }
+    }
+
+    for (short i = start; i < current_hand.size(); i++)
+    {
+        if (current_hand[i].type == digital_card && current_hand[i].value.digital_cards <= n)
+        {
+            combo.push_back(current_hand[i]);
+            if (current_hand[i].value.digital_cards != 2)
+                find_digital_combinations(current_hand, current_card, n - current_hand[i].value.digital_cards, combo, max_combo, max_combo_quality, res, i + 1);
+            else
+            {
+                find_digital_combinations(current_hand, current_card, n - 2, combo, max_combo, max_combo_quality, res, i + 1);
+                find_digital_combinations(current_hand, current_card, n - 11, combo, max_combo, max_combo_quality, res, i + 1);
+            }
+            combo.pop_back();
+        }
+    }
+}
+
+bool find_picture_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &max_combo, double max_combo_quality)
+{
+    bool res = false;
+    char current_value = current_card.value.picture_cards == 'G' ? 'L' : 'G';
+    for (int i = 0; i < current_hand.size(); i++)
+    {
+        if (current_hand[i].type == picture_card && current_hand[i].value.picture_cards == current_value)
+        {
+            if (current_hand[i].quality + current_card.quality > max_combo_quality)
+            {
+                max_combo_quality = current_hand[i].quality + current_card.quality;
+                clear_card_list(max_combo);
+                max_combo.push_back(current_hand[i]);
+                res = true;
+            }
+        }
+    }
+    return res;
+}
+
+bool find_hunter_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &combo, std::vector<card> &max_combo, double max_combo_quality)
+{
+    bool res = false;
+    double current_combo_quality = current_card.quality;
+    for (int i = 0; i < current_hand.size(); i++)
+    {
+        if ((current_hand[i].type == picture_card && current_hand[i].value.picture_cards == 'H') ||
+            (current_hand[i].type == digital_card))
+        {
+            current_combo_quality += current_hand[i].quality;
+            combo.push_back(current_hand[i]);
+        }
+    }
+    if (current_combo_quality > max_combo_quality)
+    {
+        max_combo_quality = current_combo_quality;
+        max_combo = combo;
+        res = true;
+    }
+    return res;
 }
 
 // Поиск самого выгодного хода (для бота)
-void search_trick(std::vector<card> &table_hand, std::vector<card> &selected_cards, short chosen_card_index)
+void search_trick(std::vector<card> &selected_cards, std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &max_combo, short &max_combo_card_index)
 {
+    bool find_new_max_combo = false;
+    std::vector<card> combo{};
+    double max_combo_quality = 0;
+    clear_card_list(selected_cards);
+    sort_card_list(table_hand);
+    sort_card_list(current_hand);
+    for (int i = 0; i < current_hand.size(); i++)
+    {
+        find_new_max_combo = false;
+        if (current_hand[i].type == digital_card)
+        {
+            find_digital_combinations(table_hand, current_hand[i], 22 - current_hand[i].value.digital_cards, combo, max_combo, max_combo_quality, find_new_max_combo);
+            clear_card_list(combo);
+            if (find_new_max_combo)
+                max_combo_card_index = i;
+        }
+        else
+        {
+            if (current_hand[i].value.picture_cards == 'G' || current_hand[i].value.picture_cards == 'L')
+            {
+                find_new_max_combo = find_picture_combinations(table_hand, current_hand[i], max_combo, max_combo_quality);
+                clear_card_list(combo);
+                if (find_new_max_combo)
+                    max_combo_card_index = i;
+            }
+            else
+            {
+                find_new_max_combo = find_hunter_combinations(table_hand, current_hand[i], combo, max_combo, max_combo_quality);
+                clear_card_list(combo);
+                if (find_new_max_combo)
+                    max_combo_card_index = i;
+            }
+        }
+    }
 }
 
 // Будущий макет под ход (для бота)
 void process_bot_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards)
 {
+    std::vector<card> card_from_hand{};
+    std::vector<card> max_combo{};
+    short choosen_card_index = -1;
+    // print_bot_hand(current_hand, current_hand.size());
+    search_trick(selected_cards, table_hand, current_hand, max_combo, choosen_card_index);
+    if (choosen_card_index != -1)
+    {
+        is_trick = true;
+        card_from_hand.push_back(current_hand[choosen_card_index]);
+        print_card_list(card_from_hand, 1);
+        print_card_list(max_combo, max_combo.size());
+        move_card(current_tricks, current_hand, choosen_card_index);
+        for (short i = 0; i < max_combo.size(); i++)
+            for (short j = 0; j < table_hand.size(); j++)
+                if (max_combo[i].id == table_hand[j].id)
+                    move_card(current_tricks, table_hand, j);
+    }
+    else
+    {
+        choosen_card_index = rand() % current_hand.size();
+        card_from_hand.push_back(current_hand[choosen_card_index]);
+        print_card_list(card_from_hand, 1);
+        move_card(table_hand, current_hand, choosen_card_index);
+    }
+    sort_card_list(table_hand);
 }
 
 // Передача оставшихся на столе карт, игроку, который взял последнюю взятку
@@ -542,22 +693,11 @@ void print_results(points &player_1_results, points &player_2_results)
               << player_2_results.get_ace_of_hearts << std::endl;
 }
 
-int main(void)
+void process_game(std::vector<card> &current_deck, game_mode mode, std::vector<card> &table_hand, std::vector<card> &player_1_hand, std::vector<card> &player_2_hand, std::vector<card> &player_1_tricks, std::vector<card> &player_2_tricks, std::vector<card> &selected_cards)
 {
     bool success_move = true;
     turns turn = player_1;
     turns last_trick;
-    std::vector<card> current_deck(deck_size);
-    std::vector<card> player_1_hand;
-    std::vector<card> player_1_tricks;
-    std::vector<card> player_2_hand;
-    std::vector<card> player_2_tricks;
-    std::vector<card> table_hand;
-    std::vector<card> selected_cards;
-    points player_1_results{};
-    points player_2_results{};
-    initialize_deck(current_deck);
-    shuffle_deck(current_deck);
     for (short i = 0; i < deck_size; i++)
     {
         if (i % 8 == 0 && success_move == true)
@@ -575,16 +715,47 @@ int main(void)
         }
         else
         {
-            std::cout << line << std::endl;
-            std::cout << "Ход игрока 2" << std::endl;
-            process_player_move(table_hand, player_2_hand, player_2_tricks, selected_cards);
+            switch (mode)
+            {
+            case with_other_player:
+                std::cout << line << std::endl;
+                std::cout << "Ход игрока 2" << std::endl;
+                std::cout << line << std::endl;
+                process_player_move(table_hand, player_2_hand, player_2_tricks, selected_cards);
+                break;
+            case with_bot:
+                std::cout << line << std::endl;
+                std::cout << "Ход бота" << std::endl;
+                std::cout << line << std::endl;
+                process_bot_move(table_hand, player_2_hand, player_2_tricks, selected_cards);
+                break;
+            }
             if (is_trick)
                 last_trick = player_2;
             turn = player_1;
         }
     }
+}
+
+int main(void)
+{
+    bool success_move = true;
+    turns turn = player_1;
+    turns last_trick;
+    std::vector<card> current_deck(deck_size);
+    std::vector<card> player_1_hand;
+    std::vector<card> player_1_tricks;
+    std::vector<card> player_2_hand;
+    std::vector<card> player_2_tricks;
+    std::vector<card> table_hand;
+    std::vector<card> selected_cards;
+    points player_1_results{};
+    points player_2_results{};
+    initialize_deck(current_deck);
+    shuffle_deck(current_deck);
+    process_game(current_deck, with_bot, table_hand, player_1_hand, player_2_hand, player_1_tricks, player_2_tricks, selected_cards);
     process_last_trick(last_trick, table_hand, player_1_tricks, player_2_tricks);
-    print_tricks(player_1_tricks, player_2_tricks);
+    // print_tricks(player_1_tricks, player_2_tricks);
     сalculate_points(player_1_results, player_1_tricks, player_1_tricks.size());
     сalculate_points(player_2_results, player_2_tricks, player_2_tricks.size());
     print_results(player_1_results, player_2_results);
