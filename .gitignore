@@ -1,0 +1,24 @@
+# Сборка
+/build/
+/out/
+/CMakeFiles/
+/CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Локальные CMake пресеты
+CMakePresets.json
+
+# Бинарники
+*.exe
+*.out
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+
+# IDE
+.vscode/
+.idea/
