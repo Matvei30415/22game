@@ -1,6 +1,7 @@
 # Сборка
 /build/
 /out/
+/other/
 /CMakeFiles/
 /CMakeCache.txt
 cmake_install.cmake
