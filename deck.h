@@ -1,8 +1,8 @@
 #ifndef DECK_H
 #define DECK_H
 
-#include "basic.h"
 #include "card.h"
+#include "basic.h"
 #include <cstdlib>
 #include <ctime>
 

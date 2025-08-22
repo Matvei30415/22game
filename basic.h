@@ -5,6 +5,11 @@
 #include <algorithm>
 #include <string>
 
+enum game_mode {
+    with_bot = 1,
+    with_other_player = 2,
+};
+
 extern const std::string line;
 
 void move_card(std::vector<card> &dst, std::vector<card> &src, short index = 0);

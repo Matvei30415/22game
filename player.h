@@ -1,10 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "card.h"
-#include "basic.h"
-#include "input.h"
-#include "output.h"
+#include "io_custom.h"
 #include "hunter.h"
 
 bool validate_digital_card_sum(std::vector<card> &selected_cards, card &current_selected_card, short sum = 0, short start_index = 0);

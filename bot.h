@@ -1,9 +1,7 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include "card.h"
-#include "basic.h"
-#include "output.h"
+#include "io_custom.h"
 #include "hunter.h"
 
 void find_digital_combinations(std::vector<card> &current_hand, card &current_card, short n, std::vector<card> &combo, std::vector<card> &max_combo, double &max_combo_quality, bool &res, short start = 0);

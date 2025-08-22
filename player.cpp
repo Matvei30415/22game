@@ -93,7 +93,7 @@ void select_cards_for_trick(std::vector<card> &selected_cards, std::vector<card>
         selected_card_index = get_move_input(1, table_hand.size());
         if (selected_card_index == invalid_index)
         {
-            std::cout << "Вы ввели неверный индекс, попробуйте ещё раз!" << std::endl;
+            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
         }
         else if (selected_card_index != invalid_input)
         {
@@ -117,7 +117,7 @@ short select_card_from_hand(std::vector<card> &table_hand, std::vector<card> &cu
         }
         else if (chosen_card_index == invalid_index)
         {
-            std::cout << "Вы ввели неверный индекс, попробуйте ещё раз!" << std::endl;
+            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
         }
     }
     chosen_card_index--;

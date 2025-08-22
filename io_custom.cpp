@@ -1,5 +1,31 @@
-#include "output.h"
+#include "io_custom.h"
 
+// Ввод и проверка корректности ввода
+short get_move_input(short min_index, short max_index)
+{
+    int res = 0;
+    std::string tmp;
+    std::getline(std::cin, tmp);
+    std::cout << "\033[2J\033[1;1H";
+    if (tmp == "756989716978")
+    {
+        std::cout << "Вы стали [БОЛЬШАЯ ШИШКА]!";
+        exit(0);
+    }
+    try
+    {
+        res = stoi(tmp);
+    }
+    catch (std::invalid_argument const &ex)
+    {
+        return invalid_input;
+    }
+    if (res < min_index || res > max_index)
+    {
+        return invalid_index;
+    }
+    return res;
+}
 
 // Перемещение курсора для печати
 void moving_cursor(short i)
@@ -51,7 +77,7 @@ void print_card_list(std::vector<card> &current_cards, short len)
 // Вывод руки
 void print_hand(std::vector<card> &current_cards, short len)
 {
-
+    std::cout << line << std::endl;
     std::cout << "Ваши карты: " << std::endl;
     print_card_list(current_cards, len);
     std::cout << "Выберите карту: ";
@@ -60,7 +86,7 @@ void print_hand(std::vector<card> &current_cards, short len)
 // Вывод руки бота (для отладки)
 void print_bot_hand(std::vector<card> &current_cards, short len)
 {
-
+    std::cout << line << std::endl;
     std::cout << "Карты бота: " << std::endl;
     print_card_list(current_cards, len);
 }
@@ -73,6 +99,7 @@ void print_table(std::vector<card> &current_cards, short len)
     if (len == 0)
     {
         std::cout << "Стол пуст!" << std::endl;
+        return;
     }
     else
     {
@@ -115,6 +142,37 @@ void print_results(points &player_1_results, points &player_2_results)
               << player_2_results.get_twenty_of_diamonds << " | "
               << player_2_results.get_ace_of_hearts << " | "
               << (short)player_2_results.get_more_cards + player_2_results.get_more_clubs +
-                     player_2_results.get_twenty_of_diamonds + player_2_results.get_ace_of_hearts   
+                     player_2_results.get_twenty_of_diamonds + player_2_results.get_ace_of_hearts
               << std::endl;
+}
+
+void print_rules()
+{
+    std::string rule_str;
+    std::ifstream ifs("rules.txt");
+    if (!(ifs.is_open()))
+    {
+        std::cout << "Ошибка при открытии правил" << std::endl;
+        return;
+    }
+    std::cout << line << std::endl;
+    std::cout << "Правила" << std::endl;
+    std::cout << line << std::endl;
+    while (std::getline(ifs, rule_str))
+        std::cout << rule_str << std::endl;
+    ifs.close();
+}
+
+void print_menu()
+{
+    std::cout << line << std::endl;
+    std::cout << "22game" << std::endl;
+    std::cout << line << std::endl;
+    std::cout << "Главное меню" << std::endl;
+    std::cout << line << std::endl;
+    std::cout << "1. Начать игру с ботом" << std::endl;
+    std::cout << "2. Начать игру с другим игроком (локально)" << std::endl;
+    std::cout << "3. Правила" << std::endl;
+    std::cout << "0. Выход" << std::endl;
+    std::cout << "Выберите пункт меню: ";
 }
