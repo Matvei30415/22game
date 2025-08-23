@@ -28,6 +28,7 @@ class card_list : public std::vector<card>
 public:
     card_list() = default;
     card_list(short size);
+    ~card_list() = default;
     static void move_card(card_list &dst, card_list &src, short index = 0);
     static void clear_card_list(card_list &src);
     static void sort_card_list(card_list &src);
