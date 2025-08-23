@@ -1,19 +1,18 @@
-#ifndef BOT_H
-#define BOT_H
+#pragma once
 
+#include "card_list.h"
+#include "points.h"
 #include "io_custom.h"
 #include "hunter.h"
 
-void find_digital_combinations(std::vector<card> &current_hand, card &current_card, short n, std::vector<card> &combo, std::vector<card> &max_combo, double &max_combo_quality, bool &res, short start = 0);
+void find_digital_combinations(card_list &current_hand, card &current_card, short n, card_list &combo, card_list &max_combo, double &max_combo_quality, bool &res, short start = 0);
 
-bool find_picture_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &max_combo, double max_combo_quality);
+bool find_picture_combinations(card_list &current_hand, card &current_card, card_list &max_combo, double max_combo_quality);
 
-bool find_hunter_combinations(std::vector<card> &current_hand, card &current_card, std::vector<card> &combo, std::vector<card> &max_combo, double max_combo_quality);
+bool find_hunter_combinations(card_list &current_hand, card &current_card, card_list &combo, card_list &max_combo, double max_combo_quality);
 
-void search_trick(std::vector<card> &selected_cards, std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &max_combo, short &max_combo_card_index);
+void search_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &max_combo, short &max_combo_card_index);
 
-void process_bot_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards);
+void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards);
 
-void process_bot_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards, bool &is_trick);
-
-#endif
+void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick);

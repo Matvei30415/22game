@@ -1,5 +1,6 @@
 #include "main_menu.h"
 
+// Обработка главного меню
 game_mode main_menu()
 {
     short choosen_index = 0;

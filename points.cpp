@@ -1,7 +1,7 @@
 #include "points.h"
 
 // Вычисление очков в конце партии
-void сalculate_points(points &results, std::vector<card> &current_hand, short len)
+void сalculate_points(points &results, card_list &current_hand, short len)
 {
     if (len > 24)
         results.get_more_cards = 2;

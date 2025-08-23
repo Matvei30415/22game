@@ -1,7 +1,7 @@
 #include "player.h"
 
 // Проверка суммы числовых карт
-bool validate_digital_card_sum(std::vector<card> &selected_cards, card &current_selected_card, short sum, short start_index)
+bool validate_digital_card_sum(card_list &selected_cards, card &current_selected_card, short sum, short start_index)
 {
     for (start_index; start_index < selected_cards.size(); start_index++)
     {
@@ -28,7 +28,7 @@ bool validate_digital_card_sum(std::vector<card> &selected_cards, card &current_
 }
 
 // Проверка корректности взятки
-bool validate_trick(std::vector<card> &selected_cards, card &current_selected_card, short size, short sum)
+bool validate_trick(card_list &selected_cards, card &current_selected_card, short size, short sum)
 {
     // Проверка числовых карт
     if (current_selected_card.type == digital_card)
@@ -58,16 +58,16 @@ bool validate_trick(std::vector<card> &selected_cards, card &current_selected_ca
 }
 
 // Обработка взятки
-bool process_trick(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards, short current_selected_card_index)
+bool process_trick(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, short current_selected_card_index)
 {
     bool valid_trick = validate_trick(selected_cards, current_hand[current_selected_card_index], selected_cards.size());
     if (valid_trick)
     {
         // Если ход корректный, отправляем карты во взятки
-        move_card(current_tricks, current_hand, current_selected_card_index);
+        card_list::move_card(current_tricks, current_hand, current_selected_card_index);
         while (selected_cards.size() > 0)
         {
-            move_card(current_tricks, selected_cards);
+            card_list::move_card(current_tricks, selected_cards);
         }
     }
     else
@@ -75,7 +75,7 @@ bool process_trick(std::vector<card> &table_hand, std::vector<card> &current_han
         // Если ход не корректный, возвращаем карты на стол
         while (selected_cards.size() > 0)
         {
-            move_card(table_hand, selected_cards);
+            card_list::move_card(table_hand, selected_cards);
         }
         std::cout << "Некорректный ход!" << std::endl;
     }
@@ -83,7 +83,7 @@ bool process_trick(std::vector<card> &table_hand, std::vector<card> &current_han
 }
 
 // Выбор карт для взятки
-void select_cards_for_trick(std::vector<card> &selected_cards, std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks)
+void select_cards_for_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &current_tricks)
 {
     short selected_card_index = 0;
     while (selected_card_index != invalid_input)
@@ -97,13 +97,13 @@ void select_cards_for_trick(std::vector<card> &selected_cards, std::vector<card>
         }
         else if (selected_card_index != invalid_input)
         {
-            move_card(selected_cards, table_hand, --selected_card_index);
+            card_list::move_card(selected_cards, table_hand, --selected_card_index);
         }
     }
 }
 
 // Выбор карты с руки
-short select_card_from_hand(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks)
+short select_card_from_hand(card_list &table_hand, card_list &current_hand, card_list &current_tricks)
 {
     short chosen_card_index = 0;
     while (chosen_card_index <= 0)
@@ -125,9 +125,9 @@ short select_card_from_hand(std::vector<card> &table_hand, std::vector<card> &cu
 }
 
 // Обработка 1 хода
-void process_player_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards, bool &is_trick)
+void process_player_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick)
 {
-    sort_card_list(table_hand);
+    card_list::sort_card_list(table_hand);
     short chosen_card_index = select_card_from_hand(table_hand, current_hand, current_tricks);
     // Если стол не пустой и выбранная карта - не Хантер, выбираем карты для взятки
     if (table_hand.size() != 0 && !(current_hand[chosen_card_index].type == picture_card && current_hand[chosen_card_index].value.picture_cards == 'H'))
@@ -146,13 +146,13 @@ void process_player_move(std::vector<card> &table_hand, std::vector<card> &curre
         }
         else
         {
-            move_card(table_hand, current_hand, chosen_card_index);
+            card_list::move_card(table_hand, current_hand, chosen_card_index);
         }
     }
     // Если стол пустой, выкладываем карту на стол
     else if (table_hand.size() == 0)
     {
-        move_card(table_hand, current_hand, chosen_card_index);
+        card_list::move_card(table_hand, current_hand, chosen_card_index);
     }
     // Иначе, выбранная карта = Hunter, запускаем механизм обработки
     else

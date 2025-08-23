@@ -1,23 +1,26 @@
-#include "basic.h"
+#include "card_list.h"
 
-const std::string line(100, '-');
+// Конструктор для класса card_list
+card_list::card_list(short size) {
+    this->resize(size);
+}
 
 // Перемещение карты из src в dst, с последующим удалением в src
-void move_card(std::vector<card> &dst, std::vector<card> &src, short index)
+void card_list::move_card(card_list &dst, card_list &src, short index)
 {
     dst.emplace_back(src[index]);
     src.erase(src.cbegin() + index);
 }
 
 // Очистка списка карт
-void clear_card_list(std::vector<card> &src)
+void card_list::clear_card_list(card_list &src)
 {
     while (src.size() > 0)
         src.pop_back();
 }
 
 // Сортировка текущих карт на столе
-void sort_card_list(std::vector<card> &src)
+void card_list::sort_card_list(card_list &src)
 {
     short count_picture_cards = 0;
     card tmp;

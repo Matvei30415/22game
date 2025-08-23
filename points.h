@@ -1,7 +1,6 @@
-#ifndef POINTS_H
-#define POINTS_H
+#pragma once
 
-#include "card.h"
+#include "card_list.h"
 
 struct points
 {
@@ -11,6 +10,4 @@ struct points
     bool get_ace_of_hearts;
 };
 
-void сalculate_points(points &results, std::vector<card> &current_hand, short len);
-
-#endif
+void сalculate_points(points &results, card_list &current_hand, short len);

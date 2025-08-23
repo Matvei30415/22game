@@ -1,19 +1,18 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
+#include "card_list.h"
+#include "points.h"
 #include "io_custom.h"
 #include "hunter.h"
 
-bool validate_digital_card_sum(std::vector<card> &selected_cards, card &current_selected_card, short sum = 0, short start_index = 0);
+bool validate_digital_card_sum(card_list &selected_cards, card &current_selected_card, short sum = 0, short start_index = 0);
 
-bool validate_trick(std::vector<card> &selected_cards, card &current_selected_card, short size, short sum = 0);
+bool validate_trick(card_list &selected_cards, card &current_selected_card, short size, short sum = 0);
 
-bool process_trick(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards, short current_selected_card_index);
+bool process_trick(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, short current_selected_card_index);
 
-void select_cards_for_trick(std::vector<card> &selected_cards, std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks);
+void select_cards_for_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &current_tricks);
 
-short select_card_from_hand(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks);
+short select_card_from_hand(card_list &table_hand, card_list &current_hand, card_list &current_tricks);
 
-void process_player_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, std::vector<card> &selected_cards, bool &is_trick);
-
-#endif
+void process_player_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick);

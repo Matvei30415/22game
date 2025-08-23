@@ -1,6 +1,7 @@
 #include "deck.h"
 
-const card deck_of_cards[deck_size] = {
+// Колода карт
+static const card deck_of_cards[deck_size] = {
     {.id = 1, .type = digital_card, .value = {.digital_cards = 4}, .suit = 'G', .quality = 11.0 / 264.0},
     {.id = 2, .type = digital_card, .value = {.digital_cards = 6}, .suit = 'G', .quality = 11.0 / 264.0},
     {.id = 3, .type = digital_card, .value = {.digital_cards = 8}, .suit = 'G', .quality = 11.0 / 264.0},
@@ -51,14 +52,14 @@ const card deck_of_cards[deck_size] = {
     {.id = 48, .type = digital_card, .value = {.digital_cards = 20}, .suit = 'D', .quality = 275.0 / 264.0}};
 
 // Иницализация колоды
-void initialize_deck(std::vector<card> &current_deck)
+void initialize_deck(card_list &current_deck)
 {
     for (short i = 0; i < deck_size; i++)
         current_deck[i] = deck_of_cards[i];
 }
 
 // Тасовка колоды
-void shuffle_deck(std::vector<card> &current_deck)
+void shuffle_deck(card_list &current_deck)
 {
     srand(time(NULL));
     for (short i = deck_size - 1; i > 1; i--)
@@ -69,12 +70,12 @@ void shuffle_deck(std::vector<card> &current_deck)
 }
 
 // Раздача карт
-void deal_cards(std::vector<card> &current_deck, std::vector<card> &current_hand_1, std::vector<card> &current_hand_2, short cards_in_the_deck)
+void deal_cards(card_list &current_deck, card_list &current_hand_1, card_list &current_hand_2, short cards_in_the_deck)
 {
     for (short i = 0; i < cards_in_hand; i++)
     {
-        move_card(current_hand_1, current_deck);
-        move_card(current_hand_2, current_deck);
+        card_list::move_card(current_hand_1, current_deck);
+        card_list::move_card(current_hand_2, current_deck);
     }
     cards_in_the_deck -= cards_in_hand * 2;
 }

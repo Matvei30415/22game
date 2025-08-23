@@ -1,9 +1,5 @@
-#ifndef HUNTER_H
-#define HUNTER_H
+#pragma once
 
-#include "card.h"
-#include "basic.h"
+#include "card_list.h"
 
-bool process_hunter_move(std::vector<card> &table_hand, std::vector<card> &current_hand, std::vector<card> &current_tricks, short chosen_card_index);
-
-#endif
+bool process_hunter_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, short chosen_card_index);

@@ -1,5 +1,7 @@
 #include "io_custom.h"
 
+static const std::string line(100, '-');
+
 // Ввод и проверка корректности ввода
 short get_move_input(short min_index, short max_index)
 {
@@ -27,6 +29,12 @@ short get_move_input(short min_index, short max_index)
     return res;
 }
 
+// Печать линии
+void print_line()
+{
+    std::cout << line << std::endl;
+}
+
 // Перемещение курсора для печати
 void moving_cursor(short i)
 {
@@ -36,7 +44,7 @@ void moving_cursor(short i)
 }
 
 // Печать карт (произовольная)
-void print_card_list(std::vector<card> &current_cards, short len)
+void print_card_list(card_list &current_cards, short len)
 {
     for (short i = 0; i < len; i++)
     {
@@ -75,27 +83,27 @@ void print_card_list(std::vector<card> &current_cards, short len)
 }
 
 // Вывод руки
-void print_hand(std::vector<card> &current_cards, short len)
+void print_hand(card_list &current_cards, short len)
 {
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Ваши карты: " << std::endl;
     print_card_list(current_cards, len);
     std::cout << "Выберите карту: ";
 }
 
 // Вывод руки бота (для отладки)
-void print_bot_hand(std::vector<card> &current_cards, short len)
+void print_bot_hand(card_list &current_cards, short len)
 {
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Карты бота: " << std::endl;
     print_card_list(current_cards, len);
 }
 
 // Вывод стола
-void print_table(std::vector<card> &current_cards, short len)
+void print_table(card_list &current_cards, short len)
 {
 
-    std::cout << line << std::endl;
+    print_line();
     if (len == 0)
     {
         std::cout << "Стол пуст!" << std::endl;
@@ -109,24 +117,24 @@ void print_table(std::vector<card> &current_cards, short len)
 }
 
 // Печать взяток (только для отладки)
-void print_tricks(std::vector<card> &player_1_tricks, std::vector<card> &player_2_tricks)
+void print_tricks(card_list &player_1_tricks, card_list &player_2_tricks)
 {
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Взятки игрока " << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     print_card_list(player_1_tricks, player_1_tricks.size());
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Взятки бота " << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     print_card_list(player_2_tricks, player_2_tricks.size());
 }
 
 // Печать результатов
 void print_results(points &player_1_results, points &player_2_results)
 {
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма" << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Результаты Игрока: "
               << (short)player_1_results.get_more_cards << " | "
               << player_1_results.get_more_clubs << " | "
@@ -135,7 +143,7 @@ void print_results(points &player_1_results, points &player_2_results)
               << (short)player_1_results.get_more_cards + player_1_results.get_more_clubs +
                      player_1_results.get_twenty_of_diamonds + player_1_results.get_ace_of_hearts
               << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Результаты Бота: "
               << (short)player_2_results.get_more_cards << " | "
               << player_2_results.get_more_clubs << " | "
@@ -146,6 +154,8 @@ void print_results(points &player_1_results, points &player_2_results)
               << std::endl;
 }
 
+
+// Печать правил
 void print_rules()
 {
     std::string rule_str;
@@ -155,21 +165,23 @@ void print_rules()
         std::cout << "Ошибка при открытии правил" << std::endl;
         return;
     }
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Правила" << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     while (std::getline(ifs, rule_str))
         std::cout << rule_str << std::endl;
     ifs.close();
 }
 
+
+// Печать главного меню
 void print_menu()
 {
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "22game" << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "Главное меню" << std::endl;
-    std::cout << line << std::endl;
+    print_line();
     std::cout << "1. Начать игру с ботом" << std::endl;
     std::cout << "2. Начать игру с другим игроком (локально)" << std::endl;
     std::cout << "3. Правила" << std::endl;
