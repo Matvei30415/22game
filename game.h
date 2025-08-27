@@ -2,7 +2,7 @@
 
 #include "card_list.h"
 #include "points.h"
-#include "io_custom.h"
+#include "console_io.h"
 #include "hunter.h"
 #include "deck.h"
 #include "bot.h"

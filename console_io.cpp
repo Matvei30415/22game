@@ -1,4 +1,4 @@
-#include "io_custom.h"
+#include "console_io.h"
 
 static const std::string line(100, '-');
 
@@ -6,6 +6,7 @@ static const std::string line(100, '-');
 void clear_console()
 {
     system("cls");
+    // std::cout << "\033[2J\033[1;1H";
 }
 
 // Ввод и проверка корректности ввода
@@ -14,7 +15,6 @@ short get_move_input(short min_index, short max_index)
     int res = 0;
     std::string tmp;
     std::getline(std::cin, tmp);
-    // std::cout << "\033[2J\033[1;1H";
     clear_console();
     if (tmp == "756989716978")
     {
@@ -40,11 +40,9 @@ short get_move_input(short min_index, short max_index)
 void pass_move()
 {
     std::string tmp;
-    // std::cout << "\033[2J\033[1;1H";
     clear_console();
     std::cout << "Передайте ход другому игроку, затем нажмите Enter";
     std::getline(std::cin, tmp);
-    // std::cout << "\033[2J\033[1;1H";
     clear_console();
 }
 

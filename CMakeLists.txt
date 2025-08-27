@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(22game 22game.cpp bot.cpp card_list.cpp deck.cpp game.cpp hunter.cpp io_custom.cpp player.cpp points.cpp main_menu.cpp)
+add_executable(22game 22game.cpp bot.cpp card_list.cpp deck.cpp game.cpp hunter.cpp console_io.cpp player.cpp points.cpp main_menu.cpp)
 
 if (WIN32)
     target_link_libraries(22game PRIVATE user32 gdi32)

@@ -3,7 +3,7 @@
 #include "card_list.h"
 #include "points.h"
 #include "game_mode.h"
-#include "io_custom.h"
+#include "console_io.h"
 #include "hunter.h"
 
 bool validate_digital_card_sum(card_list &selected_cards, card &current_selected_card, short sum = 0, short start_index = 0);
