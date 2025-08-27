@@ -3,7 +3,8 @@
 static const std::string line(100, '-');
 
 // Очистка консоли
-void clear_console() {
+void clear_console()
+{
     system("cls");
 }
 
@@ -167,13 +168,16 @@ void print_tricks(card_list &player_1_tricks, card_list &player_2_tricks)
 }
 
 // Печать результатов
-void print_results(points &player_1_results, points &player_2_results)
+void print_results(points &player_1_results, points &player_2_results, game_mode mode)
 {
     print_line();
     std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма" << std::endl;
     print_line();
-    std::cout << "Результаты Игрока: "
-              << (short)player_1_results.get_more_cards << " | "
+    if (mode == with_bot)
+        std::cout << "Результаты Игрока: ";
+    else if (mode == with_other_player)
+        std::cout << "Результаты Игрока 1: ";
+    std::cout << (short)player_1_results.get_more_cards << " | "
               << player_1_results.get_more_clubs << " | "
               << player_1_results.get_twenty_of_diamonds << " | "
               << player_1_results.get_ace_of_hearts << " | "
@@ -181,8 +185,11 @@ void print_results(points &player_1_results, points &player_2_results)
                      player_1_results.get_twenty_of_diamonds + player_1_results.get_ace_of_hearts
               << std::endl;
     print_line();
-    std::cout << "Результаты Бота: "
-              << (short)player_2_results.get_more_cards << " | "
+    if (mode == with_bot)
+        std::cout << "Результаты Бота: ";
+    else if (mode == with_other_player)
+        std::cout << "Результаты Игрока 2: ";
+    std::cout << (short)player_2_results.get_more_cards << " | "
               << player_2_results.get_more_clubs << " | "
               << player_2_results.get_twenty_of_diamonds << " | "
               << player_2_results.get_ace_of_hearts << " | "

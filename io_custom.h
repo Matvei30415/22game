@@ -2,6 +2,7 @@
 
 #include "card_list.h"
 #include "points.h"
+#include "game_mode.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -35,7 +36,7 @@ void print_table(card_list &current_cards, short len);
 
 void print_tricks(card_list &player_1_tricks, card_list &player_2_tricks);
 
-void print_results(points &player_1_results, points &player_2_results);
+void print_results(points &player_1_results, points &player_2_results, game_mode mode);
 
 void print_rules();
 

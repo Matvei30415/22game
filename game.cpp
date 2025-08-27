@@ -84,5 +84,5 @@ void start_game(game_mode mode)
     print_tricks(player_1_tricks, player_2_tricks);
     сalculate_points(player_1_results, player_1_tricks, player_1_tricks.size());
     сalculate_points(player_2_results, player_2_tricks, player_2_tricks.size());
-    print_results(player_1_results, player_2_results);
+    print_results(player_1_results, player_2_results, mode);
 }
