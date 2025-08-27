@@ -32,7 +32,8 @@ void process_game(card_list &current_deck, game_mode mode, card_list &table_hand
         {
             print_line();
             std::cout << "Ход игрока 1" << std::endl;
-            process_player_move(table_hand, player_1_hand, player_1_tricks, selected_cards, is_trick);
+            print_line();
+            process_player_move(table_hand, player_1_hand, player_1_tricks, selected_cards, is_trick, mode);
             if (is_trick)
                 last_trick = player_1;
             current_turn = player_2;
@@ -45,7 +46,7 @@ void process_game(card_list &current_deck, game_mode mode, card_list &table_hand
                 print_line();
                 std::cout << "Ход игрока 2" << std::endl;
                 print_line();
-                process_player_move(table_hand, player_2_hand, player_2_tricks, selected_cards, is_trick);
+                process_player_move(table_hand, player_2_hand, player_2_tricks, selected_cards, is_trick, mode);
                 break;
             case with_bot:
                 print_line();
@@ -58,6 +59,7 @@ void process_game(card_list &current_deck, game_mode mode, card_list &table_hand
                 last_trick = player_2;
             current_turn = player_1;
         }
+        // std::cout << "Последняя взятка: " << last_trick << std::endl;
     }
 }
 

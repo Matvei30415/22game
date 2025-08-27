@@ -23,3 +23,6 @@ CMakePresets.json
 # IDE
 .vscode/
 .idea/
+
+# Другое
+ToDo.txt

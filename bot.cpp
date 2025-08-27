@@ -134,25 +134,22 @@ void search_trick(card_list &selected_cards, card_list &table_hand, card_list &c
 // Ход бота
 void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick)
 {
-    card_list card_from_hand{};
     card_list max_combo{};
-    short choosen_card_index = -1;
+    short selected_card_index = -1;
     card_list::sort_card_list(table_hand);
     // print_bot_hand(current_hand, current_hand.size());
-    search_trick(selected_cards, table_hand, current_hand, max_combo, choosen_card_index);
-    if (choosen_card_index != -1)
+    search_trick(selected_cards, table_hand, current_hand, max_combo, selected_card_index);
+    if (selected_card_index != -1)
     {
-        card_from_hand.push_back(current_hand[choosen_card_index]);
-        print_card_list(card_from_hand, 1);
-        if (current_hand[choosen_card_index].type == picture_card && current_hand[choosen_card_index].value.picture_cards == 'H')
+        print_move(current_hand[selected_card_index], max_combo);
+        if (current_hand[selected_card_index].type == picture_card && current_hand[selected_card_index].value.picture_cards == 'H')
         {
-            is_trick = process_hunter_move(table_hand, current_hand, current_tricks, choosen_card_index);
+            is_trick = process_hunter_move(table_hand, current_hand, current_tricks, selected_card_index);
         }
         else
         {
             is_trick = true;
-            print_card_list(max_combo, max_combo.size());
-            card_list::move_card(current_tricks, current_hand, choosen_card_index);
+            card_list::move_card(current_tricks, current_hand, selected_card_index);
             for (short i = 0; i < max_combo.size(); i++)
                 for (short j = 0; j < table_hand.size(); j++)
                     if (max_combo[i].id == table_hand[j].id)
@@ -161,18 +158,16 @@ void process_bot_move(card_list &table_hand, card_list &current_hand, card_list 
     }
     else
     {
-        is_trick = false;
-        choosen_card_index = rand() % current_hand.size();
-        card_from_hand.push_back(current_hand[choosen_card_index]);
-        print_card_list(card_from_hand, 1);
-        if (current_hand[choosen_card_index].type == picture_card && current_hand[choosen_card_index].value.picture_cards == 'H')
+        selected_card_index = rand() % current_hand.size();
+        print_card(current_hand[selected_card_index]);
+        if (current_hand[selected_card_index].type == picture_card && current_hand[selected_card_index].value.picture_cards == 'H')
         {
-            is_trick = process_hunter_move(table_hand, current_hand, current_tricks, choosen_card_index);
+            is_trick = process_hunter_move(table_hand, current_hand, current_tricks, selected_card_index);
         }
         else
         {
             is_trick = false;
-            card_list::move_card(table_hand, current_hand, choosen_card_index);
+            card_list::move_card(table_hand, current_hand, selected_card_index);
         }
     }
 }

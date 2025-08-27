@@ -1,7 +1,7 @@
 #include "hunter.h"
 
 // Обработка механизма карты Hunter
-bool process_hunter_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, short chosen_card_index)
+bool process_hunter_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, short selected_card_index)
 {
     bool is_trick = false;
     short count_erase = 0;
@@ -18,13 +18,13 @@ bool process_hunter_move(card_list &table_hand, card_list &current_hand, card_li
     // Остаётся на столе, если не взял ни одной числовой карты или Hunter'a
     if (count_erase == 0)
     {
-        card_list::move_card(table_hand, current_hand, chosen_card_index);
+        card_list::move_card(table_hand, current_hand, selected_card_index);
     }
     // Отправляется во взятки, если взял хотя бы одну числовую карту или Hunter'а
     else
     {
         is_trick = true;
-        card_list::move_card(current_tricks, current_hand, chosen_card_index);
+        card_list::move_card(current_tricks, current_hand, selected_card_index);
     }
     return is_trick;
 }

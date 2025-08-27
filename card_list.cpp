@@ -12,6 +12,12 @@ void card_list::move_card(card_list &dst, card_list &src, short index)
     src.erase(src.cbegin() + index);
 }
 
+// Копирование карты из src в dst, без последующего удаления в src
+void card_list::copy_card(card_list &dst, card_list &src, short index)
+{
+    dst.emplace_back(src[index]);
+}
+
 // Очистка списка карт
 void card_list::clear_card_list(card_list &src)
 {

@@ -29,6 +29,16 @@ short get_move_input(short min_index, short max_index)
     return res;
 }
 
+// Передача хода
+void pass_move()
+{
+    std::string tmp;
+    std::cout << "\033[2J\033[1;1H";
+    std::cout << "Передайте ход другому игроку, затем нажмите Enter";
+    std::getline(std::cin, tmp);
+    std::cout << "\033[2J\033[1;1H";
+}
+
 // Печать линии
 void print_line()
 {
@@ -41,6 +51,27 @@ void moving_cursor(short i)
     if (i == 0)
         return;
     std::cout << "\033[" << 11 * i << 'C';
+}
+
+// Печать карты
+void print_card(card &current_card)
+{
+    printf("+--------+\n");
+    printf("|%c       |\n", current_card.suit);
+    printf("|        |\n");
+    if (current_card.type == digital_card)
+        if (current_card.value.digital_cards == 2)
+            printf("|   A    |\n");
+        else if (current_card.value.digital_cards > 9)
+            printf("|   %hd   |\n", current_card.value.digital_cards);
+        else
+            printf("|   %hd    |\n", current_card.value.digital_cards);
+    else
+        printf("|   %c    |\n", current_card.value.picture_cards);
+    printf("|        |\n");
+    printf("|       %c|\n", current_card.suit);
+    printf("+--------+\n");
+    printf("    %hd    \n", 1);
 }
 
 // Печать карт (произовольная)
@@ -102,8 +133,6 @@ void print_bot_hand(card_list &current_cards, short len)
 // Вывод стола
 void print_table(card_list &current_cards, short len)
 {
-
-    print_line();
     if (len == 0)
     {
         std::cout << "Стол пуст!" << std::endl;
@@ -154,7 +183,6 @@ void print_results(points &player_1_results, points &player_2_results)
               << std::endl;
 }
 
-
 // Печать правил
 void print_rules()
 {
@@ -173,7 +201,6 @@ void print_rules()
     ifs.close();
 }
 
-
 // Печать главного меню
 void print_menu()
 {
@@ -187,4 +214,23 @@ void print_menu()
     std::cout << "3. Правила" << std::endl;
     std::cout << "0. Выход" << std::endl;
     std::cout << "Выберите пункт меню: ";
+}
+
+// Печать хода
+void print_move(card &selected_card, card_list &selected_cards)
+{
+    short size = selected_cards.size();
+    print_card(selected_card);
+    if (size != 0)
+        print_card_list(selected_cards, size);
+}
+
+// Подтверждение хода
+void confirm_move(card &selected_card, card_list &selected_cards)
+{
+    pass_move();
+    print_line();
+    std::cout << "Ход предыдущего игрока" << std::endl;
+    print_line();
+    print_move(selected_card, selected_cards);
 }

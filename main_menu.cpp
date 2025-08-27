@@ -3,13 +3,13 @@
 // Обработка главного меню
 game_mode main_menu()
 {
-    short choosen_index = 0;
+    short selected_index = 0;
 
     while (true)
     {
         print_menu();
-        choosen_index = get_move_input(0, 3);
-        switch (choosen_index)
+        selected_index = get_move_input(0, 3);
+        switch (selected_index)
         {
         case invalid_input:
             std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
