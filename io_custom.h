@@ -6,11 +6,14 @@
 #include <fstream>
 #include <string>
 #include <utility>
+#include <windows.h>
 
 enum input_error_codes {
     invalid_input = -1,
     invalid_index = -2
 };
+
+void clear_console();
 
 short get_move_input(short min_index, short max_index);
 

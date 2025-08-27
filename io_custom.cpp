@@ -2,13 +2,19 @@
 
 static const std::string line(100, '-');
 
+// Очистка консоли
+void clear_console() {
+    system("cls");
+}
+
 // Ввод и проверка корректности ввода
 short get_move_input(short min_index, short max_index)
 {
     int res = 0;
     std::string tmp;
     std::getline(std::cin, tmp);
-    std::cout << "\033[2J\033[1;1H";
+    // std::cout << "\033[2J\033[1;1H";
+    clear_console();
     if (tmp == "756989716978")
     {
         std::cout << "Вы стали [БОЛЬШАЯ ШИШКА]!";
@@ -33,10 +39,12 @@ short get_move_input(short min_index, short max_index)
 void pass_move()
 {
     std::string tmp;
-    std::cout << "\033[2J\033[1;1H";
+    // std::cout << "\033[2J\033[1;1H";
+    clear_console();
     std::cout << "Передайте ход другому игроку, затем нажмите Enter";
     std::getline(std::cin, tmp);
-    std::cout << "\033[2J\033[1;1H";
+    // std::cout << "\033[2J\033[1;1H";
+    clear_console();
 }
 
 // Печать линии
