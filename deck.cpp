@@ -70,12 +70,11 @@ void shuffle_deck(card_list &current_deck)
 }
 
 // Раздача карт
-void deal_cards(card_list &current_deck, card_list &current_hand_1, card_list &current_hand_2, short cards_in_the_deck)
+void deal_cards(card_list &current_deck, card_list &current_hand_1, card_list &current_hand_2)
 {
     for (short i = 0; i < cards_in_hand; i++)
     {
         card_list::move_card(current_hand_1, current_deck);
         card_list::move_card(current_hand_2, current_deck);
     }
-    cards_in_the_deck -= cards_in_hand * 2;
 }

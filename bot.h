@@ -11,8 +11,8 @@ bool find_picture_combinations(card_list &current_hand, card &current_card, card
 
 bool find_hunter_combinations(card_list &current_hand, card &current_card, card_list &combo, card_list &max_combo, double max_combo_quality);
 
-void search_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &max_combo, short &max_combo_card_index);
+short search_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &max_combo);
 
 void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards);
 
-void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick);
+void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, bool &is_trick);

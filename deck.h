@@ -14,4 +14,4 @@ void initialize_deck(card_list &current_deck);
 
 void shuffle_deck(card_list &current_deck);
 
-void deal_cards(card_list &current_deck, card_list &current_hand_1, card_list &current_hand_2, short cards_in_the_deck);
+void deal_cards(card_list &current_deck, card_list &current_hand_1, card_list &current_hand_2);

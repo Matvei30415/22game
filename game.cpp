@@ -24,7 +24,7 @@ void process_game(card_list &current_deck, game_mode mode, card_list &table_hand
     {
         if (i % 8 == 0 && success_move == true)
         {
-            deal_cards(current_deck, player_1_hand, player_2_hand, current_deck.size());
+            deal_cards(current_deck, player_1_hand, player_2_hand);
             card_list::sort_card_list(player_1_hand);
             card_list::sort_card_list(player_2_hand);
         }
@@ -33,7 +33,7 @@ void process_game(card_list &current_deck, game_mode mode, card_list &table_hand
             print_line();
             std::cout << "Ход игрока 1" << std::endl;
             print_line();
-            process_player_move(table_hand, player_1_hand, player_1_tricks, selected_cards, is_trick, mode);
+            process_player_move(table_hand, player_1_hand, player_1_tricks, is_trick, mode);
             if (is_trick)
                 last_trick = player_1;
             current_turn = player_2;
@@ -46,13 +46,13 @@ void process_game(card_list &current_deck, game_mode mode, card_list &table_hand
                 print_line();
                 std::cout << "Ход игрока 2" << std::endl;
                 print_line();
-                process_player_move(table_hand, player_2_hand, player_2_tricks, selected_cards, is_trick, mode);
+                process_player_move(table_hand, player_2_hand, player_2_tricks, is_trick, mode);
                 break;
             case with_bot:
                 print_line();
                 std::cout << "Ход бота" << std::endl;
                 print_line();
-                process_bot_move(table_hand, player_2_hand, player_2_tricks, selected_cards, is_trick);
+                process_bot_move(table_hand, player_2_hand, player_2_tricks, is_trick);
                 break;
             }
             if (is_trick)

@@ -16,4 +16,4 @@ void select_cards_for_trick(card_list &selected_cards, card_list &table_hand, ca
 
 short select_card_from_hand(card_list &table_hand, card_list &current_hand, card_list &current_tricks);
 
-void process_player_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick, const game_mode mode);
+void process_player_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, bool &is_trick, const game_mode mode);

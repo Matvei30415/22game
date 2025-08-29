@@ -85,11 +85,12 @@ bool find_hunter_combinations(card_list &current_hand, card &current_card, card_
 }
 
 // Поиск самого выгодного хода для бота
-void search_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &max_combo, short &max_combo_card_index)
+short search_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &max_combo)
 {
     bool find_new_max_combo = false;
     card_list combo{};
     double max_combo_quality = 0;
+    short max_combo_card_index = -1;
     card_list::clear_card_list(selected_cards);
     for (int i = 0; i < current_hand.size(); i++)
     {
@@ -129,16 +130,17 @@ void search_trick(card_list &selected_cards, card_list &table_hand, card_list &c
             }
         }
     }
+    return max_combo_card_index;
 }
 
 // Ход бота
-void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick)
+void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, bool &is_trick)
 {
+    card_list selected_cards;
     card_list max_combo{};
-    short selected_card_index = -1;
     card_list::sort_card_list(table_hand);
+    short selected_card_index = search_trick(selected_cards, table_hand, current_hand, max_combo);
     // print_bot_hand(current_hand, current_hand.size());
-    search_trick(selected_cards, table_hand, current_hand, max_combo, selected_card_index);
     if (selected_card_index != -1)
     {
         print_move(current_hand[selected_card_index], max_combo);

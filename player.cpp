@@ -77,7 +77,6 @@ bool process_trick(card_list &table_hand, card_list &current_hand, card_list &cu
         {
             card_list::move_card(table_hand, selected_cards);
         }
-        std::cout << "Некорректный ход!" << std::endl;
     }
     return valid_trick;
 }
@@ -125,9 +124,9 @@ short select_card_from_hand(card_list &table_hand, card_list &current_hand, card
 }
 
 // Обработка 1 хода
-void process_player_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards, bool &is_trick, const game_mode mode)
+void process_player_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, bool &is_trick, const game_mode mode)
 {
-    card_list::clear_card_list(selected_cards);
+    card_list selected_cards;
     card_list::sort_card_list(table_hand);
     short selected_card_index = select_card_from_hand(table_hand, current_hand, current_tricks);
     card selected_card = current_hand[selected_card_index];
@@ -141,7 +140,8 @@ void process_player_move(card_list &table_hand, card_list &current_hand, card_li
             bool valid_trick = process_trick(table_hand, current_hand, current_tricks, selected_cards, selected_card_index);
             if (!valid_trick)
             {
-                process_player_move(table_hand, current_hand, current_tricks, selected_cards, is_trick, mode);
+                std::cout << "Некорректный ход!" << std::endl;
+                process_player_move(table_hand, current_hand, current_tricks, is_trick, mode);
                 return;
             }
             is_trick = true;
@@ -167,5 +167,4 @@ void process_player_move(card_list &table_hand, card_list &current_hand, card_li
     {
         confirm_move(selected_card, selected_cards);
     }
-    card_list::clear_card_list(selected_cards);
 }
