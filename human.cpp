@@ -174,7 +174,7 @@ void HumanPlayer::makeMove(Player &table, game_mode mode)
     // Иначе, выбранная карта = Hunter, запускаем механизм обработки
     else
     {
-        is_trick = process_hunter_move(table, player, selected_card_index);
+        is_trick = player.makeHunterMove(table, selected_card_index);
     }
     if (mode == with_other_player)
     {

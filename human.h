@@ -4,7 +4,6 @@
 #include "points.h"
 #include "game_mode.h"
 #include "console_io.h"
-#include "hunter.h"
 #include "player.h"
 
 class HumanPlayer : public Player

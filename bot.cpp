@@ -150,7 +150,7 @@ void BotPlayer::makeMove(Player &table, game_mode mode)
         print_move(current_hand[selected_card_index], max_combo);
         if (current_hand[selected_card_index].getType() == Card::Picture && current_hand[selected_card_index].getPictureValue() == 'H')
         {
-            is_trick = process_hunter_move(table, *this, selected_card_index);
+            is_trick = bot.makeHunterMove(table, selected_card_index);
         }
         else
         {
@@ -172,7 +172,7 @@ void BotPlayer::makeMove(Player &table, game_mode mode)
         print_card(current_hand[selected_card_index]);
         if (current_hand[selected_card_index].getType() == Card::Picture && current_hand[selected_card_index].getPictureValue() == 'H')
         {
-            is_trick = process_hunter_move(table, *this, selected_card_index);
+            is_trick = bot.makeHunterMove(table, selected_card_index);
         }
         else
         {

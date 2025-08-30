@@ -3,12 +3,11 @@
 #include "card.h"
 #include "points.h"
 #include "console_io.h"
-#include "hunter.h"
 #include "deck.h"
-#include "bot.h"
-#include "player.h"
-#include "game_mode.h"
 #include "human.h"
+#include "bot.h"
+#include "game_mode.h"
+
 
 enum turn
 {

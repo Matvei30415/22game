@@ -1,7 +1,6 @@
 #pragma once
 
 #include "console_io.h"
-#include "hunter.h"
 #include "player.h"
 
 class BotPlayer : public Player
