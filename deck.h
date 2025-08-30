@@ -1,6 +1,6 @@
 #pragma once
 
-#include "card_list.h"
+#include "card.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -8,10 +8,10 @@ class Deck {
 public:
     Deck();
     void shuffle();
-    void dealHand(CardList &hand, short count = 4);
+    void dealHand(std::vector<Card> &hand, short count = 4);
     bool empty() const;
 private:
-    CardList deckCards;
+    std::vector<Card> deckCards;
 };
 
 enum

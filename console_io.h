@@ -1,6 +1,6 @@
 #pragma once
 
-#include "card_list.h"
+#include "card.h"
 #include "points.h"
 #include "game_mode.h"
 #include <iostream>
@@ -26,15 +26,15 @@ void moving_cursor(short i);
 
 void print_card(Card &current_card);
 
-void print_card_list(CardList &current_cards, short len);
+void print_card_list(std::vector<Card> &current_cards, short len);
 
-void print_hand(CardList &current_cards, short len);
+void print_hand(std::vector<Card> &current_cards, short len);
 
-void print_bot_hand(CardList &current_cards, short len);
+void print_bot_hand(std::vector<Card> &current_cards, short len);
 
-void print_table(CardList &current_cards, short len);
+void print_table(std::vector<Card> &current_cards, short len);
 
-void print_tricks(CardList &player_1_tricks, CardList &player_2_tricks);
+void print_tricks(std::vector<Card> &player_1_tricks, std::vector<Card> &player_2_tricks);
 
 void print_results(Points &player_1_results, Points &player_2_results, game_mode mode);
 
@@ -42,6 +42,6 @@ void print_rules();
 
 void print_menu();
 
-void print_move(Card &selected_card, CardList &selected_cards);
+void print_move(Card &selected_card, std::vector<Card> &selected_cards);
 
-void confirm_move(Card &selected_card, CardList &selected_cards);
+void confirm_move(Card &selected_card, std::vector<Card> &selected_cards);

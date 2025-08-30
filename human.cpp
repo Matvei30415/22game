@@ -1,7 +1,7 @@
 #include "human.h"
 
 // Проверка суммы числовых карт
-bool validate_digital_card_sum(CardList &selected_cards, Card &current_selected_card, short sum, short start_index)
+bool validate_digital_card_sum(std::vector<Card> &selected_cards, Card &current_selected_card, short sum, short start_index)
 {
     for (start_index; start_index < selected_cards.size(); start_index++)
     {
@@ -28,7 +28,7 @@ bool validate_digital_card_sum(CardList &selected_cards, Card &current_selected_
 }
 
 // Проверка корректности взятки
-bool validate_trick(CardList &selected_cards, Card &current_selected_card, short size, short sum)
+bool validate_trick(std::vector<Card> &selected_cards, Card &current_selected_card, short size, short sum)
 {
     // Проверка числовых карт
     if (current_selected_card.getType() == Card::Digital)
@@ -58,12 +58,12 @@ bool validate_trick(CardList &selected_cards, Card &current_selected_card, short
 }
 
 // Обработка взятки
-bool process_trick(Player &table, Player &player, CardList &selected_cards, short &current_selected_card_index)
+bool process_trick(Player &table, Player &player, std::vector<Card> &selected_cards, short &current_selected_card_index)
 {
     bool valid_trick = validate_trick(selected_cards, player.getHand()[current_selected_card_index], selected_cards.size());
-    CardList &table_hand = table.getHand();
-    CardList &player_hand = player.getHand();
-    CardList &player_tricks = player.getTricks();
+    std::vector<Card> &table_hand = table.getHand();
+    std::vector<Card> &player_hand = player.getHand();
+    std::vector<Card> &player_tricks = player.getTricks();
     if (valid_trick)
     {
         // Если ход корректный, отправляем карты во взятки
@@ -77,17 +77,17 @@ bool process_trick(Player &table, Player &player, CardList &selected_cards, shor
         while (selected_cards.size() > 0)
         {
             table.addCardToHand(selected_cards[0]);
-            selected_cards.remove(0);
+            selected_cards.erase(begin(selected_cards));
         }
     }
     return valid_trick;
 }
 
 // Выбор карт для взятки
-void select_cards_for_trick(CardList &selected_cards, Player &table, Player &player)
+void select_cards_for_trick(std::vector<Card> &selected_cards, Player &table, Player &player)
 {
     short selected_card_index = 0;
-    CardList &table_hand = table.getHand();
+    std::vector<Card> &table_hand = table.getHand();
     while (selected_card_index != invalid_input)
     {
         print_table(table.getHand(), table.getHand().size());
@@ -100,14 +100,14 @@ void select_cards_for_trick(CardList &selected_cards, Player &table, Player &pla
         else if (selected_card_index != invalid_input)
         {
             --selected_card_index;
-            selected_cards.add(table_hand[selected_card_index]);
+            selected_cards.push_back(table_hand[selected_card_index]);
             table.removeCardFromHand(selected_card_index);
         }
     }
 }
 
 // Выбор карты с руки
-short select_card_from_hand(CardList &table_hand, CardList &current_hand, CardList &current_tricks)
+short select_card_from_hand(std::vector<Card> &table_hand, std::vector<Card> &current_hand, std::vector<Card> &current_tricks)
 {
     short selected_card_index = 0;
     while (selected_card_index <= 0)
@@ -131,12 +131,12 @@ short select_card_from_hand(CardList &table_hand, CardList &current_hand, CardLi
 // Обработка 1 хода
 void HumanPlayer::makeMove(Player &table, game_mode mode)
 {
-    CardList selected_cards;
+    std::vector<Card> selected_cards;
     table.sortHand();
     Player &player = *this;
-    CardList &table_hand = table.getHand();
-    CardList &player_hand = player.getHand();
-    CardList &player_tricks = player.getTricks();
+    std::vector<Card> &table_hand = table.getHand();
+    std::vector<Card> &player_hand = player.getHand();
+    std::vector<Card> &player_tricks = player.getTricks();
     short selected_card_index = select_card_from_hand(table_hand, player_hand, player_tricks);
     Card selected_card = player_hand[selected_card_index];
 

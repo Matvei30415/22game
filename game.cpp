@@ -3,7 +3,7 @@
 // Передача оставшихся на столе карт, игроку, который взял последнюю взятку
 void process_last_trick(turn last_trick, Player &table, Player &player_1, Player &player_2)
 {
-    CardList &table_hand = table.getHand();
+    std::vector<Card> &table_hand = table.getHand();
     if (last_trick == player_1_turn)
     {
         while (table_hand.size() > 0)
@@ -23,7 +23,7 @@ void process_last_trick(turn last_trick, Player &table, Player &player_1, Player
 // Запуск одной партии
 void process_game(Deck &current_deck, game_mode mode, Player &table,
                   Player &player_1, Player &player_2,
-                  CardList &selected_cards, turn &last_trick)
+                  std::vector<Card> &selected_cards, turn &last_trick)
 {
     bool success_move = true;
     turn current_turn = player_1_turn;
@@ -86,7 +86,7 @@ void start_game(game_mode mode)
     else
         player_2 = &human_player_2;
     HumanPlayer table("Стол");
-    CardList selected_cards;
+    std::vector<Card> selected_cards;
     Points player_1_results{};
     Points player_2_results{};
     current_deck.shuffle();

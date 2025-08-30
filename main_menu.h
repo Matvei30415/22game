@@ -1,6 +1,6 @@
 #pragma once
 
-#include "card_list.h"
+#include "card.h"
 #include "points.h"
 #include "console_io.h"
 #include "game_mode.h"

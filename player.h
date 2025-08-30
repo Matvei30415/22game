@@ -1,6 +1,6 @@
 #pragma once
 
-#include "card_list.h"
+#include "card.h"
 #include "points.h"
 #include "game_mode.h"
 #include "console_io.h"
@@ -10,21 +10,20 @@ class Player {
 public:
     Player(std::string &name);
     virtual void makeMove(Player &table, game_mode mode) = 0;
-    void setHand(CardList &src);
-    CardList& getHand();
-    CardList& getTricks();
+    std::vector<Card>& getHand();
+    std::vector<Card>& getTricks();
     bool getIsTrick();
     void sortHand();
     void addCardToHand(const Card& card);
     void addCardToTrick(const Card& card);
-    void addTrick(const CardList& trick);
+    void addTrick(const std::vector<Card>& trick);
     void removeCardFromHand(short index);
-    void moveCardFromHandTo(CardList &dst, short index = 0);
+    void moveCardFromHandTo(std::vector<Card> &dst, short index = 0);
 protected:
     std::string name;
     bool is_trick;
-    CardList hand;
-    CardList tricks;
+    std::vector<Card> hand;
+    std::vector<Card> tricks;
     Points results;
 };
 

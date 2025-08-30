@@ -6,9 +6,9 @@ bool process_hunter_move(Player &table, Player &player, short selected_card_inde
 {
     bool is_trick = false;
     short count_erase = 0;
-    CardList &table_hand = table.getHand();
-    CardList &current_hand = player.getHand();
-    CardList &current_tricks = player.getTricks();
+    std::vector<Card> &table_hand = table.getHand();
+    std::vector<Card> &current_hand = player.getHand();
+    std::vector<Card> &current_tricks = player.getTricks();
     for (short i = 0; i < table_hand.size(); i++)
     {
         // Проверяем, что карта не Gentleman или Lady

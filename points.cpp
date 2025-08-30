@@ -1,7 +1,7 @@
 #include "points.h"
 
 // Вычисление очков в конце партии
-void Points::сalculate_points(CardList &tricks)
+void Points::сalculate_points(std::vector<Card> &tricks)
 {
     short len = tricks.size();
     if (len > 24)

@@ -1,7 +1,7 @@
 #include "bot.h"
 
 // Нахождение комбинации с цифровыми картами
-void find_digital_combinations(CardList &current_hand, Card &current_card, short n, CardList &combo, CardList &max_combo, double &max_combo_quality, bool &res, short start)
+void find_digital_combinations(std::vector<Card> &current_hand, Card &current_card, short n, std::vector<Card> &combo, std::vector<Card> &max_combo, double &max_combo_quality, bool &res, short start)
 {
     double current_combo_quality = 0;
     if (n == 0)
@@ -23,7 +23,7 @@ void find_digital_combinations(CardList &current_hand, Card &current_card, short
     {
         if (current_hand[i].getType() == Card::Digital && current_hand[i].getDigitalValue() <= n)
         {
-            combo.add(current_hand[i]);
+            combo.push_back(current_hand[i]);
             if (current_hand[i].getDigitalValue() != 2)
                 find_digital_combinations(current_hand, current_card, n - current_hand[i].getDigitalValue(), combo, max_combo, max_combo_quality, res, i + 1);
             else
@@ -31,13 +31,13 @@ void find_digital_combinations(CardList &current_hand, Card &current_card, short
                 find_digital_combinations(current_hand, current_card, n - 2, combo, max_combo, max_combo_quality, res, i + 1);
                 find_digital_combinations(current_hand, current_card, n - 11, combo, max_combo, max_combo_quality, res, i + 1);
             }
-            combo.pop();
+            combo.pop_back();
         }
     }
 }
 
 // Нахождение комбинации с лицами
-bool find_picture_combinations(CardList &current_hand, Card &current_card, CardList &max_combo, double max_combo_quality)
+bool find_picture_combinations(std::vector<Card> &current_hand, Card &current_card, std::vector<Card> &max_combo, double max_combo_quality)
 {
     bool res = false;
     char current_value = current_card.getPictureValue() == 'G' ? 'L' : 'G';
@@ -49,7 +49,7 @@ bool find_picture_combinations(CardList &current_hand, Card &current_card, CardL
             {
                 max_combo_quality = current_hand[i].getQuality() + current_card.getQuality();
                 max_combo.clear();
-                max_combo.add(current_hand[i]);
+                max_combo.push_back(current_hand[i]);
                 res = true;
             }
         }
@@ -60,7 +60,7 @@ bool find_picture_combinations(CardList &current_hand, Card &current_card, CardL
 }
 
 // Расчёт ценности хода при розыгрше Хантера
-bool find_hunter_combinations(CardList &current_hand, Card &current_card, CardList &combo, CardList &max_combo, double max_combo_quality)
+bool find_hunter_combinations(std::vector<Card> &current_hand, Card &current_card, std::vector<Card> &combo, std::vector<Card> &max_combo, double max_combo_quality)
 {
     bool res = false;
     double current_combo_quality = 0;
@@ -70,7 +70,7 @@ bool find_hunter_combinations(CardList &current_hand, Card &current_card, CardLi
             (current_hand[i].getType() == Card::Digital))
         {
             current_combo_quality += current_hand[i].getQuality();
-            combo.add(current_hand[i]);
+            combo.push_back(current_hand[i]);
         }
     }
     if (current_combo_quality != 0)
@@ -85,10 +85,10 @@ bool find_hunter_combinations(CardList &current_hand, Card &current_card, CardLi
 }
 
 // Поиск самого выгодного хода для бота
-short search_trick(CardList &selected_cards, CardList &table_hand, CardList &current_hand, CardList &max_combo)
+short search_trick(std::vector<Card> &selected_cards, std::vector<Card> &table_hand, std::vector<Card> &current_hand, std::vector<Card> &max_combo)
 {
     bool find_new_max_combo = false;
-    CardList combo{};
+    std::vector<Card> combo{};
     double max_combo_quality = 0;
     short max_combo_card_index = -1;
     selected_cards.clear();
@@ -136,13 +136,13 @@ short search_trick(CardList &selected_cards, CardList &table_hand, CardList &cur
 // Ход бота
 void BotPlayer::makeMove(Player &table, game_mode mode)
 {
-    CardList selected_cards;
+    std::vector<Card> selected_cards;
     table.sortHand();
-    CardList max_combo{};
+    std::vector<Card> max_combo{};
     Player &bot = *this;
-    CardList table_hand = table.getHand();
-    CardList current_hand = this->getHand();
-    CardList current_tricks = this->getTricks();
+    std::vector<Card> &table_hand = table.getHand();
+    std::vector<Card> &current_hand = this->getHand();
+    std::vector<Card> &current_tricks = this->getTricks();
     short selected_card_index = search_trick(selected_cards, table_hand, current_hand, max_combo);
     // print_bot_hand(current_hand, current_hand.size());
     if (selected_card_index != -1)

@@ -82,7 +82,7 @@ void print_card(Card &current_card)
 }
 
 // Печать карт (произовольная)
-void print_card_list(CardList &current_cards, short len)
+void print_card_list(std::vector<Card> &current_cards, short len)
 {
     for (short i = 0; i < len; i++)
     {
@@ -121,7 +121,7 @@ void print_card_list(CardList &current_cards, short len)
 }
 
 // Вывод руки
-void print_hand(CardList &current_cards, short len)
+void print_hand(std::vector<Card> &current_cards, short len)
 {
     print_line();
     std::cout << "Ваши карты: " << std::endl;
@@ -130,7 +130,7 @@ void print_hand(CardList &current_cards, short len)
 }
 
 // Вывод руки бота (для отладки)
-void print_bot_hand(CardList &current_cards, short len)
+void print_bot_hand(std::vector<Card> &current_cards, short len)
 {
     print_line();
     std::cout << "Карты бота: " << std::endl;
@@ -138,7 +138,7 @@ void print_bot_hand(CardList &current_cards, short len)
 }
 
 // Вывод стола
-void print_table(CardList &current_cards, short len)
+void print_table(std::vector<Card> &current_cards, short len)
 {
     if (len == 0)
     {
@@ -153,7 +153,7 @@ void print_table(CardList &current_cards, short len)
 }
 
 // Печать взяток (только для отладки)
-void print_tricks(CardList &player_1_tricks, CardList &player_2_tricks)
+void print_tricks(std::vector<Card> &player_1_tricks, std::vector<Card> &player_2_tricks)
 {
     print_line();
     std::cout << "Взятки игрока " << std::endl;
@@ -232,7 +232,7 @@ void print_menu()
 }
 
 // Печать хода
-void print_move(Card &selected_card, CardList &selected_cards)
+void print_move(Card &selected_card, std::vector<Card> &selected_cards)
 {
     short size = selected_cards.size();
     print_card(selected_card);
@@ -241,7 +241,7 @@ void print_move(Card &selected_card, CardList &selected_cards)
 }
 
 // Подтверждение хода
-void confirm_move(Card &selected_card, CardList &selected_cards)
+void confirm_move(Card &selected_card, std::vector<Card> &selected_cards)
 {
     pass_move();
     print_line();

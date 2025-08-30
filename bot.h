@@ -1,7 +1,5 @@
 #pragma once
 
-#include "card_list.h"
-#include "points.h"
 #include "console_io.h"
 #include "hunter.h"
 #include "player.h"
@@ -13,10 +11,10 @@ public:
     void makeMove(Player &table, game_mode mode) override;
 };
 
-void find_digital_combinations(CardList &current_hand, Card &current_card, short n, CardList &combo, CardList &max_combo, double &max_combo_quality, bool &res, short start = 0);
+void find_digital_combinations(std::vector<Card> &current_hand, Card &current_card, short n, std::vector<Card> &combo, std::vector<Card> &max_combo, double &max_combo_quality, bool &res, short start = 0);
 
-bool find_picture_combinations(CardList &current_hand, Card &current_card, CardList &max_combo, double max_combo_quality);
+bool find_picture_combinations(std::vector<Card> &current_hand, Card &current_card, std::vector<Card> &max_combo, double max_combo_quality);
 
-bool find_hunter_combinations(CardList &current_hand, Card &current_card, CardList &combo, CardList &max_combo, double max_combo_quality);
+bool find_hunter_combinations(std::vector<Card> &current_hand, Card &current_card, std::vector<Card> &combo, std::vector<Card> &max_combo, double max_combo_quality);
 
-short search_trick(CardList &selected_cards, CardList &table_hand, CardList &current_hand, CardList &max_combo);
+short search_trick(std::vector<Card> &selected_cards, std::vector<Card> &table_hand, std::vector<Card> &current_hand, std::vector<Card> &max_combo);

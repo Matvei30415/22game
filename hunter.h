@@ -1,7 +1,7 @@
 #pragma once
 
-#include "card_list.h"
+#include "card.h"
 
-class Player; // forward declaration
+class Player;
 
 bool process_hunter_move(Player &table, Player &player, short selected_card_index);
