@@ -1,36 +1,30 @@
 #pragma once
 
 #include <vector>
+#include "card.h"
 
-enum type_denomination
-{
-    digital_card,
-    picture_card
-};
-
-union denomination
-{
-    short digital_cards;
-    char picture_cards;
-};
-
-struct card
-{
-    short id;
-    type_denomination type;
-    denomination value;
-    char suit;
-    double quality;
-};
-
-class card_list : public std::vector<card>
+class CardList
 {
 public:
-    card_list() = default;
-    card_list(short size);
-    ~card_list() = default;
-    static void move_card(card_list &dst, card_list &src, short index = 0);
-    static void copy_card(card_list &dst, card_list &src, short index = 0);
-    static void clear_card_list(card_list &src);
-    static void sort_card_list(card_list &src);
+    CardList() = default;
+    CardList(short size);
+    ~CardList() = default;
+
+    void add(const Card &card);
+    void remove(size_t index);
+    void pop();
+    Card &operator[](size_t index);
+    const Card &operator[](size_t index) const;
+    short size();
+    const short size() const;
+    void clear();
+
+    std::vector<Card> &data();
+
+    void moveCardTo(CardList &dst, short index = 0);
+    void copyCardTo(CardList &dst, short index = 0);
+    void sort();
+
+private:
+    std::vector<Card> cards;
 };

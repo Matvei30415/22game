@@ -24,24 +24,24 @@ void print_line();
 
 void moving_cursor(short i);
 
-void print_card(card &current_card);
+void print_card(Card &current_card);
 
-void print_card_list(card_list &current_cards, short len);
+void print_card_list(CardList &current_cards, short len);
 
-void print_hand(card_list &current_cards, short len);
+void print_hand(CardList &current_cards, short len);
 
-void print_bot_hand(card_list &current_cards, short len);
+void print_bot_hand(CardList &current_cards, short len);
 
-void print_table(card_list &current_cards, short len);
+void print_table(CardList &current_cards, short len);
 
-void print_tricks(card_list &player_1_tricks, card_list &player_2_tricks);
+void print_tricks(CardList &player_1_tricks, CardList &player_2_tricks);
 
-void print_results(points &player_1_results, points &player_2_results, game_mode mode);
+void print_results(Points &player_1_results, Points &player_2_results, game_mode mode);
 
 void print_rules();
 
 void print_menu();
 
-void print_move(card &selected_card, card_list &selected_cards);
+void print_move(Card &selected_card, CardList &selected_cards);
 
-void confirm_move(card &selected_card, card_list &selected_cards);
+void confirm_move(Card &selected_card, CardList &selected_cards);

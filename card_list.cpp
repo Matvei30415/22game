@@ -1,53 +1,91 @@
 #include "card_list.h"
 
-// Конструктор для класса card_list
-card_list::card_list(short size) {
-    this->resize(size);
+CardList::CardList(short size)
+{
+    this->cards.resize(size);
+}
+
+void CardList::add(const Card &card)
+{
+    cards.push_back(card);
+}
+
+void CardList::remove(size_t index)
+{
+    cards.erase(cards.begin() + index);
+}
+
+void CardList::pop()
+{
+    cards.pop_back();
+}
+
+short CardList::size()
+{
+    return cards.size();
+}
+
+const short CardList::size() const
+{
+    return cards.size();
+}
+
+void CardList::clear()
+{
+    cards.clear();
+}
+
+std::vector<Card> &CardList::data()
+{
+    return cards;
+}
+
+Card &CardList::operator[](size_t index)
+{
+    return cards[index];
+}
+
+const Card &CardList::operator[](size_t index) const
+{
+    return cards[index];
 }
 
 // Перемещение карты из src в dst, с последующим удалением в src
-void card_list::move_card(card_list &dst, card_list &src, short index)
+void CardList::moveCardTo(CardList &dst, short index)
 {
-    dst.emplace_back(src[index]);
-    src.erase(src.cbegin() + index);
+    dst.add(cards[index]);
+    this->remove(index);
 }
 
 // Копирование карты из src в dst, без последующего удаления в src
-void card_list::copy_card(card_list &dst, card_list &src, short index)
+void CardList::copyCardTo(CardList &dst, short index)
 {
-    dst.emplace_back(src[index]);
-}
-
-// Очистка списка карт
-void card_list::clear_card_list(card_list &src)
-{
-    while (src.size() > 0)
-        src.pop_back();
+    dst.add(cards[index]);
 }
 
 // Сортировка текущих карт на столе
-void card_list::sort_card_list(card_list &src)
+void CardList::sort()
 {
     short count_picture_cards = 0;
-    card tmp;
-    for (short idx_i = 0; idx_i < src.size(); idx_i++)
+    Card tmp;
+    for (short idx_i = 0; idx_i < cards.size(); idx_i++)
     {
-        if (src[idx_i].type == picture_card)
+        if (cards[idx_i].getType() == Card::Picture)
         {
-            tmp = src[idx_i];
-            src.erase(src.cbegin() + idx_i);
-            src.insert(src.cbegin(), tmp);
+            tmp = cards[idx_i];
+            cards.erase(cards.cbegin() + idx_i);
+            cards.insert(cards.cbegin(), tmp);
             count_picture_cards++;
             continue;
         }
-        for (short idx_j = idx_i + 1; idx_j < src.size(); idx_j++)
+        for (short idx_j = idx_i + 1; idx_j < cards.size(); idx_j++)
         {
-            if ((src[idx_i].type == digital_card && src[idx_j].type == digital_card) &&
-                ((src[idx_i].value.digital_cards > src[idx_j].value.digital_cards) ||
-                 ((src[idx_i].value.digital_cards == src[idx_j].value.digital_cards) &&
-                  (src[idx_i].suit != 'G' && src[idx_j].suit == 'G'))))
+            if ((cards[idx_i].getType() == Card::Digital && cards[idx_j].getType() == Card::Digital) &&
+                ((cards[idx_i].getDigitalValue() > cards[idx_j].getDigitalValue()) ||
+                 ((cards[idx_i].getDigitalValue() == cards[idx_j].getDigitalValue()) &&
+                  (cards[idx_i].getSuit() != 'G' && cards[idx_j].getSuit() == 'G'))))
             {
-                std::swap(src[idx_i], src[idx_j]);
+                std::swap(cards[idx_i], cards[idx_j]);
             }
         }
     }
@@ -55,12 +93,12 @@ void card_list::sort_card_list(card_list &src)
     {
         for (short idx_j = idx_i + 1; idx_j < count_picture_cards; idx_j++)
         {
-            if ((src[idx_i].value.picture_cards == 'L' && src[idx_j].value.picture_cards == 'G') ||
-                (src[idx_i].value.picture_cards == 'H') ||
-                ((src[idx_i].value.picture_cards == src[idx_j].value.picture_cards) &&
-                 (src[idx_i].suit != 'G' && src[idx_j].suit == 'G')))
+            if ((cards[idx_i].getPictureValue() == 'L' && cards[idx_j].getPictureValue() == 'G') ||
+                (cards[idx_i].getPictureValue() == 'H') ||
+                ((cards[idx_i].getPictureValue() == cards[idx_j].getPictureValue()) &&
+                 (cards[idx_i].getSuit() != 'G' && cards[idx_j].getSuit() == 'G')))
             {
-                std::swap(src[idx_i], src[idx_j]);
+                std::swap(cards[idx_i], cards[idx_j]);
             }
         }
     }

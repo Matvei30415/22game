@@ -4,15 +4,19 @@
 #include "points.h"
 #include "console_io.h"
 #include "hunter.h"
+#include "player.h"
 
-void find_digital_combinations(card_list &current_hand, card &current_card, short n, card_list &combo, card_list &max_combo, double &max_combo_quality, bool &res, short start = 0);
+class BotPlayer : public Player
+{
+public:
+    BotPlayer(std::string name) : Player(name) {}
+    void makeMove(Player &table, game_mode mode) override;
+};
 
-bool find_picture_combinations(card_list &current_hand, card &current_card, card_list &max_combo, double max_combo_quality);
+void find_digital_combinations(CardList &current_hand, Card &current_card, short n, CardList &combo, CardList &max_combo, double &max_combo_quality, bool &res, short start = 0);
 
-bool find_hunter_combinations(card_list &current_hand, card &current_card, card_list &combo, card_list &max_combo, double max_combo_quality);
+bool find_picture_combinations(CardList &current_hand, Card &current_card, CardList &max_combo, double max_combo_quality);
 
-short search_trick(card_list &selected_cards, card_list &table_hand, card_list &current_hand, card_list &max_combo);
+bool find_hunter_combinations(CardList &current_hand, Card &current_card, CardList &combo, CardList &max_combo, double max_combo_quality);
 
-void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, card_list &selected_cards);
-
-void process_bot_move(card_list &table_hand, card_list &current_hand, card_list &current_tricks, bool &is_trick);
+short search_trick(CardList &selected_cards, CardList &table_hand, CardList &current_hand, CardList &max_combo);

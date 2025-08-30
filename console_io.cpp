@@ -5,8 +5,8 @@ static const std::string line(100, '-');
 // Очистка консоли
 void clear_console()
 {
-    system("cls");
-    // std::cout << "\033[2J\033[1;1H";
+    // system("cls");
+    std::cout << "\033[2J\033[1;1H";
 }
 
 // Ввод и проверка корректности ввода
@@ -61,51 +61,51 @@ void moving_cursor(short i)
 }
 
 // Печать карты
-void print_card(card &current_card)
+void print_card(Card &current_card)
 {
     printf("+--------+\n");
-    printf("|%c       |\n", current_card.suit);
+    printf("|%c       |\n", current_card.getSuit());
     printf("|        |\n");
-    if (current_card.type == digital_card)
-        if (current_card.value.digital_cards == 2)
+    if (current_card.getType() == Card::Digital)
+        if (current_card.getDigitalValue() == 2)
             printf("|   A    |\n");
-        else if (current_card.value.digital_cards > 9)
-            printf("|   %hd   |\n", current_card.value.digital_cards);
+        else if (current_card.getDigitalValue() > 9)
+            printf("|   %hd   |\n", current_card.getDigitalValue());
         else
-            printf("|   %hd    |\n", current_card.value.digital_cards);
+            printf("|   %hd    |\n", current_card.getDigitalValue());
     else
-        printf("|   %c    |\n", current_card.value.picture_cards);
+        printf("|   %c    |\n", current_card.getPictureValue());
     printf("|        |\n");
-    printf("|       %c|\n", current_card.suit);
+    printf("|       %c|\n", current_card.getSuit());
     printf("+--------+\n");
     printf("    %hd    \n", 1);
 }
 
 // Печать карт (произовольная)
-void print_card_list(card_list &current_cards, short len)
+void print_card_list(CardList &current_cards, short len)
 {
     for (short i = 0; i < len; i++)
     {
         moving_cursor(i % 10);
         printf("+--------+\n");
         moving_cursor(i % 10);
-        printf("|%c       |\n", current_cards[i].suit);
+        printf("|%c       |\n", current_cards[i].getSuit());
         moving_cursor(i % 10);
         printf("|        |\n");
         moving_cursor(i % 10);
-        if (current_cards[i].type == digital_card)
-            if (current_cards[i].value.digital_cards == 2)
+        if (current_cards[i].getType() == Card::Digital)
+            if (current_cards[i].getDigitalValue() == 2)
                 printf("|   A    |\n");
-            else if (current_cards[i].value.digital_cards > 9)
-                printf("|   %hd   |\n", current_cards[i].value.digital_cards);
+            else if (current_cards[i].getDigitalValue() > 9)
+                printf("|   %hd   |\n", current_cards[i].getDigitalValue());
             else
-                printf("|   %hd    |\n", current_cards[i].value.digital_cards);
+                printf("|   %hd    |\n", current_cards[i].getDigitalValue());
         else
-            printf("|   %c    |\n", current_cards[i].value.picture_cards);
+            printf("|   %c    |\n", current_cards[i].getPictureValue());
         moving_cursor(i % 10);
         printf("|        |\n");
         moving_cursor(i % 10);
-        printf("|       %c|\n", current_cards[i].suit);
+        printf("|       %c|\n", current_cards[i].getSuit());
         moving_cursor(i % 10);
         printf("+--------+\n");
         moving_cursor(i % 10);
@@ -121,7 +121,7 @@ void print_card_list(card_list &current_cards, short len)
 }
 
 // Вывод руки
-void print_hand(card_list &current_cards, short len)
+void print_hand(CardList &current_cards, short len)
 {
     print_line();
     std::cout << "Ваши карты: " << std::endl;
@@ -130,7 +130,7 @@ void print_hand(card_list &current_cards, short len)
 }
 
 // Вывод руки бота (для отладки)
-void print_bot_hand(card_list &current_cards, short len)
+void print_bot_hand(CardList &current_cards, short len)
 {
     print_line();
     std::cout << "Карты бота: " << std::endl;
@@ -138,7 +138,7 @@ void print_bot_hand(card_list &current_cards, short len)
 }
 
 // Вывод стола
-void print_table(card_list &current_cards, short len)
+void print_table(CardList &current_cards, short len)
 {
     if (len == 0)
     {
@@ -153,7 +153,7 @@ void print_table(card_list &current_cards, short len)
 }
 
 // Печать взяток (только для отладки)
-void print_tricks(card_list &player_1_tricks, card_list &player_2_tricks)
+void print_tricks(CardList &player_1_tricks, CardList &player_2_tricks)
 {
     print_line();
     std::cout << "Взятки игрока " << std::endl;
@@ -166,33 +166,35 @@ void print_tricks(card_list &player_1_tricks, card_list &player_2_tricks)
 }
 
 // Печать результатов
-void print_results(points &player_1_results, points &player_2_results, game_mode mode)
+void print_results(Points &player_1_results, Points &player_2_results, game_mode mode)
 {
+    char more_cards;
+    bool more_clubs, twenty_of_diamons, ace_of_hearts;
     print_line();
     std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма" << std::endl;
     print_line();
+    player_1_results.get_points(more_cards, more_clubs, twenty_of_diamons, ace_of_hearts);
     if (mode == with_bot)
         std::cout << "Результаты Игрока: ";
     else if (mode == with_other_player)
         std::cout << "Результаты Игрока 1: ";
-    std::cout << (short)player_1_results.get_more_cards << " | "
-              << player_1_results.get_more_clubs << " | "
-              << player_1_results.get_twenty_of_diamonds << " | "
-              << player_1_results.get_ace_of_hearts << " | "
-              << (short)player_1_results.get_more_cards + player_1_results.get_more_clubs +
-                     player_1_results.get_twenty_of_diamonds + player_1_results.get_ace_of_hearts
+    std::cout << (short)more_cards << " | "
+              << more_clubs << " | "
+              << twenty_of_diamons << " | "
+              << ace_of_hearts << " | "
+              << (short)more_cards + more_clubs + twenty_of_diamons + ace_of_hearts
               << std::endl;
     print_line();
+    player_2_results.get_points(more_cards, more_clubs, twenty_of_diamons, ace_of_hearts);
     if (mode == with_bot)
         std::cout << "Результаты Бота: ";
     else if (mode == with_other_player)
         std::cout << "Результаты Игрока 2: ";
-    std::cout << (short)player_2_results.get_more_cards << " | "
-              << player_2_results.get_more_clubs << " | "
-              << player_2_results.get_twenty_of_diamonds << " | "
-              << player_2_results.get_ace_of_hearts << " | "
-              << (short)player_2_results.get_more_cards + player_2_results.get_more_clubs +
-                     player_2_results.get_twenty_of_diamonds + player_2_results.get_ace_of_hearts
+    std::cout << (short)more_cards << " | "
+              << more_clubs << " | "
+              << twenty_of_diamons << " | "
+              << ace_of_hearts << " | "
+              << (short)more_cards + more_clubs + twenty_of_diamons + ace_of_hearts
               << std::endl;
 }
 
@@ -230,7 +232,7 @@ void print_menu()
 }
 
 // Печать хода
-void print_move(card &selected_card, card_list &selected_cards)
+void print_move(Card &selected_card, CardList &selected_cards)
 {
     short size = selected_cards.size();
     print_card(selected_card);
@@ -239,7 +241,7 @@ void print_move(card &selected_card, card_list &selected_cards)
 }
 
 // Подтверждение хода
-void confirm_move(card &selected_card, card_list &selected_cards)
+void confirm_move(Card &selected_card, CardList &selected_cards)
 {
     pass_move();
     print_line();
