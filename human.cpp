@@ -82,7 +82,7 @@ bool HumanPlayer::process_trick(Player &table)
     return valid_trick;
 }
 
-// Обработка 1 хода (Весь визуал игрока здесь)
+// Обработка 1 хода (Весь визуал игрока здесь, основное внимание)
 void HumanPlayer::makeMove(Player &table, game_mode mode)
 {
     table.sortHand();

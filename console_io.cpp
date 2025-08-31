@@ -2,6 +2,9 @@
 
 static const std::string line(100, '-');
 
+extern unsigned char rules_txt[];
+extern unsigned int rules_txt_len;
+
 // Очистка консоли
 void clear_console()
 {
@@ -269,19 +272,11 @@ void print_results(Points &player_1_results, Points &player_2_results, game_mode
 // Печать правил
 void print_rules()
 {
-    std::string rule_str;
-    std::ifstream ifs("rules.txt");
-    if (!(ifs.is_open()))
-    {
-        std::cout << "Ошибка при открытии правил" << std::endl;
-        return;
-    }
+    std::string rule_str(reinterpret_cast<char *>(rules_txt), rules_txt_len);
     print_line();
     std::cout << "Правила" << std::endl;
     print_line();
-    while (std::getline(ifs, rule_str))
-        std::cout << rule_str << std::endl;
-    ifs.close();
+    std::cout << rule_str << std::endl;
 }
 
 // Печать главного меню

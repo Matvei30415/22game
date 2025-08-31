@@ -108,6 +108,7 @@ void BotPlayer::find_hunter_combinations(Player &table, std::vector<Card> &combo
             combo.push_back(tableHand[i]);
         }
     }
+    // Закомментировано из-за неэффективности использования карты Hunter ботом
     // if (current_combo_quality != 0)
     //     current_combo_quality += selectedCard.getQuality();
     if (current_combo_quality > bot.getMaxComboQuality())
