@@ -10,7 +10,7 @@ void clear_console()
 }
 
 // Ввод и проверка корректности ввода
-short get_move_input(short min_index, short max_index)
+short get_input(short min_index, short max_index)
 {
     int res = 0;
     std::string tmp;
@@ -34,6 +34,74 @@ short get_move_input(short min_index, short max_index)
         return invalid_index;
     }
     return res;
+}
+
+short get_trick_input(std::vector<Card> &table_hand, std::vector<Card> &selected_cards)
+{
+    print_table(table_hand, table_hand.size());
+    std::cout << "Выберите карты для взятки: ";
+    short selected_card_index = get_input(1, table_hand.size());
+    if (selected_card_index == invalid_index)
+    {
+        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        return get_trick_input(table_hand, selected_cards);
+    }
+    else if (selected_card_index == invalid_input)
+    {
+        return -1;
+    }
+    else
+    {
+        selected_card_index--;
+        return selected_card_index;
+    }
+}
+
+short get_card_input(std::vector<Card> &table_hand, std::vector<Card> &current_hand)
+{
+    print_table(table_hand, table_hand.size());
+    print_hand(current_hand, current_hand.size());
+    short selected_card_index = get_input(1, current_hand.size());
+    if (selected_card_index == invalid_index)
+    {
+        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        return get_card_input(table_hand, current_hand);
+    }
+    else if (selected_card_index == invalid_input)
+    {
+        std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        return get_card_input(table_hand, current_hand);
+    }
+    else
+    {
+        selected_card_index--;
+        return selected_card_index;
+    }
+}
+
+short get_menu_input(short min_index, short max_index)
+{
+    print_menu();
+    short selected_card_index = get_input(min_index, max_index);
+    if (selected_card_index == invalid_index)
+    {
+        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        return get_menu_input(min_index, max_index);
+    }
+    else if (selected_card_index == invalid_input)
+    {
+        std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        return get_menu_input(min_index, max_index);
+    }
+    else if (selected_card_index == 3)
+    {
+        print_rules();
+        return get_menu_input(min_index, max_index);
+    }
+    else
+    {
+        return selected_card_index;
+    }
 }
 
 // Передача хода

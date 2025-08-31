@@ -3,7 +3,12 @@
 Player::Player(std::string name)
 {
     this->name = name;
-    this->is_trick = false;
+    this->isTrick = false;
+}
+
+void Player::setSelectedCard(const Card &card)
+{
+    this->selectedCard = card;
 }
 
 std::vector<Card> &Player::getHand()
@@ -11,14 +16,29 @@ std::vector<Card> &Player::getHand()
     return this->hand;
 }
 
+void Player::setIsTrick(bool isTrick)
+{
+    this->isTrick = isTrick;
+}
+
 std::vector<Card> &Player::getTricks()
 {
     return this->tricks;
 }
 
+Card &Player::getSelectedCard()
+{
+    return this->selectedCard;
+}
+
+std::vector<Card> &Player::getSelectedTrick()
+{
+    return this->selectedTrick;
+}
+
 bool Player::getIsTrick()
 {
-    return this->is_trick;
+    return this->isTrick;
 }
 
 void Player::sortHand()
@@ -67,17 +87,32 @@ void Player::addCardToHand(const Card &card)
     (this->hand).push_back(card);
 }
 
-void Player::removeCardFromHand(short index)
+void Player::removeCardFromHand(Card &card)
 {
-    (this->hand).erase((this->hand).begin() + index);
+    auto it = std::find_if(hand.begin(), hand.end(),
+                           [&card](Card &c)
+                           { return c.getID() == card.getID(); });
+    if (it != hand.end())
+        hand.erase(it);
 }
 
-void Player::addCardToTrick(const Card &card)
+void Player::removeTrickFromHand(std::vector<Card> &trick)
+{
+    std::vector<Card> &hand = this->hand;
+    for (short i = 0; i < trick.size(); i++)
+        for (short j = 0; j < hand.size(); j++)
+            if (trick[i].getID() == hand[j].getID())
+            {
+                this->removeCardFromHand(hand[j]);
+            }
+}
+
+void Player::addCardToTricks(const Card &card)
 {
     (this->tricks).push_back(card);
 }
 
-void Player::addTrick(const std::vector<Card> &trick)
+void Player::addTrickToTricks(const std::vector<Card> &trick)
 {
     for (short i = 0; i < trick.size(); i++)
     {
@@ -85,22 +120,26 @@ void Player::addTrick(const std::vector<Card> &trick)
     }
 }
 
-// Обработка механизма карты Hunter
-bool Player::makeHunterMove(Player &table, short selected_card_index)
+void Player::clearSelectedTrick()
 {
-    bool is_trick = false;
+    (this->selectedTrick).clear();
+}
+
+// Обработка механизма карты Hunter
+void Player::makeHunterMove(Player &table)
+{
     short count_erase = 0;
     Player &player = (*this);
-    std::vector<Card> &table_hand = table.getHand();
-    std::vector<Card> &current_hand = player.getHand();
-    std::vector<Card> &current_tricks = player.getTricks();
-    for (short i = 0; i < table_hand.size(); i++)
+    std::vector<Card> &tableHand = table.getHand();
+    Card &selectedCard = player.getSelectedCard();
+    player.setIsTrick(false);
+    for (short i = 0; i < tableHand.size(); i++)
     {
         // Проверяем, что карта не Gentleman или Lady
-        if (!(table_hand[i].getType() == Card::Picture && (table_hand[i].getPictureValue() == 'G' || table_hand[i].getPictureValue() == 'L')))
+        if (!(tableHand[i].getType() == Card::Picture && (tableHand[i].getPictureValue() == 'G' || tableHand[i].getPictureValue() == 'L')))
         {
-            player.addCardToTrick(table_hand[i]);
-            table.removeCardFromHand(i);
+            player.addCardToTricks(tableHand[i]);
+            table.removeCardFromHand(tableHand[i]);
             count_erase++;
             i--;
         }
@@ -108,15 +147,14 @@ bool Player::makeHunterMove(Player &table, short selected_card_index)
     // Остаётся на столе, если не взял ни одной числовой карты или Hunter'a
     if (count_erase == 0)
     {
-        table.addCardToHand(current_hand[selected_card_index]);
-        player.removeCardFromHand(selected_card_index);
+        table.addCardToHand(selectedCard);
+        player.removeCardFromHand(selectedCard);
     }
     // Отправляется во взятки, если взял хотя бы одну числовую карту или Hunter'а
     else
     {
-        is_trick = true;
-        player.addCardToTrick(current_hand[selected_card_index]);
-        player.removeCardFromHand(selected_card_index);
+        player.setIsTrick(true);
+        player.addCardToTricks(selectedCard);
+        player.removeCardFromHand(selectedCard);
     }
-    return is_trick;
 }

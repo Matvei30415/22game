@@ -8,15 +8,15 @@ void process_last_trick(turn last_trick, Player &table, Player &player_1, Player
     {
         while (table_hand.size() > 0)
         {
-            player_1.addCardToTrick(table_hand[0]);
-            table.removeCardFromHand(0);
+            player_1.addCardToTricks(table_hand[0]);
+            table.removeCardFromHand(table_hand[0]);
         }
     }
     else if (last_trick == player_2_turn)
         while (table_hand.size() > 0)
         {
-            player_2.addCardToTrick(table_hand[0]);
-            table.removeCardFromHand(0);
+            player_2.addCardToTricks(table_hand[0]);
+            table.removeCardFromHand(table_hand[0]);
         }
 }
 
@@ -54,15 +54,14 @@ void process_game(Deck &current_deck, game_mode mode, Player &table,
                 print_line();
                 std::cout << "Ход игрока 2" << std::endl;
                 print_line();
-                player_2.makeMove(table, mode);
                 break;
             case with_bot:
                 print_line();
                 std::cout << "Ход бота" << std::endl;
                 print_line();
-                player_2.makeMove(table, mode);
                 break;
             }
+            player_2.makeMove(table, mode);
             if (player_2.getIsTrick())
                 last_trick = player_2_turn;
             current_turn = player_1_turn;

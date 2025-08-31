@@ -4,25 +4,34 @@
 #include "points.h"
 #include "game_mode.h"
 #include "console_io.h"
-class Player {
+#include <algorithm>
+class Player
+{
 public:
     Player(std::string name);
     virtual void makeMove(Player &table, game_mode mode) = 0;
-    std::vector<Card>& getHand();
-    std::vector<Card>& getTricks();
+    void setSelectedCard(const Card &card);
+    void setIsTrick(bool isTrick);
     bool getIsTrick();
+    std::vector<Card> &getHand();
+    std::vector<Card> &getTricks();
+    Card &getSelectedCard();
+    std::vector<Card> &getSelectedTrick();
     void sortHand();
-    void addCardToHand(const Card& card);
-    void addCardToTrick(const Card& card);
-    void addTrick(const std::vector<Card>& trick);
-    void removeCardFromHand(short index);
-    void moveCardFromHandTo(std::vector<Card> &dst, short index = 0);
-    bool makeHunterMove(Player &table, short selected_card_index);
+    void addCardToHand(const Card &card);
+    void addCardToTricks(const Card &card);
+    void addTrickToTricks(const std::vector<Card> &trick);
+    void removeCardFromHand(Card &card);
+    void removeTrickFromHand(std::vector<Card> &trick);
+    void clearSelectedTrick();
+    void makeHunterMove(Player &table);
+
 protected:
     std::string name;
-    bool is_trick;
+    bool isTrick;
     std::vector<Card> hand;
     std::vector<Card> tricks;
+    Card selectedCard;
+    std::vector<Card> selectedTrick;
     Points results;
 };
-

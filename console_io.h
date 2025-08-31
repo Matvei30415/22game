@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <utility>
+#include <unordered_set>
 #include <windows.h>
 
 enum input_error_codes {
@@ -16,7 +17,13 @@ enum input_error_codes {
 
 void clear_console();
 
-short get_move_input(short min_index, short max_index);
+short get_input(short min_index, short max_index);
+
+short get_trick_input(std::vector<Card> &table_hand, std::vector<Card> &selected_cards);
+
+short get_card_input(std::vector<Card> &table_hand, std::vector<Card> &current_hand);
+
+short get_menu_input(short min_index, short max_index);
 
 void pass_move();
 
