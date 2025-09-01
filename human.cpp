@@ -83,12 +83,12 @@ bool HumanPlayer::processTrick(Table &table)
 }
 
 // Обработка 1 хода (Весь визуал игрока здесь, основное внимание)
-void HumanPlayer::makeMove(Table &table, gameMode mode)
+void HumanPlayer::makeMove(Table &table, GameMode mode)
 {
     table.sortHand();
     HumanPlayer &player = *this;
     std::vector<Card> &tableHand = table.getHand();
-    short selectedCardIndex = getCardInput(tableHand, hand);
+    short selectedCardIndex = player.inputCard(table);
     player.setSelectedCard(hand[selectedCardIndex]);
     player.setIsTrick(false);
 
@@ -97,16 +97,19 @@ void HumanPlayer::makeMove(Table &table, gameMode mode)
         !(selectedCard.getType() == Card::Picture &&
           selectedCard.getPictureValue() == 'H'))
     {
-        std::vector<Card> tableHandCopy = tableHand;
+        Table tableCopy(tableHand);
         short selectedTrickCardIndex = 0;
-        while (selectedTrickCardIndex != invalidInput)
+        while (true)
         {
-
-            selectedTrickCardIndex = getTrickInput(tableHandCopy, selectedTrick);
+            selectedTrickCardIndex = player.inputTrick(tableCopy);
             if (selectedTrickCardIndex != invalidInput)
             {
-                selectedTrick.push_back(tableHandCopy[selectedTrickCardIndex]);
-                tableHandCopy.erase(begin(tableHandCopy) + selectedTrickCardIndex);
+                selectedTrick.push_back(tableCopy.getHand()[selectedTrickCardIndex]);
+                tableCopy.removeCardFromHand(tableCopy.getHand()[selectedTrickCardIndex]);
+            }
+            else
+            {
+                break;
             }
         }
 
@@ -115,7 +118,7 @@ void HumanPlayer::makeMove(Table &table, gameMode mode)
             bool validTrick = player.processTrick(table);
             if (!validTrick)
             {
-                std::cout << "Некорректный ход!" << std::endl;
+                player.printNotValidMove();
                 this->makeMove(table, mode);
                 return;
             }
@@ -142,7 +145,103 @@ void HumanPlayer::makeMove(Table &table, gameMode mode)
     }
     if (mode == withOtherPlayer)
     {
-        confirmMove(selectedCard, selectedTrick);
+        player.confirmMove();
     }
     player.clearSelectedTrick();
+}
+
+// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
+
+// Анонс хода
+void HumanPlayer::printAnnouncement()
+{
+    printLine();
+    std::cout << "Ход игрока " << std::to_string(ID) << std::endl;
+    printLine();
+}
+
+// Вывод руки
+void HumanPlayer::printHand()
+{
+    printLine();
+    std::cout << "Ваши карты: " << std::endl;
+    printCardList(hand);
+    std::cout << "Выберите карту: ";
+}
+
+// Вывод взяток
+void HumanPlayer::printTricks()
+{
+    printLine();
+    std::cout << "Взятки игрока " << std::endl;
+    printLine();
+    printCardList(tricks);
+}
+
+// Сообщение о неверном ходе
+void HumanPlayer::printNotValidMove()
+{
+    std::cout << "Некорректный ход!" << std::endl;
+}
+
+// Передача хода
+void HumanPlayer::passMove()
+{
+    system("cls");
+    std::cout << "Передайте ход другому игроку, затем нажмите Enter";
+    std::getchar();
+    system("cls");
+}
+
+// Подтверждение хода
+void HumanPlayer::confirmMove()
+{
+    passMove();
+    printLine();
+    std::cout << "Ход предыдущего игрока" << std::endl;
+    printLine();
+    printMove();
+}
+
+short HumanPlayer::inputCard(Table &table)
+{
+    table.printTable();
+    this->printHand();
+    short selectedCardIndex = input(1, hand.size());
+    if (selectedCardIndex == invalidIndex)
+    {
+        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        return inputCard(table);
+    }
+    else if (selectedCardIndex == invalidInput)
+    {
+        std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        return inputCard(table);
+    }
+    else
+    {
+        selectedCardIndex--;
+        return selectedCardIndex;
+    }
+}
+
+short HumanPlayer::inputTrick(Table &table)
+{
+    table.printTable();
+    std::cout << "Выберите карты для взятки: ";
+    short selectedCardIndex = input(1, table.getHand().size());
+    if (selectedCardIndex == invalidIndex)
+    {
+        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        return inputTrick(table);
+    }
+    else if (selectedCardIndex == invalidInput)
+    {
+        return invalidInput;
+    }
+    else
+    {
+        selectedCardIndex--;
+        return selectedCardIndex;
+    }
 }

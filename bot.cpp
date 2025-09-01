@@ -123,7 +123,6 @@ void BotPlayer::searchTrick(Table &table)
 {
     BotPlayer &bot = *this;
     std::vector<Card> combo{};
-    // selectedTrick.clear();
     for (short i = 0; i < hand.size(); i++)
     {
         bot.setSelectedCard(hand[i]);
@@ -155,16 +154,17 @@ void BotPlayer::searchTrick(Table &table)
 }
 
 // Ход бота (Весь визуал бота здесь)
-void BotPlayer::makeMove(Table &table, gameMode mode)
+void BotPlayer::makeMove(Table &table, GameMode mode)
 {
     table.sortHand();
     BotPlayer &bot = *this;
     bot.searchTrick(table);
-    // printBotHand(botHand, botHand.size());
+    // bot.printHand();
     if (bot.getMaxComboQuality() != 0)
     {
         bot.setSelectedCard(maxCard);
-        printMove(selectedCard, maxCombo);
+        bot.setSelectedTrick(maxCombo);
+        bot.printMove();
         if (selectedCard.getType() == Card::Picture && selectedCard.getPictureValue() == 'H')
         {
             bot.makeHunterMove(table);
@@ -181,7 +181,7 @@ void BotPlayer::makeMove(Table &table, gameMode mode)
     else
     {
         bot.setSelectedCard(hand[rand() % hand.size()]);
-        printCard(selectedCard);
+        bot.printSelectedCard();
         if (selectedCard.getType() == Card::Picture && selectedCard.getPictureValue() == 'H')
         {
             bot.makeHunterMove(table);
@@ -195,4 +195,32 @@ void BotPlayer::makeMove(Table &table, gameMode mode)
     }
     bot.clearSelectedTrick();
     bot.clearMaxCombo();
+}
+
+// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
+
+// Анонс хода
+void BotPlayer::printAnnouncement()
+{
+    printLine();
+    std::cout << "Ход бота " << std::to_string(ID) << std::endl;
+    printLine();
+}
+
+
+// Вывод руки
+void BotPlayer::printHand()
+{
+    printLine();
+    std::cout << "Карты бота: " << std::endl;
+    printCardList(hand);
+}
+
+// Вывод взяток
+void BotPlayer::printTricks()
+{
+    printLine();
+    std::cout << "Взятки бота " << std::endl;
+    printLine();
+    printCardList(tricks);
 }

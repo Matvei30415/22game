@@ -1,7 +1,7 @@
 #include "game.h"
 
 // Передача оставшихся на столе карт, игроку, который взял последнюю взятку
-void processLastTrick(Turn lastTrick, Table &table, Player &player1, Player &player2)
+void Game::processLastTrick(Table &table, Player &player1, Player &player2)
 {
     std::vector<Card> &tableHand = table.getHand();
     if (lastTrick == player1Turn)
@@ -21,10 +21,8 @@ void processLastTrick(Turn lastTrick, Table &table, Player &player1, Player &pla
 }
 
 // Запуск одной партии
-void processGame(Deck &deck, gameMode mode, Table &table,
-                  Player &player1, Player &player2, Turn &lastTrick)
+void Game::processGame(Deck &deck, Table &table, Player &player1, Player &player2)
 {
-    Turn turn = player1Turn;
     for (short i = 0; i < deckSize; i++)
     {
         if (i % 8 == 0)
@@ -36,9 +34,7 @@ void processGame(Deck &deck, gameMode mode, Table &table,
         }
         if (turn == player1Turn)
         {
-            printLine();
-            std::cout << "Ход игрока 1" << std::endl;
-            printLine();
+            player1.printAnnouncement();
             player1.makeMove(table, mode);
             if (player1.getIsTrick())
                 lastTrick = player1Turn;
@@ -46,19 +42,7 @@ void processGame(Deck &deck, gameMode mode, Table &table,
         }
         else
         {
-            switch (mode)
-            {
-            case withOtherPlayer:
-                printLine();
-                std::cout << "Ход игрока 2" << std::endl;
-                printLine();
-                break;
-            case withBot:
-                printLine();
-                std::cout << "Ход бота" << std::endl;
-                printLine();
-                break;
-            }
+            player2.printAnnouncement();
             player2.makeMove(table, mode);
             if (player2.getIsTrick())
                 lastTrick = player2Turn;
@@ -68,25 +52,128 @@ void processGame(Deck &deck, gameMode mode, Table &table,
     }
 }
 
-void startGame(gameMode mode)
+// Обработка главного меню
+void Game::mainMenu()
 {
-    Turn turn = player1Turn;
-    Turn lastTrick;
+    short mode = menuInput(0, 3);
+    switch (mode)
+    {
+    case 1:
+        this->mode = withBot;
+        break;
+    case 2:
+        this->mode = withOtherPlayer;
+        break;
+    default:
+        exit(0);
+        break;
+    }
+}
+
+// Запуск игры
+void Game::startGame()
+{
     Deck deck;
     Table table;
-    HumanPlayer player1("Игрок 1");
-    HumanPlayer humanPlayer2("Игрок 2");
-    BotPlayer botPlayer("Бот");
+    HumanPlayer humanPlayer1(1);
+    HumanPlayer humanPlayer2(2);
+    BotPlayer botPlayer(1);
+    Player *player1 = &humanPlayer1;
     Player *player2;
     if (mode == withBot)
         player2 = &botPlayer;
     else
         player2 = &humanPlayer2;
     deck.shuffle();
-    processGame(deck, mode, table, player1, *player2, lastTrick);
-    processLastTrick(lastTrick, table, player1, (*player2));
-    printTricks(player1.getTricks(), (*player2).getTricks());
-    player1.сalculatePoints();
+    processGame(deck, table, *player1, *player2);
+    processLastTrick(table, *player1, *player2);
+    (*player1).printTricks();
+    (*player2).printTricks();
+    (*player1).сalculatePoints();
     (*player2).сalculatePoints();
-    printResults(player1, (*player2), mode);
+    printResults((*player1), (*player2));
+}
+
+// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
+
+// Печать правил
+void Game::printRules()
+{
+    printLine();
+    std::cout << "Правила" << std::endl;
+    printLine();
+    std::cout.write((char*)rules_txt, rules_txt_len);
+}
+
+// Печать главного меню
+void Game::printMenu()
+{
+    printLine();
+    std::cout << "22game" << std::endl;
+    printLine();
+    std::cout << "Главное меню" << std::endl;
+    printLine();
+    std::cout << "1. Начать игру с ботом" << std::endl;
+    std::cout << "2. Начать игру с другим игроком (локально)" << std::endl;
+    std::cout << "3. Правила" << std::endl;
+    std::cout << "0. Выход" << std::endl;
+    std::cout << "Выберите пункт меню: ";
+}
+
+short Game::menuInput(short min, short max)
+{
+    printMenu();
+    short selectedCardIndex = input(min, max);
+    if (selectedCardIndex == invalidIndex)
+    {
+        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        return menuInput(min, max);
+    }
+    else if (selectedCardIndex == invalidInput)
+    {
+        std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        return menuInput(min, max);
+    }
+    else if (selectedCardIndex == 3)
+    {
+        printRules();
+        return menuInput(min, max);
+    }
+    else
+    {
+        return selectedCardIndex;
+    }
+}
+
+// Печать результатов
+void Game::printResults(Player &player1, Player &player2)
+{
+    char moreCards;
+    bool moreClubs, twentyOfDiamonds, aceOfHearts;
+    printLine();
+    std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма" << std::endl;
+    printLine();
+    player1.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
+    if (mode == withBot)
+        std::cout << "Результаты Игрока: ";
+    else if (mode == withOtherPlayer)
+        std::cout << "Результаты Игрока 1: ";
+    std::cout << (short)moreCards << " | "
+              << moreClubs << " | "
+              << twentyOfDiamonds << " | "
+              << aceOfHearts << " | "
+              << (short)moreCards + moreClubs + twentyOfDiamonds + aceOfHearts
+              << std::endl;
+    printLine();
+    player2.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
+    if (mode == withBot)
+        std::cout << "Результаты Бота: ";
+    else if (mode == withOtherPlayer)
+        std::cout << "Результаты Игрока 2: ";
+    std::cout << (short)moreCards << " | "
+              << moreClubs << " | "
+              << twentyOfDiamonds << " | "
+              << aceOfHearts << " | "
+              << (short)moreCards + moreClubs + twentyOfDiamonds + aceOfHearts
+              << std::endl;
 }

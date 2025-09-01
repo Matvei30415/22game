@@ -3,7 +3,11 @@
 #include "card.h"
 #include "table.h"
 
-enum gameMode : short;
+enum GameMode : short
+{
+    withBot = 1,
+    withOtherPlayer = 2,
+};
 
 struct Points
 {
@@ -16,9 +20,10 @@ struct Points
 class Player : public Table
 {
 public:
-    Player(std::string name);
-    virtual void makeMove(Table &table, gameMode mode) = 0;
+    Player(short ID);
+    virtual void makeMove(Table &table, GameMode mode) = 0;
     void setSelectedCard(const Card &card);
+    void setSelectedTrick(const std::vector<Card> &cards);
     void setIsTrick(bool isTrick);
     bool getIsTrick();
     std::vector<Card> &getTricks();
@@ -30,7 +35,15 @@ public:
     void makeHunterMove(Table &table);
     void сalculatePoints();
     void getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts);
+    // Строго функции ввода-вывода
+    virtual void printAnnouncement() = 0;
+    virtual void printHand() = 0;
+    virtual void printTricks() = 0;
+    void printSelectedCard();
+    void printMove();
+
 protected:
+    short ID;
     std::string name;
     bool isTrick;
     std::vector<Card> tricks;

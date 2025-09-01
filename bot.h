@@ -7,8 +7,12 @@
 class BotPlayer : public Player
 {
 public:
-    BotPlayer(std::string name) : Player(name) { maxComboQuality = 0; }
-    void makeMove(Table &table, gameMode mode) override;
+    BotPlayer(short ID) : Player(ID)
+    {
+        name = "Бот " + std::to_string(ID);
+        maxComboQuality = 0;
+    }
+    void makeMove(Table &table, GameMode mode) override;
     void searchTrick(Table &table);
     void findDigitalCombo(Table &table, std::vector<Card> &combo, short n, short start = 0);
     void findPictureCombo(Table &table, std::vector<Card> &combo);
@@ -19,6 +23,10 @@ public:
     Card &getMaxCard();
     double getMaxComboQuality();
     void clearMaxCombo();
+    // Строго функции ввода-вывода
+    void printAnnouncement() override;
+    void printHand() override;
+    void printTricks() override;
 
 private:
     std::vector<Card> maxCombo;

@@ -14,7 +14,6 @@ public:
     Deck();
     void shuffle();
     void dealHand(std::vector<Card> &hand, short count = 4);
-    bool empty() const;
 private:
     std::vector<Card> deckCards;
 };

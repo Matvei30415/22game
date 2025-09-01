@@ -70,3 +70,20 @@ void Table::removeTrickFromHand(std::vector<Card> &trick)
                 this->removeCardFromHand(hand[j]);
             }
 }
+
+// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
+
+// Вывод стола
+void Table::printTable()
+{
+    if (hand.size() == 0)
+    {
+        std::cout << "Стол пуст!" << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << "Карты на столе: " << std::endl;
+    }
+    printCardList(hand);
+}

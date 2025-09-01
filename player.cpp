@@ -1,8 +1,8 @@
 #include "player.h"
 
-Player::Player(std::string name)
+Player::Player(short ID)
 {
-    this->name = name;
+    this->ID = ID;
     this->isTrick = false;
     (this->results).moreCards = '\0';
     (this->results).moreClubs =
@@ -13,6 +13,11 @@ Player::Player(std::string name)
 void Player::setSelectedCard(const Card &card)
 {
     this->selectedCard = card;
+}
+
+void Player::setSelectedTrick(const std::vector<Card> &cards)
+{
+    this->selectedTrick = cards;
 }
 
 void Player::setIsTrick(bool isTrick)
@@ -121,4 +126,21 @@ void Player::getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds,
     moreClubs = (this->results).moreClubs;
     twentyOfDiamonds = (this->results).twentyOfDiamonds;
     aceOfHearts = (this->results).aceOfHearts;
+}
+
+// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
+
+// Печать выбранной карты
+void Player::printSelectedCard()
+{
+    printCard(selectedCard);
+}
+
+// Печать хода
+void Player::printMove()
+{
+    short size = selectedTrick.size();
+    printSelectedCard();
+    if (size != 0)
+        printCardList(selectedTrick);
 }
