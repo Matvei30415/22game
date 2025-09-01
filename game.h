@@ -1,24 +1,23 @@
 #pragma once
 
 #include "card.h"
-#include "points.h"
-#include "console_io.h"
+#include "consoleIO.h"
 #include "deck.h"
+#include "table.h"
+#include "player.h"
 #include "human.h"
 #include "bot.h"
-#include "game_mode.h"
 
 
-enum turn
+enum Turn
 {
-    player_1_turn = 1,
-    player_2_turn = 2
+    player1Turn = 1,
+    player2Turn = 2
 };
 
-void process_last_trick(turn last_trick, Player &table, Player &player_1, Player &player_2);
+void processLastTrick(Turn lastTrick, Table &table, Player &player1, Player &player2);
 
-void process_game(Deck &current_deck, game_mode mode, Player &table,
-                  Player &player_1, Player &player_2,
-                  std::vector<Card> &selected_cards, turn &last_trick);
+void processGame(Deck &deck, gameMode mode, Table &table,
+                  Player &player1, Player &player2, Turn &lastTrick);
 
-void start_game(game_mode mode);
+void startGame(gameMode mode);

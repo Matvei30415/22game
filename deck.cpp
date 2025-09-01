@@ -57,7 +57,7 @@ Deck::Deck()
 void Deck::shuffle()
 {
     srand(time(NULL));
-    for (short i = deck_size - 1; i > 1; i--)
+    for (short i = deckSize - 1; i > 1; i--)
     {
         short j = rand() % i;
         std::swap(deckCards[i], deckCards[j]);

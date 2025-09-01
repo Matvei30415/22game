@@ -4,16 +4,15 @@ Player::Player(std::string name)
 {
     this->name = name;
     this->isTrick = false;
+    (this->results).moreCards = '\0';
+    (this->results).moreClubs =
+        (this->results).twentyOfDiamonds =
+            (this->results).aceOfHearts = false;
 }
 
 void Player::setSelectedCard(const Card &card)
 {
     this->selectedCard = card;
-}
-
-std::vector<Card> &Player::getHand()
-{
-    return this->hand;
 }
 
 void Player::setIsTrick(bool isTrick)
@@ -41,72 +40,6 @@ bool Player::getIsTrick()
     return this->isTrick;
 }
 
-void Player::sortHand()
-{
-    std::vector<Card> &cards = this->hand;
-    short count_picture_cards = 0;
-    Card tmp;
-    for (short idx_i = 0; idx_i < cards.size(); idx_i++)
-    {
-        if (cards[idx_i].getType() == Card::Picture)
-        {
-            tmp = cards[idx_i];
-            cards.erase(cards.cbegin() + idx_i);
-            cards.insert(cards.cbegin(), tmp);
-            count_picture_cards++;
-            continue;
-        }
-        for (short idx_j = idx_i + 1; idx_j < cards.size(); idx_j++)
-        {
-            if ((cards[idx_i].getType() == Card::Digital && cards[idx_j].getType() == Card::Digital) &&
-                ((cards[idx_i].getDigitalValue() > cards[idx_j].getDigitalValue()) ||
-                 ((cards[idx_i].getDigitalValue() == cards[idx_j].getDigitalValue()) &&
-                  (cards[idx_i].getSuit() != 'G' && cards[idx_j].getSuit() == 'G'))))
-            {
-                std::swap(cards[idx_i], cards[idx_j]);
-            }
-        }
-    }
-    for (short idx_i = 0; idx_i < count_picture_cards; idx_i++)
-    {
-        for (short idx_j = idx_i + 1; idx_j < count_picture_cards; idx_j++)
-        {
-            if ((cards[idx_i].getPictureValue() == 'L' && cards[idx_j].getPictureValue() == 'G') ||
-                (cards[idx_i].getPictureValue() == 'H') ||
-                ((cards[idx_i].getPictureValue() == cards[idx_j].getPictureValue()) &&
-                 (cards[idx_i].getSuit() != 'G' && cards[idx_j].getSuit() == 'G')))
-            {
-                std::swap(cards[idx_i], cards[idx_j]);
-            }
-        }
-    }
-}
-
-void Player::addCardToHand(const Card &card)
-{
-    (this->hand).push_back(card);
-}
-
-void Player::removeCardFromHand(Card &card)
-{
-    auto it = std::find_if(hand.begin(), hand.end(),
-                           [&card](Card &c)
-                           { return c.getID() == card.getID(); });
-    if (it != hand.end())
-        hand.erase(it);
-}
-
-void Player::removeTrickFromHand(std::vector<Card> &trick)
-{
-    std::vector<Card> &hand = this->hand;
-    for (short i = 0; i < trick.size(); i++)
-        for (short j = 0; j < hand.size(); j++)
-            if (trick[i].getID() == hand[j].getID())
-            {
-                this->removeCardFromHand(hand[j]);
-            }
-}
-
 void Player::addCardToTricks(const Card &card)
 {
     (this->tricks).push_back(card);
@@ -126,9 +59,9 @@ void Player::clearSelectedTrick()
 }
 
 // Обработка механизма карты Hunter
-void Player::makeHunterMove(Player &table)
+void Player::makeHunterMove(Table &table)
 {
-    short count_erase = 0;
+    short countErase = 0;
     Player &player = (*this);
     std::vector<Card> &tableHand = table.getHand();
     Card &selectedCard = player.getSelectedCard();
@@ -140,12 +73,12 @@ void Player::makeHunterMove(Player &table)
         {
             player.addCardToTricks(tableHand[i]);
             table.removeCardFromHand(tableHand[i]);
-            count_erase++;
+            countErase++;
             i--;
         }
     }
     // Остаётся на столе, если не взял ни одной числовой карты или Hunter'a
-    if (count_erase == 0)
+    if (countErase == 0)
     {
         table.addCardToHand(selectedCard);
         player.removeCardFromHand(selectedCard);
@@ -157,4 +90,35 @@ void Player::makeHunterMove(Player &table)
         player.addCardToTricks(selectedCard);
         player.removeCardFromHand(selectedCard);
     }
+}
+
+// Вычисление очков в конце партии
+void Player::сalculatePoints()
+{
+    short len = tricks.size();
+    if (len > 24)
+        (this->results).moreCards = 2;
+    else if (len == 24)
+        (this->results).moreCards = 1;
+    short sumClubs = 0;
+    for (short i = 0; i < len; i++)
+    {
+        if (tricks[i].getSuit() == 'C')
+            sumClubs += 1;
+        if (tricks[i].getDigitalValue() == 20 && tricks[i].getSuit() == 'D')
+            (this->results).twentyOfDiamonds = true;
+        else if (tricks[i].getDigitalValue() == 2 && tricks[i].getSuit() == 'H')
+            (this->results).aceOfHearts = true;
+    }
+    if (sumClubs > 5)
+        (this->results).moreClubs = true;
+}
+
+// Геттер результатов
+void Player::getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts)
+{
+    moreCards = (this->results).moreCards;
+    moreClubs = (this->results).moreClubs;
+    twentyOfDiamonds = (this->results).twentyOfDiamonds;
+    aceOfHearts = (this->results).aceOfHearts;
 }

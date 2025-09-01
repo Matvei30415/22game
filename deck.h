@@ -4,6 +4,11 @@
 #include <cstdlib>
 #include <ctime>
 
+enum : short
+{
+    deckSize = 48,
+    cardsInHand = 4
+};
 class Deck {
 public:
     Deck();
@@ -12,10 +17,4 @@ public:
     bool empty() const;
 private:
     std::vector<Card> deckCards;
-};
-
-enum
-{
-    deck_size = 48,
-    cards_in_hand = 4
 };

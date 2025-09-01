@@ -1,98 +1,92 @@
 #include "game.h"
 
 // Передача оставшихся на столе карт, игроку, который взял последнюю взятку
-void process_last_trick(turn last_trick, Player &table, Player &player_1, Player &player_2)
+void processLastTrick(Turn lastTrick, Table &table, Player &player1, Player &player2)
 {
-    std::vector<Card> &table_hand = table.getHand();
-    if (last_trick == player_1_turn)
+    std::vector<Card> &tableHand = table.getHand();
+    if (lastTrick == player1Turn)
     {
-        while (table_hand.size() > 0)
+        while (tableHand.size() > 0)
         {
-            player_1.addCardToTricks(table_hand[0]);
-            table.removeCardFromHand(table_hand[0]);
+            player1.addCardToTricks(tableHand[0]);
+            table.removeCardFromHand(tableHand[0]);
         }
     }
-    else if (last_trick == player_2_turn)
-        while (table_hand.size() > 0)
+    else if (lastTrick == player2Turn)
+        while (tableHand.size() > 0)
         {
-            player_2.addCardToTricks(table_hand[0]);
-            table.removeCardFromHand(table_hand[0]);
+            player2.addCardToTricks(tableHand[0]);
+            table.removeCardFromHand(tableHand[0]);
         }
 }
 
 // Запуск одной партии
-void process_game(Deck &current_deck, game_mode mode, Player &table,
-                  Player &player_1, Player &player_2,
-                  std::vector<Card> &selected_cards, turn &last_trick)
+void processGame(Deck &deck, gameMode mode, Table &table,
+                  Player &player1, Player &player2, Turn &lastTrick)
 {
-    bool success_move = true;
-    turn current_turn = player_1_turn;
-    for (short i = 0; i < deck_size; i++)
+    Turn turn = player1Turn;
+    for (short i = 0; i < deckSize; i++)
     {
-        if (i % 8 == 0 && success_move == true)
+        if (i % 8 == 0)
         {
-            current_deck.dealHand(player_1.getHand());
-            current_deck.dealHand(player_2.getHand());
-            player_1.sortHand();
-            player_2.sortHand();
+            deck.dealHand(player1.getHand());
+            deck.dealHand(player2.getHand());
+            player1.sortHand();
+            player2.sortHand();
         }
-        if (current_turn == player_1_turn)
+        if (turn == player1Turn)
         {
-            print_line();
+            printLine();
             std::cout << "Ход игрока 1" << std::endl;
-            print_line();
-            player_1.makeMove(table, mode);
-            if (player_1.getIsTrick())
-                last_trick = player_1_turn;
-            current_turn = player_2_turn;
+            printLine();
+            player1.makeMove(table, mode);
+            if (player1.getIsTrick())
+                lastTrick = player1Turn;
+            turn = player2Turn;
         }
         else
         {
             switch (mode)
             {
-            case with_other_player:
-                print_line();
+            case withOtherPlayer:
+                printLine();
                 std::cout << "Ход игрока 2" << std::endl;
-                print_line();
+                printLine();
                 break;
-            case with_bot:
-                print_line();
+            case withBot:
+                printLine();
                 std::cout << "Ход бота" << std::endl;
-                print_line();
+                printLine();
                 break;
             }
-            player_2.makeMove(table, mode);
-            if (player_2.getIsTrick())
-                last_trick = player_2_turn;
-            current_turn = player_1_turn;
+            player2.makeMove(table, mode);
+            if (player2.getIsTrick())
+                lastTrick = player2Turn;
+            turn = player1Turn;
         }
-        // std::cout << "Последняя взятка: " << last_trick << std::endl;
+        // std::cout << "Последняя взятка: " << lastTrick << std::endl;
     }
 }
 
-void start_game(game_mode mode)
+void startGame(gameMode mode)
 {
-    bool success_move = true;
-    turn current_turn = player_1_turn;
-    turn last_trick;
-    Deck current_deck;
-    HumanPlayer player_1("Игрок 1");
-    HumanPlayer human_player_2("Игрок 2");
-    BotPlayer bot_player_2("Бот");
-    Player *player_2;
-    if (mode == with_bot)
-        player_2 = &bot_player_2;
+    Turn turn = player1Turn;
+    Turn lastTrick;
+    Deck deck;
+    Table table;
+    HumanPlayer player1("Игрок 1");
+    HumanPlayer humanPlayer2("Игрок 2");
+    BotPlayer botPlayer("Бот");
+    Player *player2;
+    if (mode == withBot)
+        player2 = &botPlayer;
     else
-        player_2 = &human_player_2;
-    HumanPlayer table("Стол");
-    std::vector<Card> selected_cards;
-    Points player_1_results{};
-    Points player_2_results{};
-    current_deck.shuffle();
-    process_game(current_deck, mode, table, player_1, *player_2, selected_cards, last_trick);
-    process_last_trick(last_trick, table, player_1, (*player_2));
-    print_tricks(player_1.getTricks(), (*player_2).getTricks());
-    player_1_results.сalculate_points(player_1.getTricks());
-    player_2_results.сalculate_points((*player_2).getTricks());
-    print_results(player_1_results, player_2_results, mode);
+        player2 = &humanPlayer2;
+    deck.shuffle();
+    processGame(deck, mode, table, player1, *player2, lastTrick);
+    processLastTrick(lastTrick, table, player1, (*player2));
+    printTricks(player1.getTricks(), (*player2).getTricks());
+    player1.сalculatePoints();
+    (*player2).сalculatePoints();
+    printResults(player1, (*player2), mode);
 }

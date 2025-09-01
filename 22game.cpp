@@ -1,4 +1,4 @@
-#include "main_menu.h"
+#include "mainMenu.h"
 #include "game.h"
 #include <windows.h>
 
@@ -6,9 +6,9 @@ int main(void)
 {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
-    clear_console();
-    game_mode mode;
-    mode = main_menu();
-    start_game(mode);
+    clearConsole();
+    gameMode mode;
+    mode = mainMenu();
+    startGame(mode);
     return 0;
 }
