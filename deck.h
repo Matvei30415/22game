@@ -1,6 +1,7 @@
 #pragma once
 
 #include "card.h"
+#include "player.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -13,7 +14,7 @@ class Deck {
 public:
     Deck();
     void shuffle();
-    void dealHand(std::vector<Card> &hand, short count = 4);
+    void dealHand(Player &player, short count = 4);
 private:
     std::vector<Card> deckCards;
 };

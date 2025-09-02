@@ -97,6 +97,7 @@ void HumanPlayer::makeMove(Table &table, GameMode mode)
         !(selectedCard.getType() == Card::Picture &&
           selectedCard.getPictureValue() == 'H'))
     {
+        // (*)
         Table tableCopy(tableHand);
         short selectedTrickCardIndex = 0;
         while (true)
@@ -118,7 +119,7 @@ void HumanPlayer::makeMove(Table &table, GameMode mode)
             bool validTrick = player.processTrick(table);
             if (!validTrick)
             {
-                player.printNotValidMove();
+                player.printNotValidMoveMessage();
                 this->makeMove(table, mode);
                 return;
             }
@@ -145,7 +146,8 @@ void HumanPlayer::makeMove(Table &table, GameMode mode)
     }
     if (mode == withOtherPlayer)
     {
-        player.confirmMove();
+        player.printPassMoveMessage();
+        player.printPriviousMoveMessage();
     }
     player.clearSelectedTrick();
 }
@@ -179,13 +181,13 @@ void HumanPlayer::printTricks()
 }
 
 // Печать сообщения о неправильном ходе
-void HumanPlayer::printNotValidMove()
+void HumanPlayer::printNotValidMoveMessage()
 {
     std::cout << "Некорректный ход!" << std::endl;
 }
 
-// Печать сообщения о передаче хода (*)
-void HumanPlayer::passMove()
+// Печать сообщения о передаче хода
+void HumanPlayer::printPassMoveMessage()
 {
     system("cls");
     std::cout << "Передайте ход другому игроку, затем нажмите Enter";
@@ -193,10 +195,10 @@ void HumanPlayer::passMove()
     system("cls");
 }
 
-// Печать хода предыдущего игрока (*)
-void HumanPlayer::confirmMove()
+// Печать хода предыдущего игрока
+void HumanPlayer::printPriviousMoveMessage()
 {
-    passMove();
+    
     printLine();
     std::cout << "Ход предыдущего игрока" << std::endl;
     printLine();

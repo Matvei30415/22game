@@ -17,9 +17,11 @@ public:
     void addCardToHand(const Card &card);
     void removeCardFromHand(Card &card);
     void removeTrickFromHand(std::vector<Card> &trick);
-    // Строго функции ввода-вывода
-    void printTable();
 
 protected:
     std::vector<Card> hand;
+
+    // Строго функции ввода-вывода
+public:
+    void printTable();
 };

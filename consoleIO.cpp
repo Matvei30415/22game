@@ -9,6 +9,15 @@ void clearConsole()
     // std::cout << "\033[2J\033[1;1H";
 }
 
+// Перемещение курсора для печати
+void moveCursor(short i)
+{
+    if (i == 0)
+        return;
+    // 11 - размер карты в терминале
+    std::cout << "\033[" << 11 * i << 'C';
+}
+
 // Печать линии
 void printLine()
 {
@@ -42,14 +51,6 @@ short input(short min, short max)
     return res;
 }
 
-// Перемещение курсора для печати
-void movingCursor(short i)
-{
-    if (i == 0)
-        return;
-    std::cout << "\033[" << 11 * i << 'C';
-}
-
 // Печать произвольной карты
 void printCard(Card &card)
 {
@@ -77,13 +78,13 @@ void printCardList(std::vector<Card> &cards)
     short len = cards.size();
     for (short i = 0; i < len; i++)
     {
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         printf("+--------+\n");
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         printf("|%c       |\n", cards[i].getSuit());
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         printf("|        |\n");
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         if (cards[i].getType() == Card::Digital)
             if (cards[i].getDigitalValue() == 2)
                 printf("|   A    |\n");
@@ -93,13 +94,13 @@ void printCardList(std::vector<Card> &cards)
                 printf("|   %hd    |\n", cards[i].getDigitalValue());
         else
             printf("|   %c    |\n", cards[i].getPictureValue());
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         printf("|        |\n");
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         printf("|       %c|\n", cards[i].getSuit());
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         printf("+--------+\n");
-        movingCursor(i % 10);
+        moveCursor(i % 10);
         if (i < 9)
             printf("    %hd    \n", i + 1);
         else

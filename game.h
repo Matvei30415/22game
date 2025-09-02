@@ -31,9 +31,12 @@ public:
 private:
     void processLastTrick(Table &table, Player &player1, Player &player2);
     void processGame(Deck &deck, Table &table, Player &player1, Player &player2);
+
     // Строго функции ввода-вывода
+private:
     void printResults(Player &player1, Player &player2);
     void printRules();
     void printMenu();
-    short menuInput(short min, short max);
+    void printEndGameMessage();
+    short inputMenu(short min, short max);
 };

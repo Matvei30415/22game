@@ -64,12 +64,12 @@ void Deck::shuffle()
     }
 }
 
-// Раздаты карт
-void Deck::dealHand(std::vector<Card> &hand, short count)
+// Раздать карт
+void Deck::dealHand(Player &player, short count)
 {
     for (short i = 0; i < count; i++)
     {
-        hand.push_back(deckCards[0]);
+        player.addCardToHand(deckCards[0]);
         deckCards.erase(begin(deckCards));
     }
 }

@@ -24,13 +24,15 @@ public:
     Card &getMaxCard();
     double getMaxComboQuality();
     void clearMaxCombo();
-    // Строго функции ввода-вывода
-    void printAnnouncement() override;
-    void printHand() override;
-    void printTricks() override;
 
 private:
     std::vector<Card> maxCombo;
     Card maxCard;
     double maxComboQuality;
+
+    // Строго функции ввода-вывода
+public:
+    void printAnnouncement() override;
+    void printHand() override;
+    void printTricks() override;
 };

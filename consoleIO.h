@@ -13,8 +13,8 @@ enum InputErrorCodes : short
 };
 
 void clearConsole();
+void moveCursor(short i);
 short input(short min, short max);
 void printLine();
-void movingCursor(short i);
 void printCard(Card &card);
 void printCardList(std::vector<Card> &cards);

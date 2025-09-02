@@ -36,12 +36,6 @@ public:
     void makeHunterMove(Table &table);
     void сalculatePoints();
     void getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts);
-    // Строго функции ввода-вывода
-    virtual void printAnnouncement() = 0;
-    virtual void printHand() = 0;
-    virtual void printTricks() = 0;
-    void printSelectedCard();
-    void printMove();
 
 protected:
     short ID;
@@ -51,4 +45,14 @@ protected:
     Card selectedCard;
     std::vector<Card> selectedTrick;
     Points results;
+
+    // Строго функции ввода-вывода
+public:
+    virtual void printAnnouncement() = 0;
+    virtual void printHand() = 0;
+    virtual void printTricks() = 0;
+
+protected:
+    void printSelectedCard();
+    void printMove();
 };

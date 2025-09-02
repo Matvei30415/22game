@@ -27,8 +27,8 @@ void Game::processGame(Deck &deck, Table &table, Player &player1, Player &player
     {
         if (i % 8 == 0)
         {
-            deck.dealHand(player1.getHand());
-            deck.dealHand(player2.getHand());
+            deck.dealHand(player1);
+            deck.dealHand(player2);
             player1.sortHand();
             player2.sortHand();
         }
@@ -54,7 +54,7 @@ void Game::processGame(Deck &deck, Table &table, Player &player1, Player &player
 // Запустить главное меню
 void Game::mainMenu()
 {
-    short mode = menuInput(0, 3);
+    short mode = inputMenu(0, 3);
     switch (mode)
     {
     case 1:
@@ -92,6 +92,7 @@ void Game::startGame()
     (*player1).сalculatePoints();
     (*player2).сalculatePoints();
     printResults((*player1), (*player2));
+    printEndGameMessage();
 }
 
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
@@ -102,7 +103,7 @@ void Game::printRules()
     printLine();
     std::cout << "Правила" << std::endl;
     printLine();
-    std::cout.write((char*)rules_txt, rules_txt_len);
+    std::cout.write((char *)rules_txt, rules_txt_len);
 }
 
 // Печать главного меню
@@ -121,24 +122,24 @@ void Game::printMenu()
 }
 
 // Ввод пунктов меню
-short Game::menuInput(short min, short max)
+short Game::inputMenu(short min, short max)
 {
     printMenu();
     short selectedCardIndex = input(min, max);
     if (selectedCardIndex == invalidIndex)
     {
         std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
-        return menuInput(min, max);
+        return inputMenu(min, max);
     }
     else if (selectedCardIndex == invalidInput)
     {
         std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
-        return menuInput(min, max);
+        return inputMenu(min, max);
     }
     else if (selectedCardIndex == 3)
     {
         printRules();
-        return menuInput(min, max);
+        return inputMenu(min, max);
     }
     else
     {
@@ -146,7 +147,7 @@ short Game::menuInput(short min, short max)
     }
 }
 
-// Печать результатов
+// Печать результатов (*)
 void Game::printResults(Player &player1, Player &player2)
 {
     char moreCards;
@@ -177,4 +178,11 @@ void Game::printResults(Player &player1, Player &player2)
               << aceOfHearts << " | "
               << (short)moreCards + moreClubs + twentyOfDiamonds + aceOfHearts
               << std::endl;
+}
+
+void Game::printEndGameMessage()
+{
+    std::cout << "Игрока окончена!" << std::endl
+              << "Для выхода нажмите Enter.";
+    std::getchar();
 }
