@@ -11,7 +11,7 @@ public:
         Picture
     };
     Card() = default;
-    Card(short id, Type type, short digitalValue, char pictureValue, char suit, double quality);
+    Card(short ID, Type type, short digitalValue, char pictureValue, char suit, double quality);
     short getID();
     Type getType();
     char getSuit();
@@ -20,7 +20,7 @@ public:
     double getQuality();
 
 private:
-    short id;
+    short ID;
     Type type;
     union
     {

@@ -5,8 +5,6 @@
 #include "table.h"
 #include "player.h"
 
-
-
 class HumanPlayer : public Player
 {
 public:

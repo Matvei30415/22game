@@ -1,6 +1,6 @@
 #include "game.h"
 
-// Передача оставшихся на столе карт, игроку, который взял последнюю взятку
+// Передать оставшиеся на столе карты, игроку, который взял последнюю взятку
 void Game::processLastTrick(Table &table, Player &player1, Player &player2)
 {
     std::vector<Card> &tableHand = table.getHand();
@@ -20,7 +20,7 @@ void Game::processLastTrick(Table &table, Player &player1, Player &player2)
         }
 }
 
-// Запуск одной партии
+// Запустить одну партию
 void Game::processGame(Deck &deck, Table &table, Player &player1, Player &player2)
 {
     for (short i = 0; i < deckSize; i++)
@@ -48,11 +48,10 @@ void Game::processGame(Deck &deck, Table &table, Player &player1, Player &player
                 lastTrick = player2Turn;
             turn = player1Turn;
         }
-        // std::cout << "Последняя взятка: " << lastTrick << std::endl;
     }
 }
 
-// Обработка главного меню
+// Запустить главное меню
 void Game::mainMenu()
 {
     short mode = menuInput(0, 3);
@@ -70,7 +69,7 @@ void Game::mainMenu()
     }
 }
 
-// Запуск игры
+// Запустить игру
 void Game::startGame()
 {
     Deck deck;
@@ -86,6 +85,7 @@ void Game::startGame()
         player2 = &humanPlayer2;
     deck.shuffle();
     processGame(deck, table, *player1, *player2);
+    // std::cout << "Последняя взятка: " << lastTrick << std::endl;
     processLastTrick(table, *player1, *player2);
     (*player1).printTricks();
     (*player2).printTricks();
@@ -120,6 +120,7 @@ void Game::printMenu()
     std::cout << "Выберите пункт меню: ";
 }
 
+// Ввод пунктов меню
 short Game::menuInput(short min, short max)
 {
     printMenu();

@@ -1,6 +1,6 @@
 #include "human.h"
 
-// Проверка суммы числовых карт
+// Проверить суммы числовых карт
 bool HumanPlayer::validateDigitalCardSum(short sum, short start)
 {
     HumanPlayer &player = *this;
@@ -28,7 +28,7 @@ bool HumanPlayer::validateDigitalCardSum(short sum, short start)
     return true;
 }
 
-// Проверка корректности взятки
+// Проверить корректность взятки
 bool HumanPlayer::validateTrick()
 {
     short sum = 0;
@@ -60,7 +60,7 @@ bool HumanPlayer::validateTrick()
     return true;
 }
 
-// Обработка взятки
+// Обработать взятку
 bool HumanPlayer::processTrick(Table &table)
 {
     HumanPlayer &player = *this;
@@ -82,7 +82,7 @@ bool HumanPlayer::processTrick(Table &table)
     return validTrick;
 }
 
-// Обработка 1 хода (Весь визуал игрока здесь, основное внимание)
+// Ход игрока
 void HumanPlayer::makeMove(Table &table, GameMode mode)
 {
     table.sortHand();
@@ -152,7 +152,7 @@ void HumanPlayer::makeMove(Table &table, GameMode mode)
 
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
 
-// Анонс хода
+// Печать анонса хода
 void HumanPlayer::printAnnouncement()
 {
     printLine();
@@ -160,7 +160,7 @@ void HumanPlayer::printAnnouncement()
     printLine();
 }
 
-// Вывод руки
+// Печать руки
 void HumanPlayer::printHand()
 {
     printLine();
@@ -169,7 +169,7 @@ void HumanPlayer::printHand()
     std::cout << "Выберите карту: ";
 }
 
-// Вывод взяток
+// Печать взяток
 void HumanPlayer::printTricks()
 {
     printLine();
@@ -178,13 +178,13 @@ void HumanPlayer::printTricks()
     printCardList(tricks);
 }
 
-// Сообщение о неверном ходе
+// Печать сообщения о неправильном ходе
 void HumanPlayer::printNotValidMove()
 {
     std::cout << "Некорректный ход!" << std::endl;
 }
 
-// Передача хода
+// Печать сообщения о передаче хода (*)
 void HumanPlayer::passMove()
 {
     system("cls");
@@ -193,7 +193,7 @@ void HumanPlayer::passMove()
     system("cls");
 }
 
-// Подтверждение хода
+// Печать хода предыдущего игрока (*)
 void HumanPlayer::confirmMove()
 {
     passMove();
@@ -203,6 +203,7 @@ void HumanPlayer::confirmMove()
     printMove();
 }
 
+// Ввод карты с руки
 short HumanPlayer::inputCard(Table &table)
 {
     table.printTable();
@@ -225,6 +226,7 @@ short HumanPlayer::inputCard(Table &table)
     }
 }
 
+// Ввод карты со стола для взятки
 short HumanPlayer::inputTrick(Table &table)
 {
     table.printTable();

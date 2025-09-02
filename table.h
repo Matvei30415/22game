@@ -3,7 +3,6 @@
 #include "card.h"
 #include "consoleIO.h"
 #include <algorithm>
-#include <iostream>
 
 class Table
 {

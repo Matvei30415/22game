@@ -15,7 +15,7 @@ void printLine()
     std::cout << line << std::endl;
 }
 
-// Ввод и проверка корректности ввода
+// Произвольный ввод (от и до включительно)
 short input(short min, short max)
 {
     short res = 0;
@@ -50,7 +50,7 @@ void movingCursor(short i)
     std::cout << "\033[" << 11 * i << 'C';
 }
 
-// Печать карты
+// Печать произвольной карты
 void printCard(Card &card)
 {
     printf("+--------+\n");
@@ -71,7 +71,7 @@ void printCard(Card &card)
     printf("    %hd    \n", 1);
 }
 
-// Печать карт (произовольная)
+// Печать произвольного списка карт
 void printCardList(std::vector<Card> &cards)
 {
     short len = cards.size();

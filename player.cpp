@@ -1,5 +1,6 @@
 #include "player.h"
 
+// Конструктор класса с параметром
 Player::Player(short ID)
 {
     this->ID = ID;
@@ -10,46 +11,55 @@ Player::Player(short ID)
             (this->results).aceOfHearts = false;
 }
 
+// Установить выбранную карту (с руки)
 void Player::setSelectedCard(const Card &card)
 {
     this->selectedCard = card;
 }
 
+// Установить выбранную взятку (со стола)
 void Player::setSelectedTrick(const std::vector<Card> &cards)
 {
     this->selectedTrick = cards;
 }
 
+// Установить параметр Был ли ход взяткой
 void Player::setIsTrick(bool isTrick)
 {
     this->isTrick = isTrick;
 }
 
+// Получить взятки
 std::vector<Card> &Player::getTricks()
 {
     return this->tricks;
 }
 
+// Получить выбранную карту (с руки)
 Card &Player::getSelectedCard()
 {
     return this->selectedCard;
 }
 
+// Получить выбранную взятку (со стола)
 std::vector<Card> &Player::getSelectedTrick()
 {
     return this->selectedTrick;
 }
 
+// Получить параметр Был ли ход взяткой
 bool Player::getIsTrick()
 {
     return this->isTrick;
 }
 
+// Добавить карту во взятки
 void Player::addCardToTricks(const Card &card)
 {
     (this->tricks).push_back(card);
 }
 
+// Добавить выбранную взятку (со стола) во взятки
 void Player::addTrickToTricks(const std::vector<Card> &trick)
 {
     for (short i = 0; i < trick.size(); i++)
@@ -58,6 +68,7 @@ void Player::addTrickToTricks(const std::vector<Card> &trick)
     }
 }
 
+// Очистить выбранную взятку (со стола)
 void Player::clearSelectedTrick()
 {
     (this->selectedTrick).clear();
@@ -97,7 +108,7 @@ void Player::makeHunterMove(Table &table)
     }
 }
 
-// Вычисление очков в конце партии
+// Вычислить победные очков в конце партии
 void Player::сalculatePoints()
 {
     short len = tricks.size();
@@ -119,7 +130,7 @@ void Player::сalculatePoints()
         (this->results).moreClubs = true;
 }
 
-// Геттер результатов
+// Получить результаты
 void Player::getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts)
 {
     moreCards = (this->results).moreCards;

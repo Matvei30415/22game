@@ -1,10 +1,12 @@
 #include "table.h"
 
+// Получить руку
 std::vector<Card> &Table::getHand()
 {
     return this->hand;
 }
 
+// Сортировка стола
 void Table::sortHand()
 {
     std::vector<Card> &cards = this->hand;
@@ -46,11 +48,13 @@ void Table::sortHand()
     }
 }
 
+// Добавить карту на руку
 void Table::addCardToHand(const Card &card)
 {
     (this->hand).push_back(card);
 }
 
+// Удалить карту с руки
 void Table::removeCardFromHand(Card &card)
 {
     auto it = std::find_if(hand.begin(), hand.end(),
@@ -60,6 +64,7 @@ void Table::removeCardFromHand(Card &card)
         hand.erase(it);
 }
 
+// Удалить взятку с руки
 void Table::removeTrickFromHand(std::vector<Card> &trick)
 {
     std::vector<Card> &hand = this->hand;
@@ -73,7 +78,7 @@ void Table::removeTrickFromHand(std::vector<Card> &trick)
 
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
 
-// Вывод стола
+// Печать карт на столе
 void Table::printTable()
 {
     if (hand.size() == 0)

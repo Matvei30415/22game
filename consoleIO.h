@@ -4,9 +4,6 @@
 #include "rules.h"
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <utility>
-#include <unordered_set>
 #include <windows.h>
 
 enum InputErrorCodes : short

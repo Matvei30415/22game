@@ -1,31 +1,37 @@
 #include "bot.h"
 
+// Установить наилучшую коминацию (со стола) с параметром эффективности
 void BotPlayer::setMaxCombo(std::vector<Card> &combo, double quality)
 {
     this->maxCombo = combo;
     this->maxComboQuality = quality;
 }
 
+// Установить карту (с руки) для наилучшей комбинации
 void BotPlayer::setMaxCard(Card &card)
 {
     this->maxCard = card;
 }
 
+// Получить наилучшую комбинацию
 std::vector<Card> &BotPlayer::getMaxCombo()
 {
     return this->maxCombo;
 }
 
+// Получить карту для наилучшей комбинации
 Card &BotPlayer::getMaxCard()
 {
     return this->maxCard;
 }
 
+// Получить эффективность наилучшей комбинации
 double BotPlayer::getMaxComboQuality()
 {
     return this->maxComboQuality;
 }
 
+// Очистка наилучшей комбинации и параметра эффективности
 void BotPlayer::clearMaxCombo()
 {
     (this->maxCombo).clear();
@@ -118,7 +124,7 @@ void BotPlayer::findHunterCombo(Table &table, std::vector<Card> &combo)
     }
 }
 
-// Поиск самого выгодного хода для бота
+// Нахождение самого выгодного хода для бота
 void BotPlayer::searchTrick(Table &table)
 {
     BotPlayer &bot = *this;
@@ -153,7 +159,7 @@ void BotPlayer::searchTrick(Table &table)
     }
 }
 
-// Ход бота (Весь визуал бота здесь)
+// Ход бота
 void BotPlayer::makeMove(Table &table, GameMode mode)
 {
     table.sortHand();
@@ -199,7 +205,7 @@ void BotPlayer::makeMove(Table &table, GameMode mode)
 
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
 
-// Анонс хода
+// Печать анонса хода
 void BotPlayer::printAnnouncement()
 {
     printLine();
@@ -207,8 +213,7 @@ void BotPlayer::printAnnouncement()
     printLine();
 }
 
-
-// Вывод руки
+// Печать руки
 void BotPlayer::printHand()
 {
     printLine();
@@ -216,7 +221,7 @@ void BotPlayer::printHand()
     printCardList(hand);
 }
 
-// Вывод взяток
+// Печать взяток
 void BotPlayer::printTricks()
 {
     printLine();

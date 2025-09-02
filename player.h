@@ -3,6 +3,7 @@
 #include "card.h"
 #include "table.h"
 
+// (*)
 enum GameMode : short
 {
     withBot = 1,

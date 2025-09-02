@@ -53,7 +53,7 @@ Deck::Deck()
     deckCards.push_back({48, Card::Digital, 20, '\0', 'D', 275.0 / 264.0});
 }
 
-// Тасовка колоды
+// Перемешать колоду
 void Deck::shuffle()
 {
     srand(time(NULL));
@@ -64,7 +64,7 @@ void Deck::shuffle()
     }
 }
 
-// Раздача карт
+// Раздаты карт
 void Deck::dealHand(std::vector<Card> &hand, short count)
 {
     for (short i = 0; i < count; i++)
