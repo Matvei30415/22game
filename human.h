@@ -12,21 +12,21 @@ public:
     {
         name = "Игрок " + std::to_string(ID);
     }
-    void makeMove(Table &table, GameMode mode) override;
+    void makeMove(Table &table, const GameMode mode) override;
     bool processTrick(Table &table);
-    bool validateTrick();
-    bool validateDigitalCardSum(short sum = 0, short start_index = 0);
+    bool validateTrick() const;
+    bool validateDigitalCardSum(short sum = 0, short start_index = 0) const;
 
     // Строго функции ввода-вывода
 public:
-    void printAnnouncement() override;
-    void printHand() override;
-    void printTricks() override;
+    void printAnnouncement() const override;
+    void printHand() const override;
+    void printTricks() const override;
 
 private:
-    short inputCard(Table &table);
-    short inputTrick(Table &table);
-    void printNotValidMoveMessage();
-    void printPriviousMoveMessage();
-    void printPassMoveMessage();
+    short inputCard(const Table &table) const;
+    short inputTrick(const Table &table) const;
+    void printNotValidMoveMessage() const;
+    void printPriviousMoveMessage() const;
+    void printPassMoveMessage() const;
 };

@@ -1,15 +1,26 @@
 #include "table.h"
 
-// Получить руку
-std::vector<Card> &Table::getHand()
+const short Table::getTableSize() const
 {
-    return this->hand;
+    return (this->cardsOnTable).size();
+}
+
+// Получить карту с руки по индексу
+const Card &Table::getCardOnTable(const short index) const
+{
+    return (this->cardsOnTable)[index];
+}
+
+// Получить руку
+const std::vector<Card> &Table::getCardsOnTable() const
+{
+    return this->cardsOnTable;
 }
 
 // Сортировка стола
-void Table::sortHand()
+void Table::sortCardsOnTable()
 {
-    std::vector<Card> &cards = this->hand;
+    std::vector<Card> &cards = this->cardsOnTable;
     short countPictureCards = 0;
     Card tmp;
     for (short i = 0; i < cards.size(); i++)
@@ -49,39 +60,39 @@ void Table::sortHand()
 }
 
 // Добавить карту на руку
-void Table::addCardToHand(const Card &card)
+void Table::addCardToTable(const Card &card)
 {
-    (this->hand).push_back(card);
+    (this->cardsOnTable).push_back(card);
 }
 
 // Удалить карту с руки
-void Table::removeCardFromHand(Card &card)
+void Table::removeCardFromTable(const Card &card)
 {
-    auto it = std::find_if(hand.begin(), hand.end(),
+    auto it = std::find_if(cardsOnTable.begin(), cardsOnTable.end(),
                            [&card](Card &c)
                            { return c.getID() == card.getID(); });
-    if (it != hand.end())
-        hand.erase(it);
+    if (it != cardsOnTable.end())
+        cardsOnTable.erase(it);
 }
 
 // Удалить взятку с руки
-void Table::removeTrickFromHand(std::vector<Card> &trick)
+void Table::removeTrickFromTable(const std::vector<Card> &cards)
 {
-    std::vector<Card> &hand = this->hand;
-    for (short i = 0; i < trick.size(); i++)
-        for (short j = 0; j < hand.size(); j++)
-            if (trick[i].getID() == hand[j].getID())
+    std::vector<Card> &cardsOnTable = this->cardsOnTable;
+    for (short i = 0; i < cards.size(); i++)
+        for (short j = 0; j < cardsOnTable.size(); j++)
+            if (cards[i].getID() == cardsOnTable[j].getID())
             {
-                this->removeCardFromHand(hand[j]);
+                this->removeCardFromTable(cardsOnTable[j]);
             }
 }
 
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
 
 // Печать карт на столе
-void Table::printTable()
+void Table::printTable() const
 {
-    if (hand.size() == 0)
+    if (cardsOnTable.size() == 0)
     {
         std::cout << "Стол пуст!" << std::endl;
         return;
@@ -90,5 +101,5 @@ void Table::printTable()
     {
         std::cout << "Карты на столе: " << std::endl;
     }
-    printCardList(hand);
+    printCardList(cardsOnTable);
 }

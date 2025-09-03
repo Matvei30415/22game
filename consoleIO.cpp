@@ -52,7 +52,7 @@ short input(short min, short max)
 }
 
 // Печать произвольной карты
-void printCard(Card &card)
+void printCard(const Card &card)
 {
     printf("+--------+\n");
     printf("|%c       |\n", card.getSuit());
@@ -73,7 +73,7 @@ void printCard(Card &card)
 }
 
 // Печать произвольного списка карт
-void printCardList(std::vector<Card> &cards)
+void printCardList(const std::vector<Card> &cards)
 {
     short len = cards.size();
     for (short i = 0; i < len; i++)

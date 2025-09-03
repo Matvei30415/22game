@@ -14,37 +14,37 @@ Card::Card(short ID, Type type, short digitalValue, char pictureValue, char suit
 }
 
 // Получить ID карты
-short Card::getID()
+const short Card::getID() const
 {
     return this->ID;
 }
 
 // Получить тип карты (Цифровая или Картинка)
-Card::Type Card::getType()
+const Card::Type Card::getType() const
 {
     return this->type;
 }
 
 // Получить масть карты (Общая, Трефы, Буби, Черви)
-char Card::getSuit()
+const char Card::getSuit() const
 {
     return this->suit;
 }
 
 // Получить значение цифровой карты (2, 4, ... , 18, 20)
-short Card::getDigitalValue()
+const short Card::getDigitalValue() const
 {
     return this->digitalValue;
 }
 
 // Получить значение карты-картинки (G, L, H)
-char Card::getPictureValue()
+const char Card::getPictureValue() const
 {
     return this->pictureValue;
 }
 
 // Получить ценность карты
-double Card::getQuality()
+const double Card::getQuality() const
 {
     return this->quality;
 }

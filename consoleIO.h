@@ -16,5 +16,5 @@ void clearConsole();
 void moveCursor(short i);
 short input(short min, short max);
 void printLine();
-void printCard(Card &card);
-void printCardList(std::vector<Card> &cards);
+void printCard(const Card &card);
+void printCardList(const std::vector<Card> &cards);

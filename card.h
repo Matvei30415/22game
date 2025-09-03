@@ -12,12 +12,12 @@ public:
     };
     Card() = default;
     Card(short ID, Type type, short digitalValue, char pictureValue, char suit, double quality);
-    short getID();
-    Type getType();
-    char getSuit();
-    short getDigitalValue();
-    char getPictureValue();
-    double getQuality();
+    const short getID() const;
+    const Type getType() const;
+    const char getSuit() const;
+    const short getDigitalValue() const;
+    const char getPictureValue() const;
+    const double getQuality() const;
 
 private:
     short ID;

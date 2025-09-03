@@ -34,9 +34,9 @@ private:
 
     // Строго функции ввода-вывода
 private:
-    void printResults(Player &player1, Player &player2);
-    void printRules();
-    void printMenu();
-    void printEndGameMessage();
-    short inputMenu(short min, short max);
+    void printResults(Player &player1, Player &player2) const;
+    void printRules() const;
+    void printMenu() const;
+    void printEndGameMessage() const;
+    short inputMenu(short min, short max) const;
 };

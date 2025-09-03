@@ -1,32 +1,32 @@
 #include "bot.h"
 
 // Установить наилучшую коминацию (со стола) с параметром эффективности
-void BotPlayer::setMaxCombo(std::vector<Card> &combo, double quality)
+void BotPlayer::setMaxCombo(const std::vector<Card> &combo, const double quality)
 {
     this->maxCombo = combo;
     this->maxComboQuality = quality;
 }
 
 // Установить карту (с руки) для наилучшей комбинации
-void BotPlayer::setMaxCard(Card &card)
+void BotPlayer::setMaxCard(const Card &card)
 {
     this->maxCard = card;
 }
 
 // Получить наилучшую комбинацию
-std::vector<Card> &BotPlayer::getMaxCombo()
+const std::vector<Card> &BotPlayer::getMaxCombo() const
 {
     return this->maxCombo;
 }
 
 // Получить карту для наилучшей комбинации
-Card &BotPlayer::getMaxCard()
+const Card &BotPlayer::getMaxCard() const
 {
     return this->maxCard;
 }
 
 // Получить эффективность наилучшей комбинации
-double BotPlayer::getMaxComboQuality()
+const double BotPlayer::getMaxComboQuality() const
 {
     return this->maxComboQuality;
 }
@@ -39,10 +39,9 @@ void BotPlayer::clearMaxCombo()
 }
 
 // Нахождение комбинации с цифровыми картами
-void BotPlayer::findDigitalCombo(Table &table, std::vector<Card> &combo, short n, short start)
+void BotPlayer::findDigitalCombo(const Table &table, std::vector<Card> &combo, short n, short start)
 {
     BotPlayer &bot = *this;
-    std::vector<Card> &tableHand = table.getHand();
     double comboQuality = 0;
     if (n == 0)
     {
@@ -58,13 +57,14 @@ void BotPlayer::findDigitalCombo(Table &table, std::vector<Card> &combo, short n
         }
     }
 
-    for (short i = start; i < tableHand.size(); i++)
+    for (short i = start; i < table.getTableSize(); i++)
     {
-        if (tableHand[i].getType() == Card::Digital && tableHand[i].getDigitalValue() <= n)
+        if (table.getCardOnTable(i).getType() == Card::Digital &&
+            table.getCardOnTable(i).getDigitalValue() <= n)
         {
-            combo.push_back(tableHand[i]);
-            if (tableHand[i].getDigitalValue() != 2)
-                findDigitalCombo(table, combo, n - tableHand[i].getDigitalValue(), i + 1);
+            combo.push_back(table.getCardOnTable(i));
+            if (table.getCardOnTable(i).getDigitalValue() != 2)
+                findDigitalCombo(table, combo, n - table.getCardOnTable(i).getDigitalValue(), i + 1);
             else
             {
                 findDigitalCombo(table, combo, n - 2, i + 1);
@@ -76,42 +76,42 @@ void BotPlayer::findDigitalCombo(Table &table, std::vector<Card> &combo, short n
 }
 
 // Нахождение комбинации с лицами
-void BotPlayer::findPictureCombo(Table &table, std::vector<Card> &combo)
+void BotPlayer::findPictureCombo(const Table &table, std::vector<Card> &combo)
 {
     BotPlayer &bot = *this;
-    std::vector<Card> &tableHand = table.getHand();
     double comboQuality = 0;
     char oppositePicture = selectedCard.getPictureValue() == 'G' ? 'L' : 'G';
-    for (short i = 0; i < tableHand.size(); i++)
+    for (short i = 0; i < table.getTableSize(); i++)
     {
-        if (tableHand[i].getType() == Card::Picture && tableHand[i].getPictureValue() == oppositePicture)
+        if (table.getCardOnTable(i).getType() == Card::Picture &&
+            table.getCardOnTable(i).getPictureValue() == oppositePicture)
         {
-            combo = {tableHand[i]};
-            comboQuality = tableHand[i].getQuality() + selectedCard.getQuality();
+            combo = {table.getCardOnTable(i)};
+            comboQuality = table.getCardOnTable(i).getQuality() + selectedCard.getQuality();
             if (comboQuality > bot.getMaxComboQuality())
             {
                 bot.setMaxCombo(combo, comboQuality);
                 bot.setMaxCard(selectedCard);
             }
         }
-        else if (tableHand[i].getType() == Card::Digital)
+        else if (table.getCardOnTable(i).getType() == Card::Digital)
             break;
     }
 }
 
 // Расчёт ценности хода при розыгрше Хантера
-void BotPlayer::findHunterCombo(Table &table, std::vector<Card> &combo)
+void BotPlayer::findHunterCombo(const Table &table, std::vector<Card> &combo)
 {
     BotPlayer &bot = *this;
-    std::vector<Card> &tableHand = table.getHand();
     double comboQuality = 0;
-    for (short i = 0; i < tableHand.size(); i++)
+    for (short i = 0; i < table.getTableSize(); i++)
     {
-        if ((tableHand[i].getType() == Card::Picture && tableHand[i].getPictureValue() == 'H') ||
-            (tableHand[i].getType() == Card::Digital))
+        if ((table.getCardOnTable(i).getType() == Card::Picture &&
+             table.getCardOnTable(i).getPictureValue() == 'H') ||
+            (table.getCardOnTable(i).getType() == Card::Digital))
         {
-            comboQuality += tableHand[i].getQuality();
-            combo.push_back(tableHand[i]);
+            comboQuality += table.getCardOnTable(i).getQuality();
+            combo.push_back(table.getCardOnTable(i));
         }
     }
     // Закомментировано из-за неэффективности использования карты Hunter ботом
@@ -125,7 +125,7 @@ void BotPlayer::findHunterCombo(Table &table, std::vector<Card> &combo)
 }
 
 // Нахождение самого выгодного хода для бота
-void BotPlayer::searchTrick(Table &table)
+void BotPlayer::searchTrick(const Table &table)
 {
     BotPlayer &bot = *this;
     std::vector<Card> combo{};
@@ -160,9 +160,9 @@ void BotPlayer::searchTrick(Table &table)
 }
 
 // Ход бота
-void BotPlayer::makeMove(Table &table, GameMode mode)
+void BotPlayer::makeMove(Table &table, const GameMode mode)
 {
-    table.sortHand();
+    table.sortCardsOnTable();
     BotPlayer &bot = *this;
     bot.searchTrick(table);
     // bot.printHand();
@@ -180,7 +180,7 @@ void BotPlayer::makeMove(Table &table, GameMode mode)
             bot.addCardToTricks(selectedCard);
             bot.removeCardFromHand(selectedCard);
             bot.addTrickToTricks(maxCombo);
-            table.removeTrickFromHand(maxCombo);
+            table.removeTrickFromTable(maxCombo);
             bot.setIsTrick(true);
         }
     }
@@ -194,7 +194,7 @@ void BotPlayer::makeMove(Table &table, GameMode mode)
         }
         else
         {
-            table.addCardToHand(selectedCard);
+            table.addCardToTable(selectedCard);
             bot.removeCardFromHand(selectedCard);
             bot.setIsTrick(false);
         }
@@ -206,7 +206,7 @@ void BotPlayer::makeMove(Table &table, GameMode mode)
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
 
 // Печать анонса хода
-void BotPlayer::printAnnouncement()
+void BotPlayer::printAnnouncement() const
 {
     printLine();
     std::cout << "Ход бота " << std::to_string(ID) << std::endl;
@@ -214,7 +214,7 @@ void BotPlayer::printAnnouncement()
 }
 
 // Печать руки
-void BotPlayer::printHand()
+void BotPlayer::printHand() const
 {
     printLine();
     std::cout << "Карты бота: " << std::endl;
@@ -222,7 +222,7 @@ void BotPlayer::printHand()
 }
 
 // Печать взяток
-void BotPlayer::printTricks()
+void BotPlayer::printTricks() const
 {
     printLine();
     std::cout << "Взятки бота " << std::endl;

@@ -13,16 +13,16 @@ public:
         name = "Бот " + std::to_string(ID);
         maxComboQuality = 0;
     }
-    void makeMove(Table &table, GameMode mode) override;
-    void searchTrick(Table &table);
-    void findDigitalCombo(Table &table, std::vector<Card> &combo, short n, short start = 0);
-    void findPictureCombo(Table &table, std::vector<Card> &combo);
-    void findHunterCombo(Table &table, std::vector<Card> &combo);
-    void setMaxCombo(std::vector<Card> &combo, double quality);
-    void setMaxCard(Card &card);
-    std::vector<Card> &getMaxCombo();
-    Card &getMaxCard();
-    double getMaxComboQuality();
+    void makeMove(Table &table, const GameMode mode) override;
+    void searchTrick(const Table &table);
+    void findDigitalCombo(const Table &table, std::vector<Card> &combo, short n, short start = 0);
+    void findPictureCombo(const Table &table, std::vector<Card> &combo);
+    void findHunterCombo(const Table &table, std::vector<Card> &combo);
+    void setMaxCombo(const std::vector<Card> &combo, const double quality);
+    void setMaxCard(const Card &card);
+    const std::vector<Card> &getMaxCombo() const;
+    const Card &getMaxCard() const;
+    const double getMaxComboQuality() const;
     void clearMaxCombo();
 
 private:
@@ -32,7 +32,7 @@ private:
 
     // Строго функции ввода-вывода
 public:
-    void printAnnouncement() override;
-    void printHand() override;
-    void printTricks() override;
+    void printAnnouncement() const override;
+    void printHand() const override;
+    void printTricks() const override;
 };

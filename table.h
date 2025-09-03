@@ -8,20 +8,22 @@ class Table
 {
 public:
     Table() = default;
-    Table(std::vector<Card> &hand)
+    Table(const std::vector<Card> &cardsOnTable)
     {
-        this->hand = hand;
+        this->cardsOnTable = cardsOnTable;
     }
-    std::vector<Card> &getHand();
-    void sortHand();
-    void addCardToHand(const Card &card);
-    void removeCardFromHand(Card &card);
-    void removeTrickFromHand(std::vector<Card> &trick);
+    const short getTableSize() const;
+    const Card &getCardOnTable(const short index) const;
+    const std::vector<Card> &getCardsOnTable() const;
+    void sortCardsOnTable();
+    void addCardToTable(const Card &card);
+    void removeCardFromTable(const Card &card);
+    void removeTrickFromTable(const std::vector<Card> &cards);
 
-protected:
-    std::vector<Card> hand;
+private:
+    std::vector<Card> cardsOnTable;
 
     // Строго функции ввода-вывода
 public:
-    void printTable();
+    void printTable() const;
 };

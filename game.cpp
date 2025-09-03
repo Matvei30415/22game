@@ -3,20 +3,19 @@
 // Передать оставшиеся на столе карты, игроку, который взял последнюю взятку
 void Game::processLastTrick(Table &table, Player &player1, Player &player2)
 {
-    std::vector<Card> &tableHand = table.getHand();
     if (lastTrick == player1Turn)
     {
-        while (tableHand.size() > 0)
+        while (table.getTableSize() > 0)
         {
-            player1.addCardToTricks(tableHand[0]);
-            table.removeCardFromHand(tableHand[0]);
+            player1.addCardToTricks(table.getCardOnTable(0));
+            table.removeCardFromTable(table.getCardOnTable(0));
         }
     }
     else if (lastTrick == player2Turn)
-        while (tableHand.size() > 0)
+        while (table.getTableSize() > 0)
         {
-            player2.addCardToTricks(tableHand[0]);
-            table.removeCardFromHand(tableHand[0]);
+            player2.addCardToTricks(table.getCardOnTable(0));
+            table.removeCardFromTable(table.getCardOnTable(0));
         }
 }
 
@@ -98,7 +97,7 @@ void Game::startGame()
 // СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
 
 // Печать правил
-void Game::printRules()
+void Game::printRules() const
 {
     printLine();
     std::cout << "Правила" << std::endl;
@@ -107,7 +106,7 @@ void Game::printRules()
 }
 
 // Печать главного меню
-void Game::printMenu()
+void Game::printMenu() const
 {
     printLine();
     std::cout << "22game" << std::endl;
@@ -122,7 +121,7 @@ void Game::printMenu()
 }
 
 // Ввод пунктов меню
-short Game::inputMenu(short min, short max)
+short Game::inputMenu(short min, short max) const
 {
     printMenu();
     short selectedCardIndex = input(min, max);
@@ -148,7 +147,7 @@ short Game::inputMenu(short min, short max)
 }
 
 // Печать результатов (*)
-void Game::printResults(Player &player1, Player &player2)
+void Game::printResults(Player &player1, Player &player2) const
 {
     char moreCards;
     bool moreClubs, twentyOfDiamonds, aceOfHearts;
@@ -180,7 +179,7 @@ void Game::printResults(Player &player1, Player &player2)
               << std::endl;
 }
 
-void Game::printEndGameMessage()
+void Game::printEndGameMessage() const
 {
     std::cout << "Игрока окончена!" << std::endl
               << "Для выхода нажмите Enter.";
