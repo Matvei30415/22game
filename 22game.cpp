@@ -1,9 +1,9 @@
+#include "consoleIO.h"
 #include "game.h"
 
 int main(void)
 {
-    SetConsoleCP(65001);
-    SetConsoleOutputCP(65001);
+    startConsole();
     clearConsole();
     Game game;
     game.mainMenu();

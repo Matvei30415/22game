@@ -1,50 +1,73 @@
 #include "card.h"
 
 // Конструктор с параметрами
-Card::Card(short ID, Type type, short digitalValue, char pictureValue, char suit, double quality)
+Card::Card(int id, CardKind kind, int value, Suit suit, double quality)
 {
-    this->ID = ID;
-    this->type = type;
-    if (type == Card::Digital)
-        this->digitalValue = digitalValue;
-    else
-        this->pictureValue = pictureValue;
+    this->id = id;
+    this->kind = kind;
+    if (kind == Card::CardKind::Digital)
+        this->value = value;
+    this->suit = suit;
+    this->quality = quality;
+}
+
+// Конструктор с параметрами
+Card::Card(int id, CardKind kind, Picture value, Suit suit, double quality)
+{
+    this->id = id;
+    this->kind = kind;
+    if (kind == Card::CardKind::Picture)
+        this->value = value;
     this->suit = suit;
     this->quality = quality;
 }
 
 // Получить ID карты
-const short Card::getID() const
+int Card::getID() const
 {
-    return this->ID;
+    return this->id;
 }
 
 // Получить тип карты (Цифровая или Картинка)
-const Card::Type Card::getType() const
+Card::CardKind Card::getKind() const
 {
-    return this->type;
+    return this->kind;
 }
 
 // Получить масть карты (Общая, Трефы, Буби, Черви)
-const char Card::getSuit() const
+Card::Suit Card::getSuit() const
 {
     return this->suit;
 }
 
 // Получить значение цифровой карты (2, 4, ... , 18, 20)
-const short Card::getDigitalValue() const
+int Card::getDigitalValue() const
 {
-    return this->digitalValue;
+    if (kind != CardKind::Digital)
+        throw std::logic_error("Карточка не цифровая");
+
+    if (auto ptr = std::get_if<int>(&value)) {
+        return *ptr;
+    } else {
+        throw std::logic_error("В карточке ожидается цифровое значение");
+    }
 }
 
 // Получить значение карты-картинки (G, L, H)
-const char Card::getPictureValue() const
+Card::Picture Card::getPictureValue() const
 {
-    return this->pictureValue;
+    if (kind != CardKind::Picture)
+        throw std::logic_error("Карточка не картинка");
+
+    if (auto ptr = std::get_if<Card::Picture>(&value)) {
+        return *ptr;
+    } else {
+        throw std::logic_error("В карточке ожидается значение-картинка");
+    }
 }
 
 // Получить ценность карты
-const double Card::getQuality() const
+double Card::getQuality() const
 {
     return this->quality;
 }

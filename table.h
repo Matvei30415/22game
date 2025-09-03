@@ -12,8 +12,8 @@ public:
     {
         this->cardsOnTable = cardsOnTable;
     }
-    const short getTableSize() const;
-    const Card &getCardOnTable(const short index) const;
+    std::size_t getTableSize() const;
+    const Card &getCardOnTable(const std::size_t index) const;
     const std::vector<Card> &getCardsOnTable() const;
     void sortCardsOnTable();
     void addCardToTable(const Card &card);

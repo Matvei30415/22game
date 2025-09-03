@@ -1,12 +1,12 @@
 #include "table.h"
 
-const short Table::getTableSize() const
+std::size_t Table::getTableSize() const
 {
     return (this->cardsOnTable).size();
 }
 
 // Получить карту с руки по индексу
-const Card &Table::getCardOnTable(const short index) const
+const Card &Table::getCardOnTable(const std::size_t index) const
 {
     return (this->cardsOnTable)[index];
 }
@@ -21,11 +21,11 @@ const std::vector<Card> &Table::getCardsOnTable() const
 void Table::sortCardsOnTable()
 {
     std::vector<Card> &cards = this->cardsOnTable;
-    short countPictureCards = 0;
+    std::size_t countPictureCards = 0;
     Card tmp;
-    for (short i = 0; i < cards.size(); i++)
+    for (std::size_t i = 0; i < cards.size(); i++)
     {
-        if (cards[i].getType() == Card::Picture)
+        if (cards[i].getKind() == Card::CardKind::Picture)
         {
             tmp = cards[i];
             cards.erase(cards.cbegin() + i);
@@ -33,25 +33,26 @@ void Table::sortCardsOnTable()
             countPictureCards++;
             continue;
         }
-        for (short j = i + 1; j < cards.size(); j++)
+        for (std::size_t j = i + 1; j < cards.size(); j++)
         {
-            if ((cards[i].getType() == Card::Digital && cards[j].getType() == Card::Digital) &&
+            if ((cards[i].getKind() == Card::CardKind::Digital && cards[j].getKind() == Card::CardKind::Digital) &&
                 ((cards[i].getDigitalValue() > cards[j].getDigitalValue()) ||
                  ((cards[i].getDigitalValue() == cards[j].getDigitalValue()) &&
-                  (cards[i].getSuit() != 'G' && cards[j].getSuit() == 'G'))))
+                  (cards[i].getSuit() != Card::Suit::General && cards[j].getSuit() == Card::Suit::General))))
             {
                 std::swap(cards[i], cards[j]);
             }
         }
     }
-    for (short i = 0; i < countPictureCards; i++)
+    for (std::size_t i = 0; i < countPictureCards; i++)
     {
-        for (short j = i + 1; j < countPictureCards; j++)
+        for (std::size_t j = i + 1; j < countPictureCards; j++)
         {
-            if ((cards[i].getPictureValue() == 'L' && cards[j].getPictureValue() == 'G') ||
-                (cards[i].getPictureValue() == 'H') ||
+            if ((cards[i].getPictureValue() == Card::Picture::Lady &&
+                 cards[j].getPictureValue() == Card::Picture::Gentleman) ||
+                (cards[i].getPictureValue() == Card::Picture::Hunter) ||
                 ((cards[i].getPictureValue() == cards[j].getPictureValue()) &&
-                 (cards[i].getSuit() != 'G' && cards[j].getSuit() == 'G')))
+                 (cards[i].getSuit() != Card::Suit::General && cards[j].getSuit() == Card::Suit::General)))
             {
                 std::swap(cards[i], cards[j]);
             }
@@ -79,8 +80,8 @@ void Table::removeCardFromTable(const Card &card)
 void Table::removeTrickFromTable(const std::vector<Card> &cards)
 {
     std::vector<Card> &cardsOnTable = this->cardsOnTable;
-    for (short i = 0; i < cards.size(); i++)
-        for (short j = 0; j < cardsOnTable.size(); j++)
+    for (std::size_t i = 0; i < cards.size(); i++)
+        for (std::size_t j = 0; j < cardsOnTable.size(); j++)
             if (cards[i].getID() == cardsOnTable[j].getID())
             {
                 this->removeCardFromTable(cardsOnTable[j]);

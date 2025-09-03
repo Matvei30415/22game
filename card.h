@@ -1,32 +1,44 @@
 #pragma once
 
 #include <vector>
+#include <variant>
+#include <stdexcept>
 
 class Card
 {
 public:
-    enum Type
+    enum class CardKind : unsigned char
     {
         Digital,
         Picture
     };
+    enum class Suit : unsigned char
+    {
+        General = 'G',
+        Clubs = 'C',
+        Diamonds = 'D',
+        Hearts = 'H',
+    };
+    enum class Picture : unsigned char
+    {
+        Gentleman = 'G',
+        Lady = 'L',
+        Hunter = 'H'
+    };
     Card() = default;
-    Card(short ID, Type type, short digitalValue, char pictureValue, char suit, double quality);
-    const short getID() const;
-    const Type getType() const;
-    const char getSuit() const;
-    const short getDigitalValue() const;
-    const char getPictureValue() const;
-    const double getQuality() const;
+    Card(int id, CardKind kind, int value, Suit suit, double quality);
+    Card(int id, CardKind kind, Picture value, Suit suit, double quality);
+    int getID() const;
+    CardKind getKind() const;
+    Suit getSuit() const;
+    int getDigitalValue() const;
+    Picture getPictureValue() const;
+    double getQuality() const;
 
 private:
-    short ID;
-    Type type;
-    union
-    {
-        short digitalValue;
-        char pictureValue;
-    };
-    char suit;
+    int id;
+    CardKind kind;
+    std::variant<int, Picture> value;
+    Suit suit;
     double quality;
 };

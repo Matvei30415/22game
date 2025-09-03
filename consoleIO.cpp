@@ -1,6 +1,12 @@
 #include "consoleIO.h"
 
-static const std::string line(100, '-');
+static const std::string line(110, '-');
+
+void startConsole()
+{
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+}
 
 // Очистка консоли
 void clearConsole()
@@ -10,12 +16,28 @@ void clearConsole()
 }
 
 // Перемещение курсора для печати
-void moveCursor(short i)
+void moveCursorUp(int shift)
 {
-    if (i == 0)
+    if (shift == 0)
+        return;
+    std::cout << "\033[" << shift << 'A';
+}
+
+// Перемещение курсора для печати
+void moveCursorRight(std::size_t shift)
+{
+    if (shift == 0)
         return;
     // 11 - размер карты в терминале
-    std::cout << "\033[" << 11 * i << 'C';
+    std::cout << "\033[" << shift << 'C';
+}
+
+// Перемещение курсора для печати
+void moveCursorDown(int shift)
+{
+    if (shift == 0)
+        return;
+    std::cout << "\033[" << shift << 'B';
 }
 
 // Печать линии
@@ -52,62 +74,54 @@ short input(short min, short max)
 }
 
 // Печать произвольной карты
-void printCard(const Card &card)
+void printCard(const Card &card, std::size_t shiftCursor, std::size_t number)
 {
-    printf("+--------+\n");
-    printf("|%c       |\n", card.getSuit());
-    printf("|        |\n");
-    if (card.getType() == Card::Digital)
-        if (card.getDigitalValue() == 2)
-            printf("|   A    |\n");
-        else if (card.getDigitalValue() > 9)
-            printf("|   %hd   |\n", card.getDigitalValue());
+    char suit = (char)card.getSuit();
+    moveCursorRight(shiftCursor);
+    std::cout << "+--------+" << std::endl;
+    moveCursorRight(shiftCursor);
+    std::cout << std::format("|{}       |", suit) << std::endl;
+    moveCursorRight(shiftCursor);
+    std::cout << "|        |" << std::endl;
+    moveCursorRight(shiftCursor);
+    if (card.getKind() == Card::CardKind::Digital)
+    {
+        int value = card.getDigitalValue();
+        if (value == 2)
+            std::cout << "|   A    |" << std::endl;
+        else if (value > 9)
+            std::cout << std::format("|   {}   |", value) << std::endl;
         else
-            printf("|   %hd    |\n", card.getDigitalValue());
+            std::cout << std::format("|   {}    |", value) << std::endl;
+    }
     else
-        printf("|   %c    |\n", card.getPictureValue());
-    printf("|        |\n");
-    printf("|       %c|\n", card.getSuit());
-    printf("+--------+\n");
-    printf("    %hd    \n", 1);
+    {
+        char value = (char)card.getPictureValue();
+        std::cout << std::format("|   {}    |", value) << std::endl;
+    }
+    moveCursorRight(shiftCursor);
+    std::cout << "|        |" << std::endl;
+    moveCursorRight(shiftCursor);
+    std::cout << std::format("|       {}|", suit) << std::endl;
+    moveCursorRight(shiftCursor);
+    std::cout << "+--------+" << std::endl;
+    moveCursorRight(shiftCursor);
+    if (number < 9)
+        std::cout << std::format("    {}    ", number) << std::endl;
+    else
+        std::cout << std::format("    {}   ", number) << std::endl;
 }
 
 // Печать произвольного списка карт
 void printCardList(const std::vector<Card> &cards)
 {
-    short len = cards.size();
-    for (short i = 0; i < len; i++)
+    std::size_t len = cards.size();
+    for (std::size_t i = 0; i < len; i++)
     {
-        moveCursor(i % 10);
-        printf("+--------+\n");
-        moveCursor(i % 10);
-        printf("|%c       |\n", cards[i].getSuit());
-        moveCursor(i % 10);
-        printf("|        |\n");
-        moveCursor(i % 10);
-        if (cards[i].getType() == Card::Digital)
-            if (cards[i].getDigitalValue() == 2)
-                printf("|   A    |\n");
-            else if (cards[i].getDigitalValue() > 9)
-                printf("|   %hd   |\n", cards[i].getDigitalValue());
-            else
-                printf("|   %hd    |\n", cards[i].getDigitalValue());
-        else
-            printf("|   %c    |\n", cards[i].getPictureValue());
-        moveCursor(i % 10);
-        printf("|        |\n");
-        moveCursor(i % 10);
-        printf("|       %c|\n", cards[i].getSuit());
-        moveCursor(i % 10);
-        printf("+--------+\n");
-        moveCursor(i % 10);
-        if (i < 9)
-            printf("    %hd    \n", i + 1);
-        else
-            printf("    %hd   \n", i + 1);
+        printCard(cards[i], i % 10 * 11, i + 1);
         if ((i + 1) % 10 == 0 && i != 0 && (i + 1) != len)
-            printf("\n\n\n\n\n\n\n\n");
-        std::cout << "\033[8A";
+            std::cout << "\n\n\n\n\n\n\n\n";
+        moveCursorUp(8);
     }
-    std::cout << "\033[8B";
+    moveCursorDown(8);
 }

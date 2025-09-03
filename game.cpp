@@ -152,36 +152,34 @@ void Game::printResults(Player &player1, Player &player2) const
     char moreCards;
     bool moreClubs, twentyOfDiamonds, aceOfHearts;
     printLine();
-    std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма" << std::endl;
+    std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма |" << std::endl;
     printLine();
     player1.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
-    if (mode == withBot)
-        std::cout << "Результаты Игрока: ";
-    else if (mode == withOtherPlayer)
-        std::cout << "Результаты Игрока 1: ";
-    std::cout << (short)moreCards << " | "
+    std::cout << "Результаты Игрока " << std::to_string(player1.getID()) << ": ";
+    std::cout << moreCards
               << moreClubs << " | "
               << twentyOfDiamonds << " | "
               << aceOfHearts << " | "
-              << (short)moreCards + moreClubs + twentyOfDiamonds + aceOfHearts
+              << moreCards + moreClubs + twentyOfDiamonds + aceOfHearts << " |"
               << std::endl;
     printLine();
     player2.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
     if (mode == withBot)
-        std::cout << "Результаты Бота: ";
+        std::cout << "Результаты Бота " << std::to_string(player2.getID()) << ": ";
     else if (mode == withOtherPlayer)
-        std::cout << "Результаты Игрока 2: ";
-    std::cout << (short)moreCards << " | "
+        std::cout << "Результаты Игрока " << std::to_string(player2.getID()) << ": ";
+    std::cout << moreCards
               << moreClubs << " | "
               << twentyOfDiamonds << " | "
               << aceOfHearts << " | "
-              << (short)moreCards + moreClubs + twentyOfDiamonds + aceOfHearts
+              << moreCards + moreClubs + twentyOfDiamonds + aceOfHearts << " |"
               << std::endl;
+    printLine();
 }
 
 void Game::printEndGameMessage() const
 {
     std::cout << "Игрока окончена!" << std::endl
-              << "Для выхода нажмите Enter.";
+              << "Для выхода нажмите Enter";
     std::getchar();
 }

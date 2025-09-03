@@ -12,21 +12,22 @@ enum GameMode : short
 
 struct Points
 {
-    char moreCards;
-    bool moreClubs;
-    bool twentyOfDiamonds;
-    bool aceOfHearts;
+    short moreCards;
+    short moreClubs;
+    short twentyOfDiamonds;
+    short aceOfHearts;
 };
 
 class Player
 {
 public:
-    Player(short ID);
-    virtual void makeMove(Table &table, const GameMode mode) = 0;
+    Player(short id);
+    virtual void makeMove(Table &table, GameMode mode) = 0;
     void setSelectedCard(const Card &card);
     void setSelectedTrick(const std::vector<Card> &cards);
     void setIsTrick(const bool isTrick);
-    const bool getIsTrick() const;
+    short getID() const;
+    bool getIsTrick() const;
     const std::vector<Card> &getHand() const;
     const std::vector<Card> &getTricks() const;
     const Card &getSelectedCard() const;
@@ -43,7 +44,7 @@ public:
     void getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts);
 
 protected:
-    short ID;
+    short id;
     std::string name;
     bool isTrick;
     std::vector<Card> hand;

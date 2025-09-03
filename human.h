@@ -8,14 +8,14 @@
 class HumanPlayer : public Player
 {
 public:
-    HumanPlayer(short ID) : Player(ID)
+    HumanPlayer(short id) : Player(id)
     {
-        name = "Игрок " + std::to_string(ID);
+        name = "Игрок " + std::to_string(id);
     }
-    void makeMove(Table &table, const GameMode mode) override;
+    void makeMove(Table &table, GameMode mode) override;
     bool processTrick(Table &table);
     bool validateTrick() const;
-    bool validateDigitalCardSum(short sum = 0, short start_index = 0) const;
+    bool validateDigitalCardSum(short sum = 0, std::size_t start = 0) const;
 
     // Строго функции ввода-вывода
 public:

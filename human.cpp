@@ -1,12 +1,11 @@
 #include "human.h"
 
 // Проверить суммы числовых карт
-bool HumanPlayer::validateDigitalCardSum(short sum, short start) const
+bool HumanPlayer::validateDigitalCardSum(short sum, std::size_t start) const
 {
-    const HumanPlayer &player = *this;
-    for (start; start < selectedTrick.size(); start++)
+    for (; start < selectedTrick.size(); start++)
     {
-        if (selectedTrick[start].getType() != Card::Digital)
+        if (selectedTrick[start].getKind() != Card::CardKind::Digital)
         {
             return false;
         }
@@ -32,9 +31,8 @@ bool HumanPlayer::validateDigitalCardSum(short sum, short start) const
 bool HumanPlayer::validateTrick() const
 {
     short sum = 0;
-    const HumanPlayer &player = *this;
     // Проверка числовых карт
-    if (selectedCard.getType() == Card::Digital)
+    if (selectedCard.getKind() == Card::CardKind::Digital)
     {
         if (selectedCard.getDigitalValue() != 2)
         {
@@ -50,10 +48,12 @@ bool HumanPlayer::validateTrick() const
         }
     }
     // Проверка Леди + Джентльмен
-    else if ((selectedCard.getPictureValue() == 'G' &&
-              (selectedTrick.size() != 1 || selectedTrick[0].getPictureValue() != 'L')) ||
-             (selectedCard.getPictureValue() == 'L' &&
-              (selectedTrick.size() != 1 || selectedTrick[0].getPictureValue() != 'G')))
+    else if ((selectedCard.getPictureValue() == Card::Picture::Gentleman &&
+              (selectedTrick.size() != 1 ||
+               selectedTrick[0].getPictureValue() != Card::Picture::Lady)) ||
+             (selectedCard.getPictureValue() == Card::Picture::Lady &&
+              (selectedTrick.size() != 1 ||
+               selectedTrick[0].getPictureValue() != Card::Picture::Gentleman)))
     {
         return false;
     }
@@ -82,18 +82,18 @@ bool HumanPlayer::processTrick(Table &table)
 }
 
 // Ход игрока
-void HumanPlayer::makeMove(Table &table, const GameMode mode)
+void HumanPlayer::makeMove(Table &table, GameMode mode)
 {
     table.sortCardsOnTable();
     HumanPlayer &player = *this;
-    short selectedCardIndex = player.inputCard(table);
+    std::size_t selectedCardIndex = player.inputCard(table);
     player.setSelectedCard(hand[selectedCardIndex]);
     player.setIsTrick(false);
 
     // Если стол не пустой и выбранная карта - не Хантер, выбираем карты для взятки
     if (table.getTableSize() != 0 &&
-        !(selectedCard.getType() == Card::Picture &&
-          selectedCard.getPictureValue() == 'H'))
+        !(selectedCard.getKind() == Card::CardKind::Picture &&
+          selectedCard.getPictureValue() == Card::Picture::Hunter))
     {
         // (*)
         Table tableCopy(table.getCardsOnTable());
@@ -146,6 +146,7 @@ void HumanPlayer::makeMove(Table &table, const GameMode mode)
     {
         player.printPassMoveMessage();
         player.printPriviousMoveMessage();
+        player.printMove();
     }
     player.clearSelectedTrick();
 }
@@ -156,7 +157,7 @@ void HumanPlayer::makeMove(Table &table, const GameMode mode)
 void HumanPlayer::printAnnouncement() const
 {
     printLine();
-    std::cout << "Ход игрока " << std::to_string(ID) << std::endl;
+    std::cout << "Ход игрока " << std::to_string(id) << std::endl;
     printLine();
 }
 
@@ -187,63 +188,65 @@ void HumanPlayer::printNotValidMoveMessage() const
 // Печать сообщения о передаче хода
 void HumanPlayer::printPassMoveMessage() const
 {
-    system("cls");
+    clearConsole();
     std::cout << "Передайте ход другому игроку, затем нажмите Enter";
     std::getchar();
-    system("cls");
+    clearConsole();
 }
 
 // Печать хода предыдущего игрока
 void HumanPlayer::printPriviousMoveMessage() const
 {
-    
+
     printLine();
     std::cout << "Ход предыдущего игрока" << std::endl;
     printLine();
-    printMove();
 }
 
 // Ввод карты с руки
 short HumanPlayer::inputCard(const Table &table) const
 {
-    table.printTable();
-    this->printHand();
-    short selectedCardIndex = input(1, hand.size());
-    if (selectedCardIndex == invalidIndex)
+    while (true)
     {
-        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
-        return inputCard(table);
-    }
-    else if (selectedCardIndex == invalidInput)
-    {
-        std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
-        return inputCard(table);
-    }
-    else
-    {
-        selectedCardIndex--;
-        return selectedCardIndex;
+        table.printTable();
+        this->printHand();
+        short selectedCardIndex = input(1, hand.size());
+        if (selectedCardIndex == invalidIndex)
+        {
+            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        }
+        else if (selectedCardIndex == invalidInput)
+        {
+            std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        }
+        else
+        {
+            selectedCardIndex--;
+            return selectedCardIndex;
+        }
     }
 }
 
 // Ввод карты со стола для взятки
 short HumanPlayer::inputTrick(const Table &table) const
 {
-    table.printTable();
-    std::cout << "Выберите карты для взятки: ";
-    short selectedCardIndex = input(1, table.getTableSize());
-    if (selectedCardIndex == invalidIndex)
+    while (true)
     {
-        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
-        return inputTrick(table);
-    }
-    else if (selectedCardIndex == invalidInput)
-    {
-        return invalidInput;
-    }
-    else
-    {
-        selectedCardIndex--;
-        return selectedCardIndex;
+        table.printTable();
+        std::cout << "Выберите карты для взятки: ";
+        short selectedCardIndex = input(1, table.getTableSize());
+        if (selectedCardIndex == invalidIndex)
+        {
+            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        }
+        else if (selectedCardIndex == invalidInput)
+        {
+            return invalidInput;
+        }
+        else
+        {
+            selectedCardIndex--;
+            return selectedCardIndex;
+        }
     }
 }

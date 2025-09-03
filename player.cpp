@@ -1,14 +1,14 @@
 #include "player.h"
 
 // Конструктор класса с параметром
-Player::Player(short ID)
+Player::Player(short id)
 {
-    this->ID = ID;
+    this->id = id;
     this->isTrick = false;
-    (this->results).moreCards = '\0';
-    (this->results).moreClubs =
-        (this->results).twentyOfDiamonds =
-            (this->results).aceOfHearts = false;
+    (this->results).moreCards =
+        (this->results).moreClubs =
+            (this->results).twentyOfDiamonds =
+                (this->results).aceOfHearts = 0;
 }
 
 // Установить выбранную карту (с руки)
@@ -27,6 +27,11 @@ void Player::setSelectedTrick(const std::vector<Card> &cards)
 void Player::setIsTrick(const bool isTrick)
 {
     this->isTrick = isTrick;
+}
+
+short Player::getID() const
+{
+    return this->id;
 }
 
 // Получить руку
@@ -54,7 +59,7 @@ const std::vector<Card> &Player::getSelectedTrick() const
 }
 
 // Получить параметр Был ли ход взяткой
-const bool Player::getIsTrick() const
+bool Player::getIsTrick() const
 {
     return this->isTrick;
 }
@@ -63,11 +68,11 @@ const bool Player::getIsTrick() const
 void Player::sortHand()
 {
     std::vector<Card> &cards = this->hand;
-    short countPictureCards = 0;
+    std::size_t countPictureCards = 0;
     Card tmp;
-    for (short i = 0; i < cards.size(); i++)
+    for (std::size_t i = 0; i < cards.size(); i++)
     {
-        if (cards[i].getType() == Card::Picture)
+        if (cards[i].getKind() == Card::CardKind::Picture)
         {
             tmp = cards[i];
             cards.erase(cards.cbegin() + i);
@@ -75,25 +80,28 @@ void Player::sortHand()
             countPictureCards++;
             continue;
         }
-        for (short j = i + 1; j < cards.size(); j++)
+        for (std::size_t j = i + 1; j < cards.size(); j++)
         {
-            if ((cards[i].getType() == Card::Digital && cards[j].getType() == Card::Digital) &&
+            if ((cards[i].getKind() == Card::CardKind::Digital && cards[j].getKind() == Card::CardKind::Digital) &&
                 ((cards[i].getDigitalValue() > cards[j].getDigitalValue()) ||
                  ((cards[i].getDigitalValue() == cards[j].getDigitalValue()) &&
-                  (cards[i].getSuit() != 'G' && cards[j].getSuit() == 'G'))))
+                  (cards[i].getSuit() != Card::Suit::General &&
+                   cards[j].getSuit() == Card::Suit::General))))
             {
                 std::swap(cards[i], cards[j]);
             }
         }
     }
-    for (short i = 0; i < countPictureCards; i++)
+    for (std::size_t i = 0; i < countPictureCards; i++)
     {
-        for (short j = i + 1; j < countPictureCards; j++)
+        for (std::size_t j = i + 1; j < countPictureCards; j++)
         {
-            if ((cards[i].getPictureValue() == 'L' && cards[j].getPictureValue() == 'G') ||
-                (cards[i].getPictureValue() == 'H') ||
+            if ((cards[i].getPictureValue() == Card::Picture::Lady &&
+                 cards[j].getPictureValue() == Card::Picture::Gentleman) ||
+                (cards[i].getPictureValue() == Card::Picture::Hunter) ||
                 ((cards[i].getPictureValue() == cards[j].getPictureValue()) &&
-                 (cards[i].getSuit() != 'G' && cards[j].getSuit() == 'G')))
+                 (cards[i].getSuit() != Card::Suit::General &&
+                  cards[j].getSuit() == Card::Suit::General)))
             {
                 std::swap(cards[i], cards[j]);
             }
@@ -116,7 +124,7 @@ void Player::addCardToTricks(const Card &card)
 // Добавить выбранную взятку (со стола) во взятки
 void Player::addTrickToTricks(const std::vector<Card> &cards)
 {
-    for (short i = 0; i < cards.size(); i++)
+    for (std::size_t i = 0; i < cards.size(); i++)
     {
         (this->tricks).push_back(cards[i]);
     }
@@ -136,8 +144,8 @@ void Player::removeCardFromHand(const Card &card)
 void Player::removeTrickFromHand(const std::vector<Card> &trick)
 {
     std::vector<Card> &hand = this->hand;
-    for (short i = 0; i < trick.size(); i++)
-        for (short j = 0; j < hand.size(); j++)
+    for (std::size_t i = 0; i < trick.size(); i++)
+        for (std::size_t j = 0; j < hand.size(); j++)
             if (trick[i].getID() == hand[j].getID())
             {
                 this->removeCardFromHand(hand[j]);
@@ -153,14 +161,15 @@ void Player::clearSelectedTrick()
 // Обработка механизма карты Hunter
 void Player::makeHunterMove(Table &table)
 {
-    short countErase = 0;
+    std::size_t countErase = 0;
     Player &player = (*this);
     player.setIsTrick(false);
-    for (short i = 0; i < table.getTableSize(); i++)
+    for (std::size_t i = 0; i < table.getTableSize(); i++)
     {
         // Проверяем, что карта не Gentleman или Lady
-        if (!(table.getCardOnTable(i).getType() == Card::Picture &&
-              (table.getCardOnTable(i).getPictureValue() == 'G' || table.getCardOnTable(i).getPictureValue() == 'L')))
+        if (!(table.getCardOnTable(i).getKind() == Card::CardKind::Picture &&
+              (table.getCardOnTable(i).getPictureValue() == Card::Picture::Gentleman ||
+               table.getCardOnTable(i).getPictureValue() == Card::Picture::Lady)))
         {
             player.addCardToTricks(table.getCardOnTable(i));
             table.removeCardFromTable(table.getCardOnTable(i));
@@ -186,23 +195,26 @@ void Player::makeHunterMove(Table &table)
 // Вычислить победные очков в конце партии
 void Player::сalculatePoints()
 {
-    short len = tricks.size();
+    std::size_t len = tricks.size();
     if (len > 24)
-        (this->results).moreCards = 2;
+        (this->results).moreCards += 2;
     else if (len == 24)
-        (this->results).moreCards = 1;
+        (this->results).moreCards += 1;
     short sumClubs = 0;
-    for (short i = 0; i < len; i++)
+    for (std::size_t i = 0; i < len; i++)
     {
-        if (tricks[i].getSuit() == 'C')
+        if (tricks[i].getSuit() == Card::Suit::Clubs)
             sumClubs += 1;
-        if (tricks[i].getDigitalValue() == 20 && tricks[i].getSuit() == 'D')
-            (this->results).twentyOfDiamonds = true;
-        else if (tricks[i].getDigitalValue() == 2 && tricks[i].getSuit() == 'H')
-            (this->results).aceOfHearts = true;
+        if (tricks[i].getKind() == Card::CardKind::Digital)
+        {
+            if (tricks[i].getDigitalValue() == 20 && tricks[i].getSuit() == Card::Suit::Diamonds)
+                (this->results).twentyOfDiamonds += 1;
+            else if (tricks[i].getDigitalValue() == 2 && tricks[i].getSuit() == Card::Suit::Hearts)
+                (this->results).aceOfHearts += 1;
+        }
     }
     if (sumClubs > 5)
-        (this->results).moreClubs = true;
+        (this->results).moreClubs += 1;
 }
 
 // Получить результаты
@@ -225,7 +237,7 @@ void Player::printSelectedCard() const
 // Печать хода
 void Player::printMove() const
 {
-    short size = selectedTrick.size();
+    std::size_t size = selectedTrick.size();
     printSelectedCard();
     if (size != 0)
         printCardList(selectedTrick);

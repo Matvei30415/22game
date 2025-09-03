@@ -26,7 +26,7 @@ const Card &BotPlayer::getMaxCard() const
 }
 
 // Получить эффективность наилучшей комбинации
-const double BotPlayer::getMaxComboQuality() const
+double BotPlayer::getMaxComboQuality() const
 {
     return this->maxComboQuality;
 }
@@ -39,14 +39,14 @@ void BotPlayer::clearMaxCombo()
 }
 
 // Нахождение комбинации с цифровыми картами
-void BotPlayer::findDigitalCombo(const Table &table, std::vector<Card> &combo, short n, short start)
+void BotPlayer::findDigitalCombo(const Table &table, std::vector<Card> &combo, short n, std::size_t start)
 {
     BotPlayer &bot = *this;
     double comboQuality = 0;
     if (n == 0)
     {
         comboQuality += selectedCard.getQuality();
-        for (short i = 0; i < combo.size(); i++)
+        for (std::size_t i = 0; i < combo.size(); i++)
         {
             comboQuality += combo[i].getQuality();
         }
@@ -57,9 +57,9 @@ void BotPlayer::findDigitalCombo(const Table &table, std::vector<Card> &combo, s
         }
     }
 
-    for (short i = start; i < table.getTableSize(); i++)
+    for (std::size_t i = start; i < table.getTableSize(); i++)
     {
-        if (table.getCardOnTable(i).getType() == Card::Digital &&
+        if (table.getCardOnTable(i).getKind() == Card::CardKind::Digital &&
             table.getCardOnTable(i).getDigitalValue() <= n)
         {
             combo.push_back(table.getCardOnTable(i));
@@ -80,10 +80,10 @@ void BotPlayer::findPictureCombo(const Table &table, std::vector<Card> &combo)
 {
     BotPlayer &bot = *this;
     double comboQuality = 0;
-    char oppositePicture = selectedCard.getPictureValue() == 'G' ? 'L' : 'G';
-    for (short i = 0; i < table.getTableSize(); i++)
+    Card::Picture oppositePicture = selectedCard.getPictureValue() == Card::Picture::Gentleman ? Card::Picture::Lady : Card::Picture::Gentleman;
+    for (std::size_t i = 0; i < table.getTableSize(); i++)
     {
-        if (table.getCardOnTable(i).getType() == Card::Picture &&
+        if (table.getCardOnTable(i).getKind() == Card::CardKind::Picture &&
             table.getCardOnTable(i).getPictureValue() == oppositePicture)
         {
             combo = {table.getCardOnTable(i)};
@@ -94,7 +94,7 @@ void BotPlayer::findPictureCombo(const Table &table, std::vector<Card> &combo)
                 bot.setMaxCard(selectedCard);
             }
         }
-        else if (table.getCardOnTable(i).getType() == Card::Digital)
+        else if (table.getCardOnTable(i).getKind() == Card::CardKind::Digital)
             break;
     }
 }
@@ -104,11 +104,11 @@ void BotPlayer::findHunterCombo(const Table &table, std::vector<Card> &combo)
 {
     BotPlayer &bot = *this;
     double comboQuality = 0;
-    for (short i = 0; i < table.getTableSize(); i++)
+    for (std::size_t i = 0; i < table.getTableSize(); i++)
     {
-        if ((table.getCardOnTable(i).getType() == Card::Picture &&
-             table.getCardOnTable(i).getPictureValue() == 'H') ||
-            (table.getCardOnTable(i).getType() == Card::Digital))
+        if ((table.getCardOnTable(i).getKind() == Card::CardKind::Picture &&
+             table.getCardOnTable(i).getPictureValue() == Card::Picture::Hunter) ||
+            (table.getCardOnTable(i).getKind() == Card::CardKind::Digital))
         {
             comboQuality += table.getCardOnTable(i).getQuality();
             combo.push_back(table.getCardOnTable(i));
@@ -129,10 +129,10 @@ void BotPlayer::searchTrick(const Table &table)
 {
     BotPlayer &bot = *this;
     std::vector<Card> combo{};
-    for (short i = 0; i < hand.size(); i++)
+    for (std::size_t i = 0; i < hand.size(); i++)
     {
         bot.setSelectedCard(hand[i]);
-        if (selectedCard.getType() == Card::Digital)
+        if (selectedCard.getKind() == Card::CardKind::Digital)
         {
 
             if (selectedCard.getDigitalValue() != 2)
@@ -146,7 +146,8 @@ void BotPlayer::searchTrick(const Table &table)
         }
         else
         {
-            if (selectedCard.getPictureValue() == 'G' || selectedCard.getPictureValue() == 'L')
+            if (selectedCard.getPictureValue() == Card::Picture::Gentleman ||
+                selectedCard.getPictureValue() == Card::Picture::Lady)
             {
                 bot.findPictureCombo(table, combo);
             }
@@ -160,7 +161,7 @@ void BotPlayer::searchTrick(const Table &table)
 }
 
 // Ход бота
-void BotPlayer::makeMove(Table &table, const GameMode mode)
+void BotPlayer::makeMove(Table &table, GameMode mode)
 {
     table.sortCardsOnTable();
     BotPlayer &bot = *this;
@@ -171,7 +172,8 @@ void BotPlayer::makeMove(Table &table, const GameMode mode)
         bot.setSelectedCard(maxCard);
         bot.setSelectedTrick(maxCombo);
         bot.printMove();
-        if (selectedCard.getType() == Card::Picture && selectedCard.getPictureValue() == 'H')
+        if (selectedCard.getKind() == Card::CardKind::Picture &&
+            selectedCard.getPictureValue() == Card::Picture::Hunter)
         {
             bot.makeHunterMove(table);
         }
@@ -187,8 +189,10 @@ void BotPlayer::makeMove(Table &table, const GameMode mode)
     else
     {
         bot.setSelectedCard(hand[rand() % hand.size()]);
-        bot.printSelectedCard();
-        if (selectedCard.getType() == Card::Picture && selectedCard.getPictureValue() == 'H')
+        bot.clearSelectedTrick();
+        bot.printMove();
+        if (selectedCard.getKind() == Card::CardKind::Picture &&
+            selectedCard.getPictureValue() == Card::Picture::Hunter)
         {
             bot.makeHunterMove(table);
         }
@@ -209,7 +213,7 @@ void BotPlayer::makeMove(Table &table, const GameMode mode)
 void BotPlayer::printAnnouncement() const
 {
     printLine();
-    std::cout << "Ход бота " << std::to_string(ID) << std::endl;
+    std::cout << "Ход бота " << std::to_string(id) << std::endl;
     printLine();
 }
 

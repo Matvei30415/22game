@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 
-extern char rules_txt[];
-extern int rules_txt_len;
+extern const unsigned char rules_txt[];
+extern const std::size_t rules_txt_len;
