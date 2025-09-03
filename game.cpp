@@ -123,26 +123,26 @@ void Game::printMenu() const
 // Ввод пунктов меню
 short Game::inputMenu(short min, short max) const
 {
-    printMenu();
-    short selectedCardIndex = input(min, max);
-    if (selectedCardIndex == invalidIndex)
+    while (true)
     {
-        std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
-        return inputMenu(min, max);
-    }
-    else if (selectedCardIndex == invalidInput)
-    {
-        std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
-        return inputMenu(min, max);
-    }
-    else if (selectedCardIndex == 3)
-    {
-        printRules();
-        return inputMenu(min, max);
-    }
-    else
-    {
-        return selectedCardIndex;
+        printMenu();
+        short selectedCardIndex = input(min, max);
+        if (selectedCardIndex == invalidIndex)
+        {
+            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
+        }
+        else if (selectedCardIndex == invalidInput)
+        {
+            std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        }
+        else if (selectedCardIndex == 3)
+        {
+            printRules();
+        }
+        else
+        {
+            return selectedCardIndex;
+        }
     }
 }
 
