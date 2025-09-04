@@ -13,7 +13,8 @@ public:
         name = "Бот " + std::to_string(id);
         maxComboQuality = 0;
     }
-    void makeMove(Table &table, GameMode mode) override;
+    std::string getTypeName() const override { return "Bot"; }
+    bool makeMove(Table &table, std::size_t &selectedCardIndex, std::vector<std::size_t> &selectedTrickIndexes) override;
     void searchTrick(const Table &table);
     void findDigitalCombo(const Table &table, std::vector<Card> &combo, short n, std::size_t start = 0);
     void findPictureCombo(const Table &table, std::vector<Card> &combo);
@@ -29,10 +30,4 @@ private:
     std::vector<Card> maxCombo;
     Card maxCard;
     double maxComboQuality;
-
-    // Строго функции ввода-вывода
-public:
-    void printAnnouncement() const override;
-    void printHand() const override;
-    void printTricks() const override;
 };

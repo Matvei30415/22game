@@ -5,11 +5,8 @@
 #include <cstdlib>
 #include <ctime>
 
-enum : short
-{
-    deckSize = 48,
-    cardsInHand = 4
-};
+inline constexpr short kDeckSize = 48;
+inline constexpr short kCardsInHand = 4;
 class Deck {
 public:
     Deck();

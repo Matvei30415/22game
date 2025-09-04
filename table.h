@@ -1,7 +1,6 @@
 #pragma once
 
 #include "card.h"
-#include "consoleIO.h"
 #include <algorithm>
 
 class Table
@@ -22,8 +21,4 @@ public:
 
 private:
     std::vector<Card> cardsOnTable;
-
-    // Строго функции ввода-вывода
-public:
-    void printTable() const;
 };

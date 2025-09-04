@@ -82,44 +82,25 @@ bool HumanPlayer::processTrick(Table &table)
 }
 
 // Ход игрока
-void HumanPlayer::makeMove(Table &table, GameMode mode)
+bool HumanPlayer::makeMove(Table &table, std::size_t &selectedCardIndex, std::vector<std::size_t> &selectedTrickIndexes)
 {
-    table.sortCardsOnTable();
     HumanPlayer &player = *this;
-    std::size_t selectedCardIndex = player.inputCard(table);
-    player.setSelectedCard(hand[selectedCardIndex]);
     player.setIsTrick(false);
-
+    player.clearSelectedTrick();
+    player.setSelectedCard(player.getHand()[selectedCardIndex]);
+    for (std::size_t i = 0; i < selectedTrickIndexes.size(); i++)
+        player.addCardToSelectedTrick(table.getCardOnTable(selectedTrickIndexes[i]));
     // Если стол не пустой и выбранная карта - не Хантер, выбираем карты для взятки
     if (table.getTableSize() != 0 &&
         !(selectedCard.getKind() == Card::CardKind::Picture &&
           selectedCard.getPictureValue() == Card::Picture::Hunter))
     {
-        // (*)
-        Table tableCopy(table.getCardsOnTable());
-        short selectedTrickCardIndex = 0;
-        while (true)
-        {
-            selectedTrickCardIndex = player.inputTrick(tableCopy);
-            if (selectedTrickCardIndex != invalidInput)
-            {
-                selectedTrick.push_back(tableCopy.getCardOnTable(selectedTrickCardIndex));
-                tableCopy.removeCardFromTable(tableCopy.getCardOnTable(selectedTrickCardIndex));
-            }
-            else
-            {
-                break;
-            }
-        }
-
         if (selectedTrick.size() > 0)
         {
             bool validTrick = player.processTrick(table);
             if (!validTrick)
             {
-                player.printNotValidMoveMessage();
-                this->makeMove(table, mode);
-                return;
+                return false;
             }
             player.setIsTrick(true);
         }
@@ -142,111 +123,5 @@ void HumanPlayer::makeMove(Table &table, GameMode mode)
     {
         player.makeHunterMove(table);
     }
-    if (mode == withOtherPlayer)
-    {
-        player.printPassMoveMessage();
-        player.printPriviousMoveMessage();
-        player.printMove();
-    }
-    player.clearSelectedTrick();
-}
-
-// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
-
-// Печать анонса хода
-void HumanPlayer::printAnnouncement() const
-{
-    printLine();
-    std::cout << "Ход игрока " << std::to_string(id) << std::endl;
-    printLine();
-}
-
-// Печать руки
-void HumanPlayer::printHand() const
-{
-    printLine();
-    std::cout << "Ваши карты: " << std::endl;
-    printCardList(hand);
-    std::cout << "Выберите карту: ";
-}
-
-// Печать взяток
-void HumanPlayer::printTricks() const
-{
-    printLine();
-    std::cout << "Взятки игрока " << std::endl;
-    printLine();
-    printCardList(tricks);
-}
-
-// Печать сообщения о неправильном ходе
-void HumanPlayer::printNotValidMoveMessage() const
-{
-    std::cout << "Некорректный ход!" << std::endl;
-}
-
-// Печать сообщения о передаче хода
-void HumanPlayer::printPassMoveMessage() const
-{
-    clearConsole();
-    std::cout << "Передайте ход другому игроку, затем нажмите Enter";
-    std::getchar();
-    clearConsole();
-}
-
-// Печать хода предыдущего игрока
-void HumanPlayer::printPriviousMoveMessage() const
-{
-
-    printLine();
-    std::cout << "Ход предыдущего игрока" << std::endl;
-    printLine();
-}
-
-// Ввод карты с руки
-short HumanPlayer::inputCard(const Table &table) const
-{
-    while (true)
-    {
-        table.printTable();
-        this->printHand();
-        short selectedCardIndex = input(1, hand.size());
-        if (selectedCardIndex == invalidIndex)
-        {
-            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
-        }
-        else if (selectedCardIndex == invalidInput)
-        {
-            std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
-        }
-        else
-        {
-            selectedCardIndex--;
-            return selectedCardIndex;
-        }
-    }
-}
-
-// Ввод карты со стола для взятки
-short HumanPlayer::inputTrick(const Table &table) const
-{
-    while (true)
-    {
-        table.printTable();
-        std::cout << "Выберите карты для взятки: ";
-        short selectedCardIndex = input(1, table.getTableSize());
-        if (selectedCardIndex == invalidIndex)
-        {
-            std::cout << "Неверный индекс, попробуйте ещё раз!" << std::endl;
-        }
-        else if (selectedCardIndex == invalidInput)
-        {
-            return invalidInput;
-        }
-        else
-        {
-            selectedCardIndex--;
-            return selectedCardIndex;
-        }
-    }
+    return true;
 }

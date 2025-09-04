@@ -161,17 +161,17 @@ void BotPlayer::searchTrick(const Table &table)
 }
 
 // Ход бота
-void BotPlayer::makeMove(Table &table, GameMode mode)
+bool BotPlayer::makeMove(Table &table, std::size_t &selectedCardIndex, std::vector<std::size_t> &selectedTrickIndexes)
 {
-    table.sortCardsOnTable();
     BotPlayer &bot = *this;
+    bot.setIsTrick(false);
+    bot.clearSelectedTrick();
+    bot.clearMaxCombo();
     bot.searchTrick(table);
-    // bot.printHand();
     if (bot.getMaxComboQuality() != 0)
     {
         bot.setSelectedCard(maxCard);
         bot.setSelectedTrick(maxCombo);
-        bot.printMove();
         if (selectedCard.getKind() == Card::CardKind::Picture &&
             selectedCard.getPictureValue() == Card::Picture::Hunter)
         {
@@ -190,7 +190,6 @@ void BotPlayer::makeMove(Table &table, GameMode mode)
     {
         bot.setSelectedCard(hand[rand() % hand.size()]);
         bot.clearSelectedTrick();
-        bot.printMove();
         if (selectedCard.getKind() == Card::CardKind::Picture &&
             selectedCard.getPictureValue() == Card::Picture::Hunter)
         {
@@ -203,33 +202,5 @@ void BotPlayer::makeMove(Table &table, GameMode mode)
             bot.setIsTrick(false);
         }
     }
-    bot.clearSelectedTrick();
-    bot.clearMaxCombo();
-}
-
-// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
-
-// Печать анонса хода
-void BotPlayer::printAnnouncement() const
-{
-    printLine();
-    std::cout << "Ход бота " << std::to_string(id) << std::endl;
-    printLine();
-}
-
-// Печать руки
-void BotPlayer::printHand() const
-{
-    printLine();
-    std::cout << "Карты бота: " << std::endl;
-    printCardList(hand);
-}
-
-// Печать взяток
-void BotPlayer::printTricks() const
-{
-    printLine();
-    std::cout << "Взятки бота " << std::endl;
-    printLine();
-    printCardList(tricks);
+    return true;
 }

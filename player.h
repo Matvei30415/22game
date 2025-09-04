@@ -3,13 +3,6 @@
 #include "card.h"
 #include "table.h"
 
-// (*)
-enum GameMode : short
-{
-    withBot = 1,
-    withOtherPlayer = 2,
-};
-
 struct Points
 {
     short moreCards;
@@ -22,7 +15,8 @@ class Player
 {
 public:
     Player(short id);
-    virtual void makeMove(Table &table, GameMode mode) = 0;
+    virtual std::string getTypeName() const = 0;
+    virtual bool makeMove(Table &table, std::size_t &selectedCardIndex, std::vector<std::size_t> &selectedTrickIndexes) = 0;
     void setSelectedCard(const Card &card);
     void setSelectedTrick(const std::vector<Card> &cards);
     void setIsTrick(const bool isTrick);
@@ -35,13 +29,14 @@ public:
     void sortHand();
     void addCardToHand(const Card &card);
     void addCardToTricks(const Card &card);
+    void addCardToSelectedTrick(const Card &card);
     void addTrickToTricks(const std::vector<Card> &cards);
     void removeCardFromHand(const Card &card);
     void removeTrickFromHand(const std::vector<Card> &trick);
     void clearSelectedTrick();
     void makeHunterMove(Table &table);
     void сalculatePoints();
-    void getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts);
+    void getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts) const;
 
 protected:
     short id;
@@ -52,14 +47,4 @@ protected:
     Card selectedCard;
     std::vector<Card> selectedTrick;
     Points results;
-
-    // Строго функции ввода-вывода
-public:
-    virtual void printAnnouncement() const = 0;
-    virtual void printHand() const = 0;
-    virtual void printTricks() const = 0;
-
-protected:
-    void printSelectedCard() const;
-    void printMove() const;
 };

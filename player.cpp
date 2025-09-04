@@ -121,6 +121,11 @@ void Player::addCardToTricks(const Card &card)
     (this->tricks).push_back(card);
 }
 
+void Player::addCardToSelectedTrick(const Card &card)
+{
+    (this->selectedTrick).push_back(card);
+}
+
 // Добавить выбранную взятку (со стола) во взятки
 void Player::addTrickToTricks(const std::vector<Card> &cards)
 {
@@ -218,27 +223,10 @@ void Player::сalculatePoints()
 }
 
 // Получить результаты
-void Player::getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts)
+void Player::getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts) const
 {
     moreCards = (this->results).moreCards;
     moreClubs = (this->results).moreClubs;
     twentyOfDiamonds = (this->results).twentyOfDiamonds;
     aceOfHearts = (this->results).aceOfHearts;
-}
-
-// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
-
-// Печать выбранной карты
-void Player::printSelectedCard() const
-{
-    printCard(selectedCard);
-}
-
-// Печать хода
-void Player::printMove() const
-{
-    std::size_t size = selectedTrick.size();
-    printSelectedCard();
-    if (size != 0)
-        printCardList(selectedTrick);
 }

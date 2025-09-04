@@ -87,20 +87,3 @@ void Table::removeTrickFromTable(const std::vector<Card> &cards)
                 this->removeCardFromTable(cardsOnTable[j]);
             }
 }
-
-// СТРОГО ФУНКЦИИ ВВОДА-ВЫВОДА
-
-// Печать карт на столе
-void Table::printTable() const
-{
-    if (cardsOnTable.size() == 0)
-    {
-        std::cout << "Стол пуст!" << std::endl;
-        return;
-    }
-    else
-    {
-        std::cout << "Карты на столе: " << std::endl;
-    }
-    printCardList(cardsOnTable);
-}

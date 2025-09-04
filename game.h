@@ -1,42 +1,38 @@
 #pragma once
 
 #include "card.h"
-#include "consoleIO.h"
 #include "deck.h"
 #include "table.h"
 #include "player.h"
 #include "human.h"
+#include "consoleIO.h"
 #include "bot.h"
-
-enum Turn
-{
-    player1Turn = 1,
-    player2Turn = 2
-};
 
 class Game
 {
-    GameMode mode;
+    enum class Turn : unsigned char
+    {
+        player1,
+        player2
+    };
+    enum class Mode : short
+    {
+        withBot = 1,
+        withOtherPlayer = 2,
+    };
+    Mode mode;
     Turn lastTrick;
     Turn turn;
 
 public:
     Game()
     {
-        turn = player1Turn;
+        turn = Turn::player1;
     }
-    void mainMenu();
-    void startGame();
+    void mainMenu(ConsoleView &view);
+    void startGame(ConsoleView &view);
 
 private:
     void processLastTrick(Table &table, Player &player1, Player &player2);
-    void processGame(Deck &deck, Table &table, Player &player1, Player &player2);
-
-    // Строго функции ввода-вывода
-private:
-    void printResults(Player &player1, Player &player2) const;
-    void printRules() const;
-    void printMenu() const;
-    void printEndGameMessage() const;
-    short inputMenu(short min, short max) const;
+    void processGame(ConsoleView &view, Deck &deck, Table &table, Player &player1, Player &player2);
 };

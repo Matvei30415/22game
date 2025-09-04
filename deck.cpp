@@ -56,11 +56,9 @@ Deck::Deck()
 // Перемешать колоду
 void Deck::shuffle()
 {
-    srand(time(NULL));
-    for (short i = deckSize - 1; i > 1; i--)
+    for (short i = kDeckSize - 1; i > 1; i--)
     {
-        short j = rand() % i;
-        std::swap(deckCards[i], deckCards[j]);
+        std::swap(deckCards[i], deckCards[rand() % i]);
     }
 }
 
@@ -69,7 +67,7 @@ void Deck::dealHand(Player &player, short count)
 {
     for (short i = 0; i < count; i++)
     {
-        player.addCardToHand(deckCards[0]);
-        deckCards.erase(begin(deckCards));
+        player.addCardToHand(deckCards.back());
+        deckCards.pop_back();
     }
 }
