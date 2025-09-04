@@ -50,10 +50,12 @@ bool HumanPlayer::validateTrick() const
     // Проверка Леди + Джентльмен
     else if ((selectedCard.getPictureValue() == Card::Picture::Gentleman &&
               (selectedTrick.size() != 1 ||
-               selectedTrick[0].getPictureValue() != Card::Picture::Lady)) ||
+               (selectedTrick[0].getKind() != Card::CardKind::Picture ||
+                selectedTrick[0].getPictureValue() != Card::Picture::Lady))) ||
              (selectedCard.getPictureValue() == Card::Picture::Lady &&
               (selectedTrick.size() != 1 ||
-               selectedTrick[0].getPictureValue() != Card::Picture::Gentleman)))
+               (selectedTrick[0].getKind() != Card::CardKind::Picture ||
+                selectedTrick[0].getPictureValue() != Card::Picture::Gentleman))))
     {
         return false;
     }

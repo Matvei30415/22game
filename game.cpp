@@ -25,10 +25,10 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
     Player *player = &player1;
     std::size_t selectedCardIndex;
     std::vector<std::size_t> selectedTrickIndexes;
-    bool successMove;
+    bool successMove = true;
     for (short i = 0; i < kDeckSize; i++)
     {
-        if (i % 8 == 0)
+        if (i % 8 == 0 && successMove)
         {
             deck.dealHand(player1);
             deck.dealHand(player2);
@@ -123,8 +123,8 @@ void Game::startGame(ConsoleView &view)
     processLastTrick(table, *player1, *player2);
     view.printTricks(*player1);
     view.printTricks(*player2);
-    (*player1).сalculatePoints();
-    (*player2).сalculatePoints();
+    (*player1).calculatePoints();
+    (*player2).calculatePoints();
     view.printResults((*player1), (*player2));
     view.printEndGameMessage();
 }

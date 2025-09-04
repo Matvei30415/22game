@@ -27,6 +27,7 @@ public:
     void printAnnouncement(const Player &player) const;
     void printHand(const Player &player) const;
     void printTricks(const Player &player) const;
+    void printSelection(const std::vector<std::size_t> &selectedTrickIndexes, const std::size_t tableSize) const;
     std::size_t inputCard(const Player &human, const Table &table) const;
     std::vector<std::size_t> inputTrick(const Table &table) const;
     void printNotValidMoveMessage() const;

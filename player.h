@@ -35,7 +35,7 @@ public:
     void removeTrickFromHand(const std::vector<Card> &trick);
     void clearSelectedTrick();
     void makeHunterMove(Table &table);
-    void сalculatePoints();
+    void calculatePoints();
     void getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts) const;
 
 protected:

@@ -198,7 +198,7 @@ void Player::makeHunterMove(Table &table)
 }
 
 // Вычислить победные очков в конце партии
-void Player::сalculatePoints()
+void Player::calculatePoints()
 {
     std::size_t len = tricks.size();
     if (len > 24)

@@ -13,8 +13,8 @@ void startConsole()
 // Очистка консоли
 void clearConsole()
 {
-    system("cls");
-    // std::cout << "\033[2J\033[1;1H";
+    // system("cls");
+    std::cout << "\033[2J\033[1;1H";
 }
 
 // Перемещение курсора для печати
@@ -219,6 +219,31 @@ void ConsoleView::printPriviousMoveMessage() const
     printLine();
 }
 
+// Печать выбора
+void ConsoleView::printSelection(const std::vector<std::size_t> &selectedTrickIndexes, const std::size_t tableSize) const
+{
+    bool flag = false;
+    for (std::size_t i = 0; i < tableSize; i++)
+    {
+        for (std::size_t j = 0; j < selectedTrickIndexes.size(); j++)
+        {
+            if (selectedTrickIndexes[j] == i)
+            {
+                std::cout << "    ✓      ";
+                flag = true;
+            }
+            else if (selectedTrickIndexes[j] > i)
+            {
+                if (!flag)
+                    std::cout << "           ";
+                flag = false;
+                break;
+            }
+        }
+    }
+    std::cout << std::endl;
+}
+
 // Ввод карты с руки
 std::size_t ConsoleView::inputCard(const Player &human, const Table &table) const
 {
@@ -244,13 +269,17 @@ std::size_t ConsoleView::inputCard(const Player &human, const Table &table) cons
 // Ввод карты со стола для взятки
 std::vector<std::size_t> ConsoleView::inputTrick(const Table &table) const
 {
+    std::size_t tableSize;
     std::size_t selectedCardIndex;
     std::vector<std::size_t> selectedTrickIndexes;
     while (true)
     {
+        tableSize = table.getTableSize();
+        std::sort(selectedTrickIndexes.begin(), selectedTrickIndexes.end());
         printTable(table);
+        printSelection(selectedTrickIndexes, tableSize);
         std::cout << "Выберите карты для взятки: ";
-        bool successInput = input(selectedCardIndex, 1, table.getTableSize());
+        bool successInput = input(selectedCardIndex, 1, tableSize);
         if (!successInput)
         {
             return selectedTrickIndexes;
@@ -258,7 +287,17 @@ std::vector<std::size_t> ConsoleView::inputTrick(const Table &table) const
         else
         {
             selectedCardIndex--;
-            selectedTrickIndexes.push_back(selectedCardIndex);
+            for (size_t i = 0; i < selectedTrickIndexes.size(); i++)
+            {
+                if (selectedCardIndex == selectedTrickIndexes[i])
+                {
+                    selectedTrickIndexes.erase(begin(selectedTrickIndexes) + i);
+                    successInput = false;
+                    break;
+                }
+            }
+            if (successInput)
+                selectedTrickIndexes.push_back(selectedCardIndex);
         }
     }
 }
