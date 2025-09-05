@@ -7,7 +7,7 @@
 class Card
 {
 public:
-    enum class CardKind : unsigned char
+    enum class Kind : unsigned char
     {
         Digital,
         Picture
@@ -26,10 +26,10 @@ public:
         Hunter = 'H'
     };
     Card() = default;
-    Card(int id, CardKind kind, int value, Suit suit, double quality);
-    Card(int id, CardKind kind, Picture value, Suit suit, double quality);
+    Card(int id, Kind kind, int value, Suit suit, double quality);
+    Card(int id, Kind kind, Picture value, Suit suit, double quality);
     int getID() const;
-    CardKind getKind() const;
+    Kind getKind() const;
     Suit getSuit() const;
     int getDigitalValue() const;
     Picture getPictureValue() const;
@@ -37,7 +37,7 @@ public:
 
 private:
     int id;
-    CardKind kind;
+    Kind kind;
     std::variant<int, Picture> value;
     Suit suit;
     double quality;

@@ -31,7 +31,7 @@ public:
     std::size_t inputCard(const Player &human, const Table &table) const;
     std::vector<std::size_t> inputTrick(const Table &table) const;
     void printNotValidMoveMessage() const;
-    void printPriviousMoveMessage() const;
+    void printPreviousMoveMessage() const;
     void printPassMoveMessage() const;
     void printResults(const Player &player1, const Player &player2) const;
     void printRules() const;

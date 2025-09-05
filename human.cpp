@@ -5,7 +5,7 @@ bool HumanPlayer::validateDigitalCardSum(short sum, std::size_t start) const
 {
     for (; start < selectedTrick.size(); start++)
     {
-        if (selectedTrick[start].getKind() != Card::CardKind::Digital)
+        if (selectedTrick[start].getKind() != Card::Kind::Digital)
         {
             return false;
         }
@@ -32,7 +32,7 @@ bool HumanPlayer::validateTrick() const
 {
     short sum = 0;
     // Проверка числовых карт
-    if (selectedCard.getKind() == Card::CardKind::Digital)
+    if (selectedCard.getKind() == Card::Kind::Digital)
     {
         if (selectedCard.getDigitalValue() != 2)
         {
@@ -50,11 +50,11 @@ bool HumanPlayer::validateTrick() const
     // Проверка Леди + Джентльмен
     else if ((selectedCard.getPictureValue() == Card::Picture::Gentleman &&
               (selectedTrick.size() != 1 ||
-               (selectedTrick[0].getKind() != Card::CardKind::Picture ||
+               (selectedTrick[0].getKind() != Card::Kind::Picture ||
                 selectedTrick[0].getPictureValue() != Card::Picture::Lady))) ||
              (selectedCard.getPictureValue() == Card::Picture::Lady &&
               (selectedTrick.size() != 1 ||
-               (selectedTrick[0].getKind() != Card::CardKind::Picture ||
+               (selectedTrick[0].getKind() != Card::Kind::Picture ||
                 selectedTrick[0].getPictureValue() != Card::Picture::Gentleman))))
     {
         return false;
@@ -83,18 +83,25 @@ bool HumanPlayer::processTrick(Table &table)
     return validTrick;
 }
 
-// Ход игрока
-bool HumanPlayer::makeMove(Table &table, std::size_t &selectedCardIndex, std::vector<std::size_t> &selectedTrickIndexes)
+// Действия перед ходом
+void HumanPlayer::preMoveActions(const Table &table, const std::size_t &selectedCardIndex,
+                                 const std::vector<std::size_t> &selectedTrickIndexes)
 {
     HumanPlayer &player = *this;
-    player.setIsTrick(false);
     player.clearSelectedTrick();
+    player.setIsTrick(false);
     player.setSelectedCard(player.getHand()[selectedCardIndex]);
     for (std::size_t i = 0; i < selectedTrickIndexes.size(); i++)
         player.addCardToSelectedTrick(table.getCardOnTable(selectedTrickIndexes[i]));
+}
+
+// Ход игрока
+bool HumanPlayer::makeMove(Table &table)
+{
+    HumanPlayer &player = *this;
     // Если стол не пустой и выбранная карта - не Хантер, выбираем карты для взятки
     if (table.getTableSize() != 0 &&
-        !(selectedCard.getKind() == Card::CardKind::Picture &&
+        !(selectedCard.getKind() == Card::Kind::Picture &&
           selectedCard.getPictureValue() == Card::Picture::Hunter))
     {
         if (selectedTrick.size() > 0)

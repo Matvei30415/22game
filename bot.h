@@ -1,6 +1,7 @@
 #pragma once
 
 #include "card.h"
+#include "deck.h"
 #include "consoleIO.h"
 #include "table.h"
 #include "player.h"
@@ -8,26 +9,39 @@
 class BotPlayer : public Player
 {
 public:
+    struct AVGStat
+    {
+        short comboNumber;
+        double average;
+        double minAverage;
+        std::size_t minAverageIndex;
+    };
     BotPlayer(short id) : Player(id)
     {
         name = "Бот " + std::to_string(id);
         maxComboQuality = 0;
     }
     std::string getTypeName() const override { return "Bot"; }
-    bool makeMove(Table &table, std::size_t &selectedCardIndex, std::vector<std::size_t> &selectedTrickIndexes) override;
-    void searchTrick(const Table &table);
-    void findDigitalCombo(const Table &table, std::vector<Card> &combo, short n, std::size_t start = 0);
-    void findPictureCombo(const Table &table, std::vector<Card> &combo);
-    void findHunterCombo(const Table &table, std::vector<Card> &combo);
+    void preMoveActions(const std::vector<Card> &playerHand, const std::vector<Card> &deckCards);
+    bool makeMove(Table &table) override;
+    void selectNonComboCard();
+    void searchTrick(const std::vector<Card> &tableHand);
+    void findDigitalCombo(const std::vector<Card> &tableHand, std::vector<Card> &combo, short n, std::size_t start = 0);
+    void findPictureCombo(const std::vector<Card> &tableHand, std::vector<Card> &combo);
+    void findHunterCombo(const std::vector<Card> &tableHand, std::vector<Card> &combo);
     void setMaxCombo(const std::vector<Card> &combo, const double quality);
     void setMaxCard(const Card &card);
     const std::vector<Card> &getMaxCombo() const;
     const Card &getMaxCard() const;
     double getMaxComboQuality() const;
     void clearMaxCombo();
+    void clearAVGStat();
+    void clearModifiedDeck();
 
 private:
     std::vector<Card> maxCombo;
+    std::vector<Card> modifiedDeck;
     Card maxCard;
     double maxComboQuality;
+    AVGStat statistics;
 };

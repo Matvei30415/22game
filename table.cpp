@@ -25,7 +25,7 @@ void Table::sortCardsOnTable()
     Card tmp;
     for (std::size_t i = 0; i < cards.size(); i++)
     {
-        if (cards[i].getKind() == Card::CardKind::Picture)
+        if (cards[i].getKind() == Card::Kind::Picture)
         {
             tmp = cards[i];
             cards.erase(cards.cbegin() + i);
@@ -35,7 +35,7 @@ void Table::sortCardsOnTable()
         }
         for (std::size_t j = i + 1; j < cards.size(); j++)
         {
-            if ((cards[i].getKind() == Card::CardKind::Digital && cards[j].getKind() == Card::CardKind::Digital) &&
+            if ((cards[i].getKind() == Card::Kind::Digital && cards[j].getKind() == Card::Kind::Digital) &&
                 ((cards[i].getDigitalValue() > cards[j].getDigitalValue()) ||
                  ((cards[i].getDigitalValue() == cards[j].getDigitalValue()) &&
                   (cards[i].getSuit() != Card::Suit::General && cards[j].getSuit() == Card::Suit::General))))

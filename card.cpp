@@ -1,22 +1,22 @@
 #include "card.h"
 
 // Конструктор с параметрами
-Card::Card(int id, CardKind kind, int value, Suit suit, double quality)
+Card::Card(int id, Kind kind, int value, Suit suit, double quality)
 {
     this->id = id;
     this->kind = kind;
-    if (kind == Card::CardKind::Digital)
+    if (kind == Card::Kind::Digital)
         this->value = value;
     this->suit = suit;
     this->quality = quality;
 }
 
 // Конструктор с параметрами
-Card::Card(int id, CardKind kind, Picture value, Suit suit, double quality)
+Card::Card(int id, Kind kind, Picture value, Suit suit, double quality)
 {
     this->id = id;
     this->kind = kind;
-    if (kind == Card::CardKind::Picture)
+    if (kind == Card::Kind::Picture)
         this->value = value;
     this->suit = suit;
     this->quality = quality;
@@ -29,7 +29,7 @@ int Card::getID() const
 }
 
 // Получить тип карты (Цифровая или Картинка)
-Card::CardKind Card::getKind() const
+Card::Kind Card::getKind() const
 {
     return this->kind;
 }
@@ -43,7 +43,7 @@ Card::Suit Card::getSuit() const
 // Получить значение цифровой карты (2, 4, ... , 18, 20)
 int Card::getDigitalValue() const
 {
-    if (kind != CardKind::Digital)
+    if (kind != Kind::Digital)
         throw std::logic_error("Карточка не цифровая");
 
     if (auto ptr = std::get_if<int>(&value)) {
@@ -56,7 +56,7 @@ int Card::getDigitalValue() const
 // Получить значение карты-картинки (G, L, H)
 Card::Picture Card::getPictureValue() const
 {
-    if (kind != CardKind::Picture)
+    if (kind != Kind::Picture)
         throw std::logic_error("Карточка не картинка");
 
     if (auto ptr = std::get_if<Card::Picture>(&value)) {

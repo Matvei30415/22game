@@ -72,7 +72,7 @@ void Player::sortHand()
     Card tmp;
     for (std::size_t i = 0; i < cards.size(); i++)
     {
-        if (cards[i].getKind() == Card::CardKind::Picture)
+        if (cards[i].getKind() == Card::Kind::Picture)
         {
             tmp = cards[i];
             cards.erase(cards.cbegin() + i);
@@ -82,7 +82,7 @@ void Player::sortHand()
         }
         for (std::size_t j = i + 1; j < cards.size(); j++)
         {
-            if ((cards[i].getKind() == Card::CardKind::Digital && cards[j].getKind() == Card::CardKind::Digital) &&
+            if ((cards[i].getKind() == Card::Kind::Digital && cards[j].getKind() == Card::Kind::Digital) &&
                 ((cards[i].getDigitalValue() > cards[j].getDigitalValue()) ||
                  ((cards[i].getDigitalValue() == cards[j].getDigitalValue()) &&
                   (cards[i].getSuit() != Card::Suit::General &&
@@ -172,7 +172,7 @@ void Player::makeHunterMove(Table &table)
     for (std::size_t i = 0; i < table.getTableSize(); i++)
     {
         // Проверяем, что карта не Gentleman или Lady
-        if (!(table.getCardOnTable(i).getKind() == Card::CardKind::Picture &&
+        if (!(table.getCardOnTable(i).getKind() == Card::Kind::Picture &&
               (table.getCardOnTable(i).getPictureValue() == Card::Picture::Gentleman ||
                table.getCardOnTable(i).getPictureValue() == Card::Picture::Lady)))
         {
@@ -210,7 +210,7 @@ void Player::calculatePoints()
     {
         if (tricks[i].getSuit() == Card::Suit::Clubs)
             sumClubs += 1;
-        if (tricks[i].getKind() == Card::CardKind::Digital)
+        if (tricks[i].getKind() == Card::Kind::Digital)
         {
             if (tricks[i].getDigitalValue() == 20 && tricks[i].getSuit() == Card::Suit::Diamonds)
                 (this->results).twentyOfDiamonds += 1;
@@ -223,7 +223,7 @@ void Player::calculatePoints()
 }
 
 // Получить результаты
-void Player::getPoints(char &moreCards, bool &moreClubs, bool &twentyOfDiamonds, bool &aceOfHearts) const
+void Player::getPoints(short &moreCards, short &moreClubs, short &twentyOfDiamonds, short &aceOfHearts) const
 {
     moreCards = (this->results).moreCards;
     moreClubs = (this->results).moreClubs;

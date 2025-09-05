@@ -26,7 +26,7 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
     std::size_t selectedCardIndex;
     std::vector<std::size_t> selectedTrickIndexes;
     bool successMove = true;
-    for (short i = 0; i < kDeckSize; i++)
+    for (std::size_t i = 0; i < kDeckSize; i++)
     {
         if (i % 8 == 0 && successMove)
         {
@@ -40,14 +40,16 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
         if (turn == Game::Turn::player1 || (turn == Game::Turn::player2 && mode == Game::Mode::withOtherPlayer))
         {
             view.printAnnouncement(*player);
+            view.printHand(player2); // Печать руки бота (для отладки)
             selectedCardIndex = view.inputCard(*player, table);
             if (table.getTableSize() != 0 &&
-                !((*player).getHand()[selectedCardIndex].getKind() == Card::CardKind::Picture &&
+                !((*player).getHand()[selectedCardIndex].getKind() == Card::Kind::Picture &&
                   (*player).getHand()[selectedCardIndex].getPictureValue() == Card::Picture::Hunter))
             {
                 selectedTrickIndexes = view.inputTrick(table);
             }
-            successMove = (*player).makeMove(table, selectedCardIndex, selectedTrickIndexes);
+            static_cast<HumanPlayer*>(player)->preMoveActions(table, selectedCardIndex, selectedTrickIndexes);
+            successMove = (*player).makeMove(table);
             if (!successMove)
             {
                 view.printNotValidMoveMessage();
@@ -57,15 +59,15 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
             if (mode == Game::Mode::withOtherPlayer)
             {
                 view.printPassMoveMessage();
-                view.printPriviousMoveMessage();
+                view.printPreviousMoveMessage();
                 view.printMove(*player);
             }
         }
         else if (turn == Game::Turn::player2 && mode == Game::Mode::withBot)
         {
             view.printAnnouncement((*player));
-            // view.printHand((*player));
-            successMove = (*player).makeMove(table, selectedCardIndex, selectedTrickIndexes);
+            static_cast<BotPlayer*>(player)->preMoveActions(player1.getHand(), deck.getDeckCards());
+            successMove = (*player).makeMove(table);
             view.printMove((*player));
         }
         if (turn == Game::Turn::player1)

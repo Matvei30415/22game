@@ -46,7 +46,7 @@ void ConsoleView::printCard(const Card &card, std::size_t shiftCursor, std::size
     moveCursorRight(shiftCursor);
     std::cout << "|        |" << std::endl;
     moveCursorRight(shiftCursor);
-    if (card.getKind() == Card::CardKind::Digital)
+    if (card.getKind() == Card::Kind::Digital)
     {
         int value = card.getDigitalValue();
         if (value == 2)
@@ -168,7 +168,7 @@ void ConsoleView::printPassMoveMessage() const
 }
 
 // Печать хода предыдущего игрока
-void ConsoleView::printPriviousMoveMessage() const
+void ConsoleView::printPreviousMoveMessage() const
 {
 
     printLine();
@@ -314,14 +314,13 @@ std::size_t ConsoleView::inputMenu(std::size_t min, std::size_t max) const
 // Печать результатов (*)
 void ConsoleView::printResults(const Player &player1, const Player &player2) const
 {
-    char moreCards;
-    bool moreClubs, twentyOfDiamonds, aceOfHearts;
+    short moreCards, moreClubs, twentyOfDiamonds, aceOfHearts;
     printLine();
     std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма |" << std::endl;
     printLine();
     player1.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
     std::cout << "Результаты Игрока " << std::to_string(player1.getID()) << ": ";
-    std::cout << moreCards
+    std::cout << moreCards << " | "
               << moreClubs << " | "
               << twentyOfDiamonds << " | "
               << aceOfHearts << " | "
@@ -333,7 +332,7 @@ void ConsoleView::printResults(const Player &player1, const Player &player2) con
         std::cout << "Результаты Бота " << std::to_string(player2.getID()) << ": ";
     else if (player2.getTypeName() == "Human")
         std::cout << "Результаты Игрока " << std::to_string(player2.getID()) << ": ";
-    std::cout << moreCards
+    std::cout << moreCards << " | "
               << moreClubs << " | "
               << twentyOfDiamonds << " | "
               << aceOfHearts << " | "
