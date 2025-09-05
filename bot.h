@@ -12,9 +12,8 @@ public:
     struct AVGStat
     {
         short comboNumber;
-        double average;
-        double minAverage;
-        std::size_t minAverageIndex;
+        short minComboNumber;
+        std::size_t minComboNumberIndex;
     };
     BotPlayer(short id) : Player(id)
     {
@@ -35,7 +34,7 @@ public:
     const Card &getMaxCard() const;
     double getMaxComboQuality() const;
     void clearMaxCombo();
-    void clearAVGStat();
+    void clearComboNumber();
     void clearModifiedDeck();
 
 private:

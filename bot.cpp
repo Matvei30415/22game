@@ -39,9 +39,8 @@ void BotPlayer::clearMaxCombo()
 }
 
 // Очистка статистики бота
-void BotPlayer::clearAVGStat()
+void BotPlayer::clearComboNumber()
 {
-    this->statistics.average = 0;
     this->statistics.comboNumber = 0;
 }
 
@@ -63,7 +62,6 @@ void BotPlayer::findDigitalCombo(const std::vector<Card> &mainHand, std::vector<
         {
             comboQuality += combo[i].getQuality();
         }
-        bot.statistics.average += comboQuality;
         bot.statistics.comboNumber += 1;
         if (comboQuality > bot.getMaxComboQuality())
         {
@@ -103,7 +101,6 @@ void BotPlayer::findPictureCombo(const std::vector<Card> &mainHand, std::vector<
         {
             combo = {mainHand[i]};
             comboQuality = mainHand[i].getQuality() + selectedCard.getQuality();
-            bot.statistics.average += comboQuality;
             bot.statistics.comboNumber += 1;
             if (comboQuality > bot.getMaxComboQuality())
             {
@@ -144,6 +141,7 @@ void BotPlayer::searchTrick(const std::vector<Card> &tableHand)
 {
     BotPlayer &bot = *this;
     std::vector<Card> combo{};
+    bot.statistics.minComboNumber = 2000;
     for (std::size_t i = 0; i < hand.size(); i++)
     {
         bot.setSelectedCard(hand[i]);
@@ -171,13 +169,19 @@ void BotPlayer::searchTrick(const std::vector<Card> &tableHand)
                 bot.findHunterCombo(tableHand, combo);
             }
         }
-        bot.statistics.average /= bot.statistics.comboNumber;
-        if (bot.statistics.average < bot.statistics.minAverage || i == 0)
+        if (!(selectedCard.getKind() == Card::Kind::Picture && selectedCard.getPictureValue() == Card::Picture::Hunter))
         {
-            bot.statistics.minAverage = bot.statistics.average;
-            bot.statistics.minAverageIndex = i;
+            // Отладка
+            // ConsoleView view;
+            /// std::cout << statistics.comboNumber  << ' ' << statistics.minComboNumber << std::endl;
+            // view.printCard(selectedCard);
+            if (bot.statistics.comboNumber < bot.statistics.minComboNumber)
+            {
+                bot.statistics.minComboNumber = bot.statistics.comboNumber;
+                bot.statistics.minComboNumberIndex = i;
+            }
+            bot.clearComboNumber();
         }
-        bot.clearAVGStat();
         combo.clear();
     }
 }
@@ -187,7 +191,7 @@ void BotPlayer::selectNonComboCard()
 {
     BotPlayer &bot = *this;
     bot.searchTrick(modifiedDeck);
-    bot.setSelectedCard(hand[bot.statistics.minAverageIndex]);
+    bot.setSelectedCard(hand[bot.statistics.minComboNumberIndex]);
 }
 
 void BotPlayer::preMoveActions(const std::vector<Card> &playerHand,
