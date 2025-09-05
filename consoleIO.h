@@ -36,6 +36,7 @@ public:
     void printResults(const Player &player1, const Player &player2) const;
     void printRules() const;
     void printMenu() const;
+    void printEndGameConfirm() const;
     void printEndGameMessage() const;
     std::size_t inputMenu(std::size_t min, std::size_t max) const;
 };

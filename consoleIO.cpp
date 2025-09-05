@@ -343,7 +343,11 @@ void ConsoleView::printResults(const Player &player1, const Player &player2) con
 
 void ConsoleView::printEndGameMessage() const
 {
-    std::cout << "Игрока окончена!" << std::endl
-              << "Для выхода нажмите Enter";
+    std::cout << "Игрока окончена!" << std::endl;
+}
+
+void ConsoleView::printEndGameConfirm() const
+{
+    std::cout << "Для выхода нажмите Enter" << std::endl;
     std::getchar();
 }

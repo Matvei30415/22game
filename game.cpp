@@ -40,7 +40,7 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
         if (turn == Game::Turn::player1 || (turn == Game::Turn::player2 && mode == Game::Mode::withOtherPlayer))
         {
             view.printAnnouncement(*player);
-            view.printHand(player2); // Печать руки бота (для отладки)
+            // view.printHand(player2); // Печать руки бота (для отладки)
             selectedCardIndex = view.inputCard(*player, table);
             if (table.getTableSize() != 0 &&
                 !((*player).getHand()[selectedCardIndex].getKind() == Card::Kind::Picture &&
@@ -127,6 +127,7 @@ void Game::startGame(ConsoleView &view)
     view.printTricks(*player2);
     (*player1).calculatePoints();
     (*player2).calculatePoints();
-    view.printResults((*player1), (*player2));
     view.printEndGameMessage();
+    view.printResults((*player1), (*player2));
+    view.printEndGameConfirm();
 }
