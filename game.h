@@ -1,11 +1,11 @@
 #pragma once
 
+#include "consoleIO.h"
 #include "card.h"
 #include "deck.h"
 #include "table.h"
 #include "player.h"
 #include "human.h"
-#include "consoleIO.h"
 #include "bot.h"
 
 class Game

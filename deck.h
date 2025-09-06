@@ -2,8 +2,6 @@
 
 #include "card.h"
 #include "player.h"
-#include <cstdlib>
-#include <ctime>
 
 inline constexpr std::size_t kDeckSize = 48;
 inline constexpr std::size_t kCardsInHand = 4;

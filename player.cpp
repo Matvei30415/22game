@@ -1,4 +1,5 @@
 #include "player.h"
+#include <algorithm>
 
 // Конструктор класса с параметром
 Player::Player(short id)

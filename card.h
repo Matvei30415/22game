@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <variant>
-#include <stdexcept>
 
 class Card
 {

@@ -4,9 +4,6 @@
 #include "rules.h"
 #include "table.h"
 #include "player.h"
-#include <string>
-#include <iostream>
-#include <format>
 
 
 void startConsole();

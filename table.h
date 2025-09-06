@@ -1,7 +1,6 @@
 #pragma once
 
 #include "card.h"
-#include <algorithm>
 
 class Table
 {

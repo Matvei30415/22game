@@ -2,6 +2,7 @@
 
 #include "card.h"
 #include "table.h"
+#include <string>
 
 struct Points
 {
@@ -10,8 +11,6 @@ struct Points
     short twentyOfDiamonds;
     short aceOfHearts;
 };
-
-class Deck;
 class Player
 {
 public:

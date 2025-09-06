@@ -1,4 +1,5 @@
 #include "table.h"
+#include <algorithm>
 
 std::size_t Table::getTableSize() const
 {

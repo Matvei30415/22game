@@ -23,7 +23,7 @@ set(SRCS
 if(WIN32)
     list(APPEND SRCS consoleWin.cpp)
 else()
-    # list(APPEND SRCS consolePosix.cpp) (ВРЕМЕННО НЕДОСТУПНО)
+    list(APPEND SRCS consolePosix.cpp)
 endif()
 
 add_executable(22game ${SRCS})

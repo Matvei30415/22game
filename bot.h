@@ -1,8 +1,6 @@
 #pragma once
 
 #include "card.h"
-#include "deck.h"
-#include "consoleIO.h"
 #include "table.h"
 #include "player.h"
 

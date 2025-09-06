@@ -1,4 +1,5 @@
 #include "card.h"
+#include <stdexcept>
 
 // Конструктор с параметрами
 Card::Card(int id, Kind kind, int value, Suit suit, double quality)
