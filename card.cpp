@@ -44,27 +44,15 @@ Card::Suit Card::getSuit() const
 // Получить значение цифровой карты (2, 4, ... , 18, 20)
 int Card::getDigitalValue() const
 {
-    if (kind != Kind::Digital)
-        throw std::logic_error("Карточка не цифровая");
-
-    if (auto ptr = std::get_if<int>(&value)) {
-        return *ptr;
-    } else {
-        throw std::logic_error("В карточке ожидается цифровое значение");
-    }
+    auto ptr = std::get_if<int>(&value);
+    return *ptr;
 }
 
 // Получить значение карты-картинки (G, L, H)
 Card::Picture Card::getPictureValue() const
 {
-    if (kind != Kind::Picture)
-        throw std::logic_error("Карточка не картинка");
-
-    if (auto ptr = std::get_if<Card::Picture>(&value)) {
-        return *ptr;
-    } else {
-        throw std::logic_error("В карточке ожидается значение-картинка");
-    }
+    auto ptr = std::get_if<Card::Picture>(&value);
+    return *ptr;
 }
 
 // Получить ценность карты

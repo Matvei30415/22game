@@ -22,32 +22,32 @@ Deck::Deck()
     {
         if (i > 45)
         {
-            addDigital(i + 1, 2, Card::Suit::Hearts, 275.0 / 264.0);
-            addDigital(i + 2, 20, Card::Suit::Diamonds, 275.0 / 264.0);
+            addDigital(i + 1, 2, Card::Suit::Hearts, kBestQuality);
+            addDigital(i + 2, 20, Card::Suit::Diamonds, kBestQuality);
             i++;
         }
         else if (i > 42)
         {
-            addPicture(i + 1, Card::Picture::Hunter, Card::Suit::General, 11.0 / 264.0);
+            addPicture(i + 1, Card::Picture::Hunter, Card::Suit::General, kStandartQuality);
         }
         else if (i > 40)
         {
-            addPicture(i + 1, Card::Picture::Lady, Card::Suit::Clubs, 35.0 / 264.0);
-            addPicture(i + 2, Card::Picture::Gentleman, Card::Suit::Clubs, 35.0 / 264.0);
+            addPicture(i + 1, Card::Picture::Lady, Card::Suit::Clubs, kClubsQuality);
+            addPicture(i + 2, Card::Picture::Gentleman, Card::Suit::Clubs, kClubsQuality);
             i++;
         }
         else if (i > 34)
         {
-            addPicture(i + 1, Card::Picture::Lady, Card::Suit::General, 11.0 / 264.0);
-            addPicture(i + 2, Card::Picture::Gentleman, Card::Suit::General, 11.0 / 264.0);
+            addPicture(i + 1, Card::Picture::Lady, Card::Suit::General, kStandartQuality);
+            addPicture(i + 2, Card::Picture::Gentleman, Card::Suit::General, kStandartQuality);
             i++;
         }
         else if (i > 25)
-            addDigital(i + 1, 2 + 2 * ((i + 1) % 9), Card::Suit::Clubs, 35.0 / 264.0);
+            addDigital(i + 1, 2 + 2 * ((i + 1) % 9), Card::Suit::Clubs, kClubsQuality);
         else if (i > 17)
-            addDigital(i + 1, 4 + 2 * (i % 9), Card::Suit::General, 11.0 / 264.0);
+            addDigital(i + 1, 4 + 2 * (i % 9), Card::Suit::General, kStandartQuality);
         else
-            addDigital(1 + i, 2 + 2 * (i % 9), Card::Suit::General, 11.0 / 264.0);
+            addDigital(1 + i, 2 + 2 * (i % 9), Card::Suit::General, kStandartQuality);
     }
 }
 

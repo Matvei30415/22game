@@ -11,7 +11,7 @@ void startConsole()
 void clearConsole()
 {
     system("cls");
-    // std::cout << "\033[2J\033[1;1H";
+    // std::cout << "\033[2J\033[H";
 }
 
 // Перемещение курсора для печати
