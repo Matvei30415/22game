@@ -9,7 +9,7 @@ void startConsole()
 // Очистка консоли
 void clearConsole()
 {
-    std::cout << "\033[2J\033[H";
+    // std::cout << "\033[2J\033[H";
     std::cout << "\033[2J\033[1;1H";
 }
 
