@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <format>
+#include <algorithm>
 
 static const std::string line(110, '-');
 
