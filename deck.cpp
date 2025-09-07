@@ -4,10 +4,8 @@
 // #include <cstdlib>
 
 // Инициализация колоды
-Deck::Deck()
+void Deck::init()
 {
-    deckCards.reserve(48); // чтобы не было лишних realocations
-
     auto addDigital = [&](int id, int value, Card::Suit suit, double q)
     {
         deckCards.emplace_back(id, Card::Kind::Digital, value, suit, q);

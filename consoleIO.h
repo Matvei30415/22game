@@ -4,7 +4,8 @@
 #include "rules.h"
 #include "table.h"
 #include "player.h"
-
+#include "human.h"
+#include "bot.h"
 
 void startConsole();
 void clearConsole();
@@ -33,7 +34,13 @@ public:
     void printResults(const Player &player1, const Player &player2) const;
     void printRules() const;
     void printMenu() const;
+    void printAnnounceRound(short n) const;
+    void printAnnounceWinner(Player &player) const;
+    void printAnnounceWinner() const;
     void printEndGameConfirm() const;
     void printEndGameMessage() const;
+    void printEndRoundMessage() const;
+    void printEndRoundConfirm() const;
     std::size_t inputMenu(std::size_t min, std::size_t max) const;
+    std::size_t inputTarget() const;
 };

@@ -10,11 +10,13 @@ struct Points
     short moreClubs;
     short twentyOfDiamonds;
     short aceOfHearts;
+    short pointsSum;
 };
 class Player
 {
 public:
     Player(short id);
+    virtual ~Player() = default;
     virtual std::string getTypeName() const = 0;
     virtual bool makeMove(Table &table) = 0;
     void setSelectedCard(const Card &card);
@@ -33,10 +35,12 @@ public:
     void addTrickToTricks(const std::vector<Card> &cards);
     void removeCardFromHand(const Card &card);
     void removeTrickFromHand(const std::vector<Card> &trick);
+    void clearTricks();
     void clearSelectedTrick();
     void makeHunterMove(Table &table);
     void calculatePoints();
-    void getPoints(short &moreCards, short &moreClubs, short &twentyOfDiamonds, short &aceOfHearts) const;
+    void getPoints(short &moreCards, short &moreClubs, short &twentyOfDiamonds, short &aceOfHearts, short &pointsSum) const;
+    short getPointsSum() const;
 
 protected:
     short id;

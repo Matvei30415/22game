@@ -13,6 +13,11 @@ void BotPlayer::setMaxCard(const Card &card)
     this->maxCard = card;
 }
 
+void BotPlayer::setMinComboNumber(short n)
+{
+    this->statistics.minComboNumber = n;
+}
+
 // Получить наилучшую комбинацию
 const std::vector<Card> &BotPlayer::getMaxCombo() const
 {
@@ -141,7 +146,6 @@ void BotPlayer::searchTrick(const std::vector<Card> &tableHand)
 {
     BotPlayer &bot = *this;
     std::vector<Card> combo{};
-    bot.statistics.minComboNumber = 2000;
     for (std::size_t i = 0; i < hand.size(); i++)
     {
         bot.setSelectedCard(hand[i]);
@@ -190,6 +194,7 @@ void BotPlayer::searchTrick(const std::vector<Card> &tableHand)
 void BotPlayer::selectNonComboCard()
 {
     BotPlayer &bot = *this;
+    bot.setMinComboNumber(2000);
     bot.searchTrick(modifiedDeck);
     bot.setSelectedCard(hand[bot.statistics.minComboNumberIndex]);
 }
@@ -199,10 +204,10 @@ void BotPlayer::preMoveActions(const std::vector<Card> &playerHand,
 {
     BotPlayer &bot = *this;
     bot.setIsTrick(false);
+    bot.clearComboNumber();
     bot.clearSelectedTrick();
     bot.clearMaxCombo();
     bot.clearModifiedDeck();
-    modifiedDeck.reserve(playerHand.size() + deckCards.size());
     modifiedDeck.insert(modifiedDeck.end(), deckCards.begin(), deckCards.end());
     modifiedDeck.insert(modifiedDeck.end(), playerHand.begin(), playerHand.end());
 }

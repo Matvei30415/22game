@@ -9,7 +9,8 @@ Player::Player(short id)
     (this->results).moreCards =
         (this->results).moreClubs =
             (this->results).twentyOfDiamonds =
-                (this->results).aceOfHearts = 0;
+                (this->results).aceOfHearts =
+                    (this->results).pointsSum = 0;
 }
 
 // Установить выбранную карту (с руки)
@@ -158,6 +159,12 @@ void Player::removeTrickFromHand(const std::vector<Card> &trick)
             }
 }
 
+// Очистить все взятки
+void Player::clearTricks()
+{
+    (this->tricks).clear();
+}
+
 // Очистить выбранную взятку (со стола)
 void Player::clearSelectedTrick()
 {
@@ -203,9 +210,9 @@ void Player::calculatePoints()
 {
     std::size_t len = tricks.size();
     if (len > 24)
-        (this->results).moreCards += 2;
+        (this->results).moreCards = 2;
     else if (len == 24)
-        (this->results).moreCards += 1;
+        (this->results).moreCards = 1;
     short sumClubs = 0;
     for (std::size_t i = 0; i < len; i++)
     {
@@ -214,20 +221,31 @@ void Player::calculatePoints()
         if (tricks[i].getKind() == Card::Kind::Digital)
         {
             if (tricks[i].getDigitalValue() == 20 && tricks[i].getSuit() == Card::Suit::Diamonds)
-                (this->results).twentyOfDiamonds += 1;
+                (this->results).twentyOfDiamonds = 1;
             else if (tricks[i].getDigitalValue() == 2 && tricks[i].getSuit() == Card::Suit::Hearts)
-                (this->results).aceOfHearts += 1;
+                (this->results).aceOfHearts = 1;
         }
     }
     if (sumClubs > 5)
-        (this->results).moreClubs += 1;
+        (this->results).moreClubs = 1;
+    (this->results).pointsSum += ((this->results).moreCards +
+                                  (this->results).moreClubs +
+                                  (this->results).twentyOfDiamonds +
+                                  (this->results).aceOfHearts);
 }
 
 // Получить результаты
-void Player::getPoints(short &moreCards, short &moreClubs, short &twentyOfDiamonds, short &aceOfHearts) const
+void Player::getPoints(short &moreCards, short &moreClubs, short &twentyOfDiamonds, short &aceOfHearts, short &pointsSum) const
 {
     moreCards = (this->results).moreCards;
     moreClubs = (this->results).moreClubs;
     twentyOfDiamonds = (this->results).twentyOfDiamonds;
     aceOfHearts = (this->results).aceOfHearts;
+    pointsSum = (this->results).pointsSum;
+}
+
+// Получить суммарный результат за все раунды
+short Player::getPointsSum() const
+{
+    return (this->results).pointsSum;
 }

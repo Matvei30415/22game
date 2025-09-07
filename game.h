@@ -21,6 +21,7 @@ class Game
         withOtherPlayer = 2,
     };
     Mode mode;
+    short target;
     Turn lastTrick;
     Turn turn;
 
@@ -30,6 +31,7 @@ public:
         turn = Turn::player1;
     }
     void mainMenu(ConsoleView &view);
+    void startOneRound(ConsoleView &view, Deck &deck, Table &table, Player &player1, Player &player2);
     void startGame(ConsoleView &view);
 
 private:

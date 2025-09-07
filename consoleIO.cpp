@@ -315,23 +315,42 @@ std::size_t ConsoleView::inputMenu(std::size_t min, std::size_t max) const
     }
 }
 
+// Ввод цели
+std::size_t ConsoleView::inputTarget() const
+{
+    std::size_t target;
+    while (true)
+    {
+        std::cout << "Введите цель для игры (минимум 0, максимум 250):" << std::endl;
+        bool successInput = input(target, 0, 250);
+        if (!successInput)
+        {
+            std::cout << "Неверный ввод, попробуйте ещё раз!" << std::endl;
+        }
+        else
+        {
+            return target;
+        }
+    }
+}
+
 // Печать результатов (*)
 void ConsoleView::printResults(const Player &player1, const Player &player2) const
 {
-    short moreCards, moreClubs, twentyOfDiamonds, aceOfHearts;
+    short moreCards, moreClubs, twentyOfDiamonds, aceOfHearts, pointsSum;
     printLine();
     std::cout << "Результаты: Больше всего карт | Больше всего треф | Двадцатка Буби | Туз черви | Сумма |" << std::endl;
     printLine();
-    player1.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
+    player1.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts, pointsSum);
     std::cout << "Результаты Игрока " << std::to_string(player1.getID()) << ": ";
     std::cout << moreCards << " | "
               << moreClubs << " | "
               << twentyOfDiamonds << " | "
               << aceOfHearts << " | "
-              << moreCards + moreClubs + twentyOfDiamonds + aceOfHearts << " |"
+              << pointsSum << " |"
               << std::endl;
     printLine();
-    player2.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts);
+    player2.getPoints(moreCards, moreClubs, twentyOfDiamonds, aceOfHearts, pointsSum);
     if (player2.getTypeName() == "Bot")
         std::cout << "Результаты Бота " << std::to_string(player2.getID()) << ": ";
     else if (player2.getTypeName() == "Human")
@@ -340,7 +359,7 @@ void ConsoleView::printResults(const Player &player1, const Player &player2) con
               << moreClubs << " | "
               << twentyOfDiamonds << " | "
               << aceOfHearts << " | "
-              << moreCards + moreClubs + twentyOfDiamonds + aceOfHearts << " |"
+              << pointsSum << " |"
               << std::endl;
     printLine();
 }
@@ -352,6 +371,44 @@ void ConsoleView::printEndGameMessage() const
 
 void ConsoleView::printEndGameConfirm() const
 {
-    std::cout << "Для выхода нажмите Enter" << std::endl;
+    std::cout << "Для выхода нажмите Enter";
     std::getchar();
+}
+
+void ConsoleView::printEndRoundMessage() const
+{
+    std::cout << "Раунд окончен!" << std::endl;
+}
+
+void ConsoleView::printEndRoundConfirm() const
+{
+    std::cout << "Для продолжения нажмите Enter";
+    std::getchar();
+    clearConsole();
+}
+
+void ConsoleView::printAnnounceRound(short n) const
+{
+    printLine();
+    std::cout << "Раунд " << n << std::endl;
+    printLine();
+}
+
+void ConsoleView::printAnnounceWinner(Player &player) const
+{
+    printLine();
+    if (dynamic_cast<BotPlayer *>(&player))
+        std::cout << "Победил Бот " << player.getID() << std::endl;
+    else if (dynamic_cast<HumanPlayer *>(&player))
+        std::cout << "Победил Игрок " << player.getID() << std::endl;
+    else
+        std::cout << "Ничья" << std::endl;
+    printLine();
+}
+
+void ConsoleView::printAnnounceWinner() const
+{
+    printLine();
+    std::cout << "Ничья" << std::endl;
+    printLine();
 }

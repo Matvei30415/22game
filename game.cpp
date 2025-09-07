@@ -48,7 +48,7 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
             {
                 selectedTrickIndexes = view.inputTrick(table);
             }
-            static_cast<HumanPlayer*>(player)->preMoveActions(table, selectedCardIndex, selectedTrickIndexes);
+            static_cast<HumanPlayer *>(player)->preMoveActions(table, selectedCardIndex, selectedTrickIndexes);
             successMove = (*player).makeMove(table);
             if (!successMove)
             {
@@ -66,7 +66,7 @@ void Game::processGame(ConsoleView &view, Deck &deck, Table &table, Player &play
         else if (turn == Game::Turn::player2 && mode == Game::Mode::withBot)
         {
             view.printAnnouncement((*player));
-            static_cast<BotPlayer*>(player)->preMoveActions(player1.getHand(), deck.getDeckCards());
+            static_cast<BotPlayer *>(player)->preMoveActions(player1.getHand(), deck.getDeckCards());
             successMove = (*player).makeMove(table);
             view.printMove((*player));
         }
@@ -103,11 +103,36 @@ void Game::mainMenu(ConsoleView &view)
         exit(0);
         break;
     }
+    this->target = view.inputTarget();
+}
+
+void Game::startOneRound(ConsoleView &view, Deck &deck, Table &table, Player &player1, Player &player2)
+{
+    deck.init();
+    deck.shuffle();
+    player1.clearTricks();
+    player2.clearTricks();
+    processGame(view, deck, table, player1, player2);
+    // Отладка
+    // std::cout << "Последняя взятка: " << lastTrick << std::endl;
+    processLastTrick(table, player1, player2);
+    view.printTricks(player1);
+    view.printTricks(player2);
+    player1.calculatePoints();
+    player2.calculatePoints();
+    view.printEndRoundMessage();
+    view.printResults(player1, player2);
+    view.printEndRoundConfirm();
+    if (turn == Game::Turn::player1)
+        turn = Game::Turn::player2;
+    else if (turn == Game::Turn::player2)
+        turn = Game::Turn::player1;
 }
 
 // Запустить игру
 void Game::startGame(ConsoleView &view)
 {
+    short round_cnt = 1, player1Points, player2Points;
     Deck deck;
     Table table;
     HumanPlayer humanPlayer1(1);
@@ -119,15 +144,32 @@ void Game::startGame(ConsoleView &view)
         player2 = &botPlayer;
     else
         player2 = &humanPlayer2;
-    deck.shuffle();
-    processGame(view, deck, table, *player1, *player2);
-    // std::cout << "Последняя взятка: " << lastTrick << std::endl;
-    processLastTrick(table, *player1, *player2);
-    view.printTricks(*player1);
-    view.printTricks(*player2);
-    (*player1).calculatePoints();
-    (*player2).calculatePoints();
+    while (true)
+    {
+        view.printAnnounceRound(round_cnt);
+        startOneRound(view, deck, table, *player1, *player2);
+        player1Points = player1->getPointsSum();
+        player2Points = player2->getPointsSum();
+        if ((player1Points > player2Points) &&
+            (player1Points >= target || target == 0))
+        {
+            view.printAnnounceWinner(*player1);
+            break;
+        }
+        else if ((player1Points < player2Points) &&
+                 (player2Points >= target || target == 0))
+        {
+            view.printAnnounceWinner(*player2);
+            break;
+        }
+        else if ((player1Points == player2Points) &&
+                 ((player1Points >= target && player2Points >= target) || target == 0))
+        {
+            view.printAnnounceWinner();
+            break;
+        }
+        round_cnt++;
+    }
     view.printEndGameMessage();
-    view.printResults((*player1), (*player2));
     view.printEndGameConfirm();
 }

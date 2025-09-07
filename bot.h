@@ -28,6 +28,7 @@ public:
     void findHunterCombo(const std::vector<Card> &tableHand, std::vector<Card> &combo);
     void setMaxCombo(const std::vector<Card> &combo, const double quality);
     void setMaxCard(const Card &card);
+    void setMinComboNumber(short n);
     const std::vector<Card> &getMaxCombo() const;
     const Card &getMaxCard() const;
     double getMaxComboQuality() const;
