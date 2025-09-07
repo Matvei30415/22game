@@ -21,7 +21,7 @@
 
 ## Установка и запуск
 
-[Скачать последнюю версию](https://github.com/username/22game/Matvei30415/latest)
+[Скачать последнюю версию](https://github.com/Matvei30415/22game/latest)
 
 ### Windows
 ```powershell
