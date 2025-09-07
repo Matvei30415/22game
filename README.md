@@ -21,13 +21,13 @@
 
 ## Установка и запуск
 
-[Скачать последнюю версию](https://github.com/username/22game/Matvei30415/latest)
+[Скачать последнюю версию](https://github.com/Matvei30415/22game/releases/latest)
 
 ### Windows
 ```powershell
 # Скачайте файл 22game.exe
 # Запустите двойным кликом или через консоль:
-22game.exe
+./22game.exe
 ```
 
 ### Linux
